@@ -1,12 +1,39 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
+import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const queryClient = useQueryClient();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [input, setInput] = useState<string>("");
+  const session = useSession();
+  const loggedIn = !!session.data;
+  const wines = api.wines.getAll.useQuery();
+  const grapes = api.grapes.getAll.useQuery();
+  const createGrape = api.grapes.create.useMutation({
+    async onSuccess() {
+      await queryClient.invalidateQueries(grapes);
+    },
+  });
+
+  const deleteGrape = api.grapes.delete.useMutation({
+    async onSuccess() {
+      await queryClient.invalidateQueries(grapes);
+    },
+  });
+
+  const handleDeleteGrape = (id: string) => {
+    deleteGrape.mutate({ id });
+  };
+
+  const handleClick = () => {
+    createGrape.mutate({ name: input });
+    setModalOpen(false);
+  };
 
   return (
     <>
@@ -20,35 +47,79 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
           </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
+          <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            Add Grapes
+          </h2>
+          <button
+            className="rounded-md border border-white px-4 text-white"
+            onClick={() => setModalOpen(true)}
+          >
+            Add a grape
+          </button>
+          {modalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center">
+              <div className="rounded-md bg-white p-4">
+                <input
+                  className="rounded-md border border-gray-300 p-2"
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+                <button
+                  className="rounded-md bg-blue-500 p-2 text-white"
+                  onClick={() => handleClick()}
+                >
+                  Add
+                </button>
+                <button
+                  className="rounded-md bg-red-500 p-2 text-white"
+                  onClick={() => setModalOpen(false)}
+                >
+                  Cancel
+                </button>
               </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
+            </div>
+          )}
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </p>
+            {loggedIn &&
+              grapes.data &&
+              grapes.data.map((e) => {
+                const { id, name } = e;
+                return (
+                  <div key={id} className="flex gap-8">
+                    <p className=" text-left text-2xl text-white">{name}</p>
+                    <button onClick={() => handleDeleteGrape(id)}>X</button>
+                  </div>
+                );
+              })}
             <AuthShowcase />
+          </div>
+          <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            My Cave
+          </h2>
+          <div className="flex flex-col items-center gap-2">
+            {loggedIn &&
+              wines.data &&
+              wines.data.map((wine) => {
+                return (
+                  <div key={wine.name} className="flex gap-8">
+                    <p className=" text-left text-2xl text-white">
+                      {wine.name}
+                    </p>
+                    <p className=" text-left text-2xl text-white">
+                      {wine.year}
+                    </p>
+                    <p className=" text-left text-2xl text-white">
+                      {wine.region}
+                    </p>
+                    <p className=" text-left text-2xl text-white">
+                      {wine.Grapes.map(
+                        (wineGrape) => wineGrape.grape.name
+                      ).join(", ")}
+                    </p>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </main>
@@ -61,16 +132,10 @@ export default Home;
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
-
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
