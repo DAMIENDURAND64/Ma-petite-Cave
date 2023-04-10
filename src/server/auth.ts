@@ -1,3 +1,4 @@
+import GoogleProvider from "next-auth/providers/google";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -51,6 +52,11 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+
     /**
      * ...add more providers here.
      *
