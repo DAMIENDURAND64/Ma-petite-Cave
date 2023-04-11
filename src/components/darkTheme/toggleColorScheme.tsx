@@ -7,14 +7,17 @@ function ThemeToggler() {
   const dark = colorScheme === "dark";
 
   return (
-    <ActionIcon
-      variant="outline"
-      color={dark ? "yellow" : "blue"}
-      onClick={() => toggleColorScheme()}
-      title="Toggle color scheme"
-    >
-      {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
-    </ActionIcon>
+    <div className="flex justify-end">
+      <ActionIcon
+        variant="outline"
+        color={dark ? "yellow" : "blue"}
+        onClick={() => toggleColorScheme()}
+        title="Toggle color scheme"
+        className="h-10 w-10"
+      >
+        {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+      </ActionIcon>
+    </div>
   );
 }
 
