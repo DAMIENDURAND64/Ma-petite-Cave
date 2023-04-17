@@ -3,7 +3,7 @@ import React from "react";
 
 const Logo = () => {
   return (
-    <div className="flex-all-center gap-1">
+    <div className="xy-center gap-1">
       <h1 className="text-2xl font-extrabold">
         Ma <br /> petite <br />
         Cave.
