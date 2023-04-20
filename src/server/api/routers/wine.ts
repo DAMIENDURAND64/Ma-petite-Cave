@@ -13,6 +13,7 @@ export const wineRouter = createTRPCRouter({
             grape: true,
           },
         },
+        color: true,
         user: true,
       },
     });
@@ -24,6 +25,15 @@ export const wineRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          Grapes: {
+            include: {
+              grape: true,
+            },
+          },
+          color: true,
+          user: true,
+        },
       });
     }),
 
@@ -34,6 +44,7 @@ export const wineRouter = createTRPCRouter({
         year: z.number(),
         type: z.string(),
         country: z.string(),
+        colorId: z.string(),
         region: z.string(),
         price: z.number(),
         quantity: z.number(),
@@ -41,11 +52,20 @@ export const wineRouter = createTRPCRouter({
         user: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const color = await ctx.prisma.color.findUnique({
+        where: {
+          id: input.colorId,
+        },
+      });
+      if (!color) {
+        throw new Error(`Invalid color id: ${input.colorId}`);
+      }
       return ctx.prisma.wine.create({
         data: {
           name: input.name,
           year: input.year,
+          color: { connect: { id: input.colorId } },
           type: input.type,
           country: input.country,
           region: input.region,
@@ -62,6 +82,7 @@ export const wineRouter = createTRPCRouter({
         },
       });
     }),
+
   update: publicProcedure
     .input(
       z.object({
@@ -74,9 +95,29 @@ export const wineRouter = createTRPCRouter({
         price: z.number(),
         quantity: z.number(),
         grapes: z.array(z.string()),
+        colorId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const wine = await ctx.prisma.wine.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          color: true,
+        },
+      });
+      if (!wine) {
+        throw new Error(`Invalid wine id: ${input.id}`);
+      }
+      const color = await ctx.prisma.color.findUnique({
+        where: {
+          id: input.colorId,
+        },
+      });
+      if (!color) {
+        throw new Error(`Invalid color id: ${input.colorId}`);
+      }
       return ctx.prisma.wine.update({
         where: {
           id: input.id,
@@ -87,14 +128,20 @@ export const wineRouter = createTRPCRouter({
           type: input.type,
           country: input.country,
           region: input.region,
-          quantity: input.quantity,
           price: input.price,
+          quantity: input.quantity,
           Grapes: {
             connect: input.grapes.map((grape) => ({ id: grape })),
+          },
+          color: {
+            connect: {
+              id: input.colorId,
+            },
           },
         },
       });
     }),
+
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {

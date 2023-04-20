@@ -30,6 +30,16 @@ model Wine {
   Grapes   WineGrape[]
   user        User       @relation(fields: [userId], references: [id])
   userId      String     @map("userId")
+  color       Color      @relation(fields: [colorId], references: [id])
+  colorId     String     @unique
+ 
+}
+model Color {
+  id        String      @id @default(cuid())
+  name      String
+  backgroundColor String?
+  Wine      Wine[]
+  
 }
 
 model Grape {
