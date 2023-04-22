@@ -18,6 +18,25 @@ export const wineRouter = createTRPCRouter({
       },
     });
   }),
+  getAllByColor: publicProcedure
+    .input(z.object({ colorId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.wine.findMany({
+        where: {
+          colorId: input.colorId,
+          userId: ctx.session?.user.id,
+        },
+        include: {
+          Grapes: {
+            include: {
+              grape: true,
+            },
+          },
+          color: true,
+          user: true,
+        },
+      });
+    }),
   getOne: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {

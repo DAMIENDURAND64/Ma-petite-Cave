@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import { Carousel } from "@mantine/carousel";
 import Image from "next/image";
 import { getStylesRef, useMantineTheme } from "@mantine/core";
+import Link from "next/link";
 
 function CarouselWineColor() {
   const wineColor = api.color.getAll.useQuery();
@@ -52,16 +53,23 @@ function CarouselWineColor() {
       >
         {wineColor.data?.map((color) => (
           <Carousel.Slide key={color.id}>
-            <div className="relative mt-6">
-              <Image
-                src={color.backgroundColor as string}
-                alt={color.name}
-                width={300}
-                height={300}
-                className="min-h-10 max-h-10 rounded-xl object-cover"
-              />
-              <p className="absolute-center">{color.name}</p>
-            </div>
+            <Link
+              href={{
+                pathname: "/color/[id]",
+                query: { id: color.id },
+              }}
+            >
+              <div className="relative mt-6">
+                <Image
+                  src={color.backgroundColor as string}
+                  alt={color.name}
+                  width={300}
+                  height={300}
+                  className="min-h-10 max-h-10 rounded-xl object-cover"
+                />
+                <p className="absolute-center">{color.name}</p>
+              </div>
+            </Link>
           </Carousel.Slide>
         ))}
       </Carousel>

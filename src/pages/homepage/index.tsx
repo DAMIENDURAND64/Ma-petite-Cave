@@ -1,4 +1,3 @@
-import React from "react";
 import CarouselWineColor from "~/components/carouselWineColor/CarouselWineColor";
 
 function Homepage() {
@@ -8,4 +7,5 @@ function Homepage() {
     </div>
   );
 }
+
 export default Homepage;

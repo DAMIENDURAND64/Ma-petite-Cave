@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-function SignIn() {
+function WelcomePage() {
   return (
     <div className="xy-center flex-col gap-5 p-3 pt-4">
       <p className="text-center text-4xl font-semibold">
@@ -20,4 +20,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default WelcomePage;

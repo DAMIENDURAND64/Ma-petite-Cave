@@ -9,6 +9,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import Router, { useRouter } from "next/router";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -43,6 +44,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = user.id;
         // session.user.role = user.role; <-- put other properties on the session here
       }
+
       return session;
     },
   },
