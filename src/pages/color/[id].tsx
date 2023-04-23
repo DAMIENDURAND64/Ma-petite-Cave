@@ -1,22 +1,12 @@
 import type { Wine } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import WelcomePage from "~/components/welcome/WelcomePage";
 import { api } from "~/utils/api";
 
 const Color = () => {
+  const { data: sessionData } = useSession();
   const router = useRouter();
-
   const { id } = router.query;
-  /*  const { data: sessionData } = useSession();
-
-  if (!sessionData) {
-    return (
-      <div className="p-3">
-        <WelcomePage />
-      </div>
-    );
-  } */
 
   const wineColorQuery = api.wines.getAllByColor.useQuery(
     { colorId: id as string },
@@ -35,6 +25,14 @@ const Color = () => {
 
   const wineColor: Wine[] = wineColorQuery.data;
 
+  if (sessionData === null) {
+    return (
+      <div className="p-3">
+        <h1>Homepage</h1>
+        <p>Sign in to see your homepage</p>
+      </div>
+    );
+  }
   return (
     <div>
       {wineColor.map((wine) => (

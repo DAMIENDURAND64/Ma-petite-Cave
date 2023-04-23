@@ -1,10 +1,11 @@
 import { type NextPage } from "next";
-import Homepage from "./homepage";
+
+import WelcomePage from "~/components/welcome/WelcomePage";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Homepage />
+      <WelcomePage />
     </>
   );
 };

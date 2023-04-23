@@ -9,10 +9,9 @@ function CarouselWineColor() {
   const wineColor = api.color.getAll.useQuery();
   const theme = useMantineTheme();
 
-  console.log(wineColor.data);
   return (
     <div>
-      <p className="-mb-6">Wine Color:</p>
+      <p className="-mb-6">Categories:</p>
       <Carousel
         withIndicators
         height={90}
