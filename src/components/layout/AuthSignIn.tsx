@@ -9,7 +9,17 @@ const AuthSignIn: React.FC = () => {
     <div>
       <Button
         variant="filled"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
+        onClick={
+          sessionData
+            ? () =>
+                void signOut({
+                  callbackUrl: "/",
+                })
+            : () =>
+                void signIn("undefined", {
+                  callbackUrl: "/homepage",
+                })
+        }
         style={{
           backgroundColor: theme.colors.blue[9],
         }}
