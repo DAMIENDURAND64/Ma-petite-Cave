@@ -11,7 +11,7 @@ function CarouselWineColor() {
 
   return (
     <div>
-      <p className="-mb-6">Categories:</p>
+      <p className="-mb-3">Categories:</p>
       <Carousel
         withIndicators
         height={90}

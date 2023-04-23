@@ -19,7 +19,13 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["cdn.pixabay.com", "png.pngtree.com", "dictionary.cambridge.org"],
+    domains: [
+      "cdn.pixabay.com",
+      "png.pngtree.com",
+      "dictionary.cambridge.org",
+      "infinities-wines.com",
+      "static.millesima.com",
+    ],
   },
 };
 export default config;
