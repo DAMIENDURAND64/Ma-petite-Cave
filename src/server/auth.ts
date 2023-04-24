@@ -1,3 +1,4 @@
+import GoogleProvider from "next-auth/providers/google";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -8,6 +9,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import Router, { useRouter } from "next/router";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -42,6 +44,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = user.id;
         // session.user.role = user.role; <-- put other properties on the session here
       }
+
       return session;
     },
   },
@@ -51,6 +54,11 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+
     /**
      * ...add more providers here.
      *
