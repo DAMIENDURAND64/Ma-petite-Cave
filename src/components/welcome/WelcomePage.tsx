@@ -14,7 +14,7 @@ function WelcomePage() {
         alt="Bottle of wine"
         width={300}
         height={300}
-        className="h-72 w-full rounded-md"
+        className="h-72 w-full rounded-md object-contain"
       />
     </div>
   );

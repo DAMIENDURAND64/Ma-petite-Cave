@@ -11,12 +11,12 @@ function CarouselWineColor() {
 
   return (
     <div>
-      <p className="-mb-3">Categories:</p>
+      <p className="mb-3">Categories:</p>
       <Carousel
         withIndicators
-        height={90}
         slideSize="30%"
         loop
+        height={70}
         align="start"
         dragFree
         slideGap={3}
@@ -30,7 +30,6 @@ function CarouselWineColor() {
             width: "10px",
             height: "5px",
             transition: "width 250ms ease",
-
             "&[data-active]": {
               width: "40px",
             },
@@ -54,11 +53,11 @@ function CarouselWineColor() {
           <Carousel.Slide key={color.id}>
             <Link
               href={{
-                pathname: "/color/[id]",
+                pathname: "/category/[id]",
                 query: { id: color.id },
               }}
             >
-              <div className="relative mt-6">
+              <div className="relative">
                 <Image
                   src={color.backgroundColor as string}
                   alt={color.name}
