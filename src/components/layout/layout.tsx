@@ -4,14 +4,10 @@ import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
 import { Avatar } from "@mantine/core";
+import { removedFamilyName } from "~/utils/functions";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { data: sessionData } = useSession();
-
-  function removedFamilyName(name: string) {
-    const lastIndex = name.lastIndexOf(" ");
-    return name.substring(0, lastIndex);
-  }
 
   return (
     <>
