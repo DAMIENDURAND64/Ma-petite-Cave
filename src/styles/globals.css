@@ -5,7 +5,7 @@
 
 @layer components {
   .xy-center {
-    @apply flex items-center justify-center;
+    @apply items-center justify-center;
   }
   .flexcol {
     @apply flex flex-col;

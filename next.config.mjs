@@ -25,6 +25,7 @@ const config = {
       "dictionary.cambridge.org",
       "infinities-wines.com",
       "static.millesima.com",
+      "lh3.googleusercontent.com",
     ],
   },
 };
