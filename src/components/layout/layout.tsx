@@ -28,7 +28,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                   Hello{" "}
                   <Link
                     href="/profil"
-                    className="cursor-pointer hover:underline"
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent"
                   >
                     {removedFamilyName(sessionData.user.name as string)}
                   </Link>{" "}
