@@ -6,7 +6,7 @@ export const colorRouter = createTRPCRouter({
     return ctx.prisma.color.findMany();
   }),
   getOne: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.number() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.color.findFirst({
         where: {

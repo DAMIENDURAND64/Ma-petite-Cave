@@ -10,13 +10,14 @@ const Color = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const wineColorId = parseInt(id as string, 10);
 
   const {
     data: wineColorQuery,
     isLoading,
     error,
   } = api.wines.getAllByColor.useQuery(
-    { colorId: id as string },
+    { wineColorId },
     {
       enabled: !!id,
     }
