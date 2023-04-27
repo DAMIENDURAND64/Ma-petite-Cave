@@ -14,91 +14,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  wines         Wine[]
+}
 
-
+// modèle Wine
 model Wine {
-  id          String      @id @default(cuid())
-  name        String
-  year        Int
-  type        String
-  country     String
-  region      String
-  price       Int?
-  quantity    Int
-  image       String?
-  description String?
-  Grapes   WineGrape[]
-  user        User       @relation(fields: [userId], references: [id])
-  userId      String     @map("userId")
-  color       Color      @relation(fields: [colorId], references: [id])
-  colorId     String     
- 
+  id                 Int           @id @default(autoincrement())
+  name               String
+  producer           String
+  varietal           String[]
+  country            String
+  region             String
+  vintage            Int
+  purchasedAt        DateTime?
+  consumedAt         DateTime?
+  quantity           Int?
+  unitPrice          Float?
+  description        String?
+  image              String?
+  servingTemperature String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  // Relations
+  owner              User          @relation(fields: [ownerId], references: [id])
+  ownerId            String
+  formats            WineFormat[]
+  wineColor          Color         @relation(fields: [wineColorId], references: [id])
+  wineColorId        Int
+  tastingNotes       TastingNote[]
 }
+
+// modèle Color
 model Color {
-  id        String      @id @default(cuid())
-  name      String
-  backgroundColor String?
-  Wine      Wine[]
-  
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wines     Wine[]
 }
 
-model Grape {
-  id        String      @id @default(cuid())
-  name      String
-  WineGrape WineGrape[]
+// modèle BottleFormat
+model BottleFormat {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  WineFormat WineFormat[]
 }
 
-model WineGrape {
-  id      String @id @default(cuid())
-  wine    Wine   @relation(fields: [wineId], references: [id])
-  wineId  String
-  grape   Grape  @relation(fields: [grapeId], references: [id])
-  grapeId String
+// modèle TastingNote
+model TastingNote {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wines     Wine[]
+}
+
+// modèle WineFormat
+model WineFormat {
+  id        Int           @id @default(autoincrement())
+  quantity  Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  // Relations
+  format    BottleFormat? @relation(fields: [formatId], references: [id])
+  formatId  Int?
+  wine      Wine          @relation(fields: [wineId], references: [id])
+  wineId    Int
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String?  @db.Text 
-    access_token      String?  @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String?  @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    wines Wine[]
-
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }

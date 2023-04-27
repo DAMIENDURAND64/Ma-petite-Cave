@@ -9,9 +9,10 @@ function GetOneWine() {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const wineId = parseInt(id as string, 10);
 
   const wineQuery = api.wines.getOne.useQuery(
-    { id: id as string },
+    { id: wineId },
     {
       enabled: !!id,
     }

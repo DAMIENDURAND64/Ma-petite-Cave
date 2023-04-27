@@ -1,4 +1,4 @@
-import { Avatar, Box, Input, Paper } from "@mantine/core";
+import { Paper } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";

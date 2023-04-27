@@ -1,5 +1,5 @@
 import { Grid, useMantineTheme } from "@mantine/core";
-import type { Color, Grape, User, Wine, WineGrape } from "@prisma/client";
+import type { Color, Wine } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { capitalize, truncateText } from "~/utils/functions";
@@ -7,9 +7,7 @@ import { capitalize, truncateText } from "~/utils/functions";
 interface Props {
   wines:
     | (Wine & {
-        color: Color;
-        user: User;
-        Grapes: (WineGrape & { grape: Grape })[];
+        wineColor: Color;
       })[];
 }
 
@@ -49,17 +47,15 @@ function WineListTemplate({ wines }: Props) {
                 <p>{wine.name.toUpperCase()}</p>
                 <p>{capitalize(wine.region)}</p>
                 <div className="flexrow items-center gap-1">
-                  <p>{wine.color.name}</p>
+                  <p>{wine.wineColor.name}</p>
                   <p
                     style={{
-                      backgroundImage: `url(${
-                        wine.color.backgroundColor as string
-                      })`,
+                      backgroundImage: `url(${wine.wineColor.image as string})`,
                     }}
                     className="h-3 w-3 rounded-full"
                   />
                 </div>
-                <p>{wine.year}</p>
+                <p>{wine.vintage}</p>
                 <p>
                   Description:
                   <br />
