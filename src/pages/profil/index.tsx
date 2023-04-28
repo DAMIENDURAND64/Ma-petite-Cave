@@ -14,6 +14,18 @@ function Profil() {
     }
   );
 
+  const quantityAvailable = me.data?.wines
+    .map((bottle) => bottle?.quantity ?? 0)
+    .reduce((a, b) => a + b, 0);
+
+  const totalConsumedQuantity = me.data?.wines
+    .filter((wine) => wine.consumedAt !== null)
+    .reduce((acc, wine) => acc + (wine.quantity ?? 0), 0);
+
+  const valueCave = me.data?.wines
+    .map((bottle) => (bottle?.unitPrice ?? 0) * (bottle?.quantity ?? 0))
+    .reduce((a, b) => a + b, 0);
+
   return (
     <div className="xy-center flexcol gap-2 p-3">
       <h1>Profil</h1>
@@ -26,6 +38,18 @@ function Profil() {
       />
       <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
         {me.data?.name as string}
+      </Paper>
+      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
+        {me.data?.email as string}
+      </Paper>
+      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
+        {`${quantityAvailable as number} bouteilles disponibles`}
+      </Paper>
+      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
+        {`${totalConsumedQuantity as number} bouteilles bues`}
+      </Paper>
+      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
+        {`Valeur de ma cave : ${valueCave as number} € `}
       </Paper>
     </div>
   );
