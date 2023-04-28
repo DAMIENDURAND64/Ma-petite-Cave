@@ -33,17 +33,17 @@ function WineListTemplate({ wines }: Props) {
               query: { id: wine.id },
             }}
           >
-            <div className="flexrow h-[170px]">
+            <div className="flexrow h-fit  max-h-[185px]">
               <div>
                 <Image
                   src={(wine.image as string) || "/images/black_crows.jpg"}
                   alt={wine.name}
                   width={50}
                   height={50}
-                  className="h-full w-[100px] object-contain"
+                  className="h-[150px] w-[90px]  object-contain"
                 />
               </div>
-              <div className="w-full pl-4">
+              <div className="w-full pl-3">
                 <p>{wine.name.toUpperCase()}</p>
                 <p>{capitalize(wine.region)}</p>
                 <div className="flexrow items-center gap-1">
@@ -59,12 +59,12 @@ function WineListTemplate({ wines }: Props) {
                 <p>
                   Description:
                   <br />
-                  <span className="text-xs">
+                  <p className="text-xs">
                     {truncateText(
                       (wine.description as string) || "non defini",
-                      70
+                      80
                     )}
-                  </span>
+                  </p>
                 </p>
               </div>
             </div>
