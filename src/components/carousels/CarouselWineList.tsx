@@ -10,7 +10,6 @@ import { api } from "~/utils/api";
 function CarouselWineList() {
   const router = useRouter();
   const wines = api.wines.getAll.useQuery();
-  console.log(wines.data);
   const theme = useMantineTheme();
   return (
     <div>
