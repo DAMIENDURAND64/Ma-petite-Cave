@@ -1,16 +1,8 @@
-import { Button, Grid, useMantineTheme } from "@mantine/core";
-import type { Wine } from "@prisma/client";
+import { Button, useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import WineListTemplate from "~/components/wineList/wineList";
 import { api } from "~/utils/api";
-import { capitalize, truncateText } from "~/utils/functions";
-
-type WineWithColor = Wine & {
-  color: {
-    name: string;
-  };
-};
 
 const Color = () => {
   const theme = useMantineTheme();
@@ -18,23 +10,26 @@ const Color = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const wineColorId = parseInt(id as string, 10);
 
-  const wineColorQuery = api.wines.getAllByColor.useQuery(
-    { colorId: id as string },
+  const {
+    data: wineColorQuery,
+    isLoading,
+    error,
+  } = api.wines.getAllByColor.useQuery(
+    { wineColorId },
     {
       enabled: !!id,
     }
   );
 
-  if (wineColorQuery.isLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (wineColorQuery.error) {
-    return <div>Error: {wineColorQuery.error.message}</div>;
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
-
-  const wineColor: WineWithColor[] = wineColorQuery.data;
 
   if (sessionData === null) {
     return (
@@ -60,50 +55,7 @@ const Color = () => {
           retour
         </Button>
       </div>
-
-      <Grid justify="space-around" grow gutter="xs">
-        {wineColor.map((wine) => (
-          <Grid.Col
-            key={wine.id}
-            sm={5}
-            md={3}
-            lg={3}
-            style={{
-              border: `2px solid ${theme.colors.violet[9]}`,
-              margin: "3px",
-              borderRadius: "10px",
-            }}
-          >
-            <div className="flexrow h-[170px]">
-              <div>
-                <Image
-                  src={(wine.image as string) || "/images/black_crows.jpg"}
-                  alt={wine.name}
-                  width={50}
-                  height={50}
-                  className="h-full w-[100px] object-contain"
-                />
-              </div>
-              <div className="w-full pl-4">
-                <p>{wine.name.toUpperCase()}</p>
-                <p>{capitalize(wine.region)}</p>
-                <p>{wine.color.name}</p>
-                <p>{wine.year}</p>
-                <p>
-                  Description:
-                  <br />
-                  <span className="text-xs">
-                    {truncateText(
-                      (wine.description as string) || "non defini",
-                      70
-                    )}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </Grid.Col>
-        ))}
-      </Grid>
+      <WineListTemplate wines={wineColorQuery} />
     </div>
   );
 };

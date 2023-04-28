@@ -4,14 +4,11 @@ import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
 import { Avatar } from "@mantine/core";
+import { removedFamilyName } from "~/utils/functions";
+import Link from "next/link";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { data: sessionData } = useSession();
-
-  function removedFamilyName(name: string) {
-    const lastIndex = name.lastIndexOf(" ");
-    return name.substring(0, lastIndex);
-  }
 
   return (
     <>
@@ -28,7 +25,14 @@ const Layout = ({ children }: PropsWithChildren) => {
               </div>
               <div className="flex gap-4">
                 <p>
-                  Hello {removedFamilyName(sessionData.user.name as string)} !
+                  Hello{" "}
+                  <Link
+                    href="/profil"
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent"
+                  >
+                    {removedFamilyName(sessionData.user.name as string)}
+                  </Link>{" "}
+                  !
                 </p>
                 <Avatar
                   src={sessionData.user.image}

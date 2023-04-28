@@ -1,5 +1,6 @@
 import { Carousel } from "@mantine/carousel";
 import { getStylesRef, useMantineTheme, Button } from "@mantine/core";
+import type { Color, Wine } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -64,39 +65,45 @@ function CarouselWineList() {
           },
         }}
       >
-        {wines.data?.map((wine) => (
-          <Carousel.Slide
-            key={wine.id}
-            style={{
-              backgroundImage: `url(${wine.color.backgroundColor as string})`,
-              borderRadius: "12px",
-              paddingTop: "12px",
-              marginRight: "8px",
-              maxHeight: "270px",
-              minHeight: "270px",
-            }}
-          >
-            <Link
+        {wines.data?.map(
+          (
+            wine: Wine & {
+              wineColor: Color;
+            }
+          ) => (
+            <Carousel.Slide
               key={wine.id}
-              href={{
-                pathname: "/wines/[id]",
-                query: { id: wine.id },
+              style={{
+                backgroundImage: `url(${wine.wineColor.image as string})`,
+                borderRadius: "12px",
+                paddingTop: "12px",
+                marginRight: "8px",
+                maxHeight: "270px",
+                minHeight: "270px",
               }}
             >
-              <div className="flexcol relative items-center text-center">
-                <Image
-                  src={wine.image || "/images/black_crows.jpg"}
-                  alt={wine.name}
-                  width={100}
-                  height={100}
-                  className="ml-1 max-h-[150px] min-h-[150px] object-contain"
-                />
-                <p>{wine.name.toUpperCase()}</p>
-                <p>{wine.year}</p>
-              </div>
-            </Link>
-          </Carousel.Slide>
-        ))}
+              <Link
+                key={wine.id}
+                href={{
+                  pathname: "/wines/[id]",
+                  query: { id: wine.id },
+                }}
+              >
+                <div className="flexcol relative items-center text-center">
+                  <Image
+                    src={wine.image || "/images/black_crows.jpg"}
+                    alt={wine.name}
+                    width={100}
+                    height={100}
+                    className="ml-1 max-h-[150px] min-h-[150px] object-contain"
+                  />
+                  <p>{wine.name.toUpperCase()}</p>
+                  <p>{wine.vintage}</p>
+                </div>
+              </Link>
+            </Carousel.Slide>
+          )
+        )}
       </Carousel>
     </div>
   );

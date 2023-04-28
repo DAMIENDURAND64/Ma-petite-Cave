@@ -1,16 +1,16 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
-export const grapesRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.grape.findMany();
-  }),
+export const userRouter = createTRPCRouter({
   getOne: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.grape.findFirst({
+      return ctx.prisma.user.findFirst({
         where: {
           id: input.id,
+        },
+        include: {
+          wines: true,
         },
       });
     }),
@@ -18,7 +18,7 @@ export const grapesRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ name: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.grape.create({
+      return ctx.prisma.user.create({
         data: {
           name: input.name,
         },
@@ -27,7 +27,7 @@ export const grapesRouter = createTRPCRouter({
   update: publicProcedure
     .input(z.object({ id: z.string(), name: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.grape.update({
+      return ctx.prisma.user.update({
         where: {
           id: input.id,
         },
@@ -39,7 +39,7 @@ export const grapesRouter = createTRPCRouter({
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.grape.delete({
+      return ctx.prisma.user.delete({
         where: {
           id: input.id,
         },

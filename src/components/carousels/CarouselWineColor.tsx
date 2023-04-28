@@ -59,7 +59,7 @@ function CarouselWineColor() {
             >
               <div className="relative">
                 <Image
-                  src={color.backgroundColor as string}
+                  src={color.image as string}
                   alt={color.name}
                   width={300}
                   height={300}

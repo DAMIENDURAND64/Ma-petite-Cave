@@ -25,6 +25,11 @@ const config = {
       "dictionary.cambridge.org",
       "infinities-wines.com",
       "static.millesima.com",
+      "lh3.googleusercontent.com",
+      "cdn.wallpapersafari.com",
+      "img.pixers.pics",
+      "encrypted-tbn0.gstatic.com",
+      "static.vecteezy.com",
     ],
   },
 };

@@ -5,3 +5,8 @@ export const truncateText = (text: string, maxLength = 50) => {
 export const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+export const removedFamilyName = (name: string) => {
+  const lastIndex = name.lastIndexOf(" ");
+  return name.substring(0, lastIndex);
+};

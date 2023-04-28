@@ -1,7 +1,7 @@
 import { ActionIcon, useMantineColorScheme } from "@mantine/core";
 import { IconSun, IconMoonStars } from "@tabler/icons-react";
 
-function ThemeToggler() {
+const ThemeToggler = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -19,6 +19,6 @@ function ThemeToggler() {
       </ActionIcon>
     </div>
   );
-}
+};
 
 export default ThemeToggler;
