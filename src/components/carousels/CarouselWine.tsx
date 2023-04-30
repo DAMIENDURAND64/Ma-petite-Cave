@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 
 type CarouselProps = {
+  controlsProps?: string;
   colorData?: Color[];
   wineData?: (Wine & {
     formats: WineFormat[];
@@ -17,15 +18,21 @@ type CarouselProps = {
   colors: { [key: number]: string };
 };
 
-function CarouselWine({ colorData, wineData, height, colors }: CarouselProps) {
+function CarouselWine({
+  colorData,
+  wineData,
+  height,
+  colors,
+  controlsProps,
+}: CarouselProps) {
   const router = useRouter();
   const theme = useMantineTheme();
 
   return (
     <div>
-      {colorData && <p className="mb-3">Categories:</p>}
+      {colorData && <p className="mb-1">Categories:</p>}
       {wineData && (
-        <div className="mb-3 flex justify-between">
+        <div className="mb-1 flex justify-between ">
           <p>Mes vins:</p>
           <Button
             variant="filled"
@@ -69,7 +76,7 @@ function CarouselWine({ colorData, wineData, height, colors }: CarouselProps) {
             ref: getStylesRef("controls"),
             transition: "opacity 150ms ease",
             opacity: 0,
-            top: "12px",
+            top: controlsProps,
           },
 
           root: {
@@ -92,8 +99,10 @@ function CarouselWine({ colorData, wineData, height, colors }: CarouselProps) {
                   query: { id: color.id },
                 }}
               >
-                <div className={`${coloor} relative h-12 rounded-lg`}>
-                  <p className="absolute-center">{color.name}</p>
+                <div className={`${coloor} relative h-10 rounded-lg`}>
+                  <p className="absolute-center font-sans text-sm  font-bold">
+                    {color.name}
+                  </p>
                 </div>
               </Link>
             </Carousel.Slide>
@@ -110,17 +119,22 @@ function CarouselWine({ colorData, wineData, height, colors }: CarouselProps) {
                   query: { id: wine.id },
                 }}
               >
-                <div className="h-48 rounded-md border border-slate-500">
-                  <div className={`${coloor}  h-3 rounded-t-md`} />
-                  <Image
-                    src={wine.image || "/images/black_crows.jpg"}
-                    alt={wine.name}
-                    width={100}
-                    height={100}
-                    className="absolute top-0 ml-1 max-h-[150px] min-h-[150px] object-contain"
-                  />
-                  <p>{wine.name.toUpperCase()}</p>
-                  <p>{wine.vintage}</p>
+                <div className={`${coloor} h-2 w-full rounded-full`} />
+                <div
+                  className={`flexcol y-center h-[270px]  rounded-md  text-center text-xs`}
+                >
+                  <div className="relative my-1 h-[180px] w-[70px]">
+                    <Image
+                      src={wine.image || "/images/black_crows.jpg"}
+                      alt={wine.name}
+                      fill
+                      className="rounded-md object-fill"
+                    />
+                  </div>
+                  <p className="font-sans font-semibold">
+                    {wine.name.toUpperCase()}
+                  </p>
+                  <p className="font-sans font-semibold">{wine.vintage}</p>
                 </div>
               </Link>
             </Carousel.Slide>

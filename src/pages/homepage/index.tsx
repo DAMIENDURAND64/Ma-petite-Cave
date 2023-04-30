@@ -27,8 +27,18 @@ function Homepage() {
 
   return (
     <div className="p-3">
-      <CarouselWine colors={colors} colorData={wineColor} height="80px" />
-      <CarouselWine colors={colors} wineData={wines} />
+      <CarouselWine
+        colors={colors}
+        colorData={wineColor}
+        height="80px"
+        controlsProps="10px"
+      />
+      <CarouselWine
+        colors={colors}
+        wineData={wines}
+        controlsProps="100px"
+        height="292px"
+      />
     </div>
   );
 }
