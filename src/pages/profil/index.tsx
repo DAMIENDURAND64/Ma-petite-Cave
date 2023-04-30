@@ -43,7 +43,7 @@ function Profil() {
           {me.data?.name as string}
         </Paper>
       </Paper>
-      <div className="flex w-5/6 items-center justify-around gap-1 rounded-xl border border-indigo-700 p-1 ">
+      <div className="border- flex w-5/6 items-center justify-around gap-1 rounded-xl border  p-1 ">
         Nom complet
         <div className="rounded-xl  bg-gradient-to-r from-indigo-500 to-purple-500  p-2">
           {me.data?.name as string}
