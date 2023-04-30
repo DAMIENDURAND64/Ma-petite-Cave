@@ -25,7 +25,7 @@ const Layout = ({ children }: PropsWithChildren) => {
               </div>
               <div className="flex gap-4">
                 <p>
-                  Hello{" "}
+                  <span className="font-sans">Hello </span>
                   <Link
                     href="/profil"
                     className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent"
