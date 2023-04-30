@@ -1,31 +1,45 @@
-import { Button, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Button, useMantineTheme } from "@mantine/core";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { Logout } from "tabler-icons-react";
 
 const AuthSignIn: React.FC = () => {
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
+  const dark = theme.colorScheme === "dark";
 
   return (
     <div>
-      <Button
-        variant="filled"
-        onClick={
-          sessionData
-            ? () =>
-                void signOut({
-                  callbackUrl: "/",
-                })
-            : () =>
-                void signIn("undefined", {
-                  callbackUrl: "/homepage",
-                })
-        }
-        style={{
-          backgroundColor: theme.colors.blue[9],
-        }}
-      >
-        {sessionData ? "Sign Out" : "Sign In / Log In"}
-      </Button>
+      {sessionData ? (
+        <ActionIcon
+          variant="outline"
+          className="h-7 w-7"
+          style={{
+            color: dark ? theme.colors.violet[9] : theme.colors.dark[9],
+            borderColor: dark ? theme.colors.violet[9] : theme.colors.dark[9],
+          }}
+          onClick={() =>
+            void signOut({
+              callbackUrl: "/",
+            })
+          }
+        >
+          <Logout size="1.1rem" />
+        </ActionIcon>
+      ) : (
+        <Button
+          variant="filled"
+          onClick={() =>
+            void signIn("undefined", {
+              callbackUrl: "/homepage",
+            })
+          }
+          style={{
+            backgroundColor: theme.colors.blue[9],
+          }}
+        >
+          {!sessionData && "Sign in"}
+        </Button>
+      )}
     </div>
   );
 };

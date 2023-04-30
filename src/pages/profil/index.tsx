@@ -36,9 +36,20 @@ function Profil() {
         height={100}
         className="rounded-full"
       />
-      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
-        {me.data?.name as string}
+
+      <Paper radius="lg" p="xs" w={300} display="flex" withBorder shadow="lg">
+        Nom complet :
+        <Paper radius="lg" p="xs" withBorder>
+          {me.data?.name as string}
+        </Paper>
       </Paper>
+      <div className="border- flex w-5/6 items-center justify-around gap-1 rounded-xl border  p-1 ">
+        Nom complet
+        <div className="rounded-xl  bg-gradient-to-r from-indigo-500 to-purple-500  p-2">
+          {me.data?.name as string}
+        </div>
+      </div>
+
       <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
         {me.data?.email as string}
       </Paper>
