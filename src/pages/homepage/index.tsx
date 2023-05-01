@@ -26,7 +26,7 @@ function Homepage() {
   };
 
   return (
-    <div className="p-3">
+    <div className="h-screen overflow-y-auto p-3">
       <CarouselWine
         colors={colors}
         colorData={wineColor}
