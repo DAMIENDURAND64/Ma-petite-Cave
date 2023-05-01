@@ -3,16 +3,22 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { Avatar } from "@mantine/core";
+import { Avatar, UnstyledButton } from "@mantine/core";
 import { removedFamilyName } from "~/utils/functions";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    router.push("/wines/add").catch((err) => console.log(err));
+  };
 
   return (
     <>
-      <div className="w-full border-b-4 border-slate-400">
+      <div className=" w-full border-b-4 border-slate-400">
         <div className="flex h-32 justify-between p-3">
           <div className="flex">
             <Logo />
@@ -51,6 +57,16 @@ const Layout = ({ children }: PropsWithChildren) => {
         </div>
       </div>
       {children}
+      {sessionData && (
+        <div className="fixed bottom-5 flex w-full justify-center">
+          <div
+            onClick={handleNavigation}
+            className="flex h-10 w-4/6 justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500"
+          >
+            <UnstyledButton>AJOUTER UN VIN</UnstyledButton>
+          </div>
+        </div>
+      )}
     </>
   );
 };
