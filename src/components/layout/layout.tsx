@@ -15,7 +15,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const handleNavigation = () => {
     router.push("/wines/add").catch((err) => console.log(err));
   };
-
+  const showAddButton = router.pathname !== "/wines/add";
   return (
     <>
       <div className=" w-full border-b-4 border-slate-400">
@@ -57,7 +57,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         </div>
       </div>
       {children}
-      {sessionData && (
+      {sessionData && showAddButton && (
         <div className="fixed bottom-5 flex w-full justify-center">
           <div
             onClick={handleNavigation}
