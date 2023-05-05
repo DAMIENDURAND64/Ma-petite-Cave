@@ -85,14 +85,14 @@ model TastingNote {
 // modèle WineFormat
 model WineFormat {
   id        Int           @id @default(autoincrement())
-  quantity  Int
+  quantity  Float
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   // Relations
   format    BottleFormat? @relation(fields: [formatId], references: [id])
   formatId  Int?
-  wine      Wine          @relation(fields: [wineId], references: [id])
-  wineId    Int
+  wine      Wine?          @relation(fields: [wineId], references: [id])
+  wineId    Int?
 }
 
 // Necessary for Next auth
