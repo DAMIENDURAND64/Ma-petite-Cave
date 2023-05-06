@@ -12,7 +12,7 @@ export const wineRouter = createTRPCRouter({
       },
       include: {
         wineColor: true,
-        formats: true,
+        wineBottles: true,
         tastingNotes: true,
       },
     });
@@ -30,7 +30,7 @@ export const wineRouter = createTRPCRouter({
         },
         include: {
           wineColor: true,
-          formats: true,
+          wineBottles: true,
           tastingNotes: true,
         },
       });
@@ -45,7 +45,7 @@ export const wineRouter = createTRPCRouter({
         },
         include: {
           wineColor: true,
-          formats: true,
+          wineBottles: true,
           tastingNotes: true,
         },
       });
@@ -56,22 +56,21 @@ export const wineRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         producer: z.string(),
-        varietal: z.array(z.string()),
+        varietal: z.array(z.string()).optional(),
         country: z.string(),
         region: z.string(),
         vintage: z.number(),
         purchasedAt: z.date(),
         consumedAt: z.date(),
-        quantity: z.number(),
-        unitPrice: z.number(),
         description: z.string(),
         image: z.string(),
         servingTemperature: z.string(),
         ownerId: z.string(),
         wineColorId: z.number(),
-        wineFormats: z.array(
+        wineBottles: z.array(
           z.object({
             quantity: z.number(),
+            price: z.number(),
             format: z.object({
               id: z.number(),
             }),
@@ -84,16 +83,17 @@ export const wineRouter = createTRPCRouter({
         throw new Error("User must be logged in to create a wine record");
       }
 
-      const { wineFormats, ...wineData } = input;
+      const { wineBottles, ...wineData } = input;
 
       const wine = await ctx.prisma.wine.create({
         data: {
           ...wineData,
           ownerId: input.ownerId,
           wineColorId: input.wineColorId,
-          formats: {
-            create: wineFormats.map((f) => ({
+          wineBottles: {
+            create: wineBottles.map((f) => ({
               quantity: f.quantity,
+              price: f.price,
               format: {
                 connect: { id: f.format.id },
               },
@@ -117,8 +117,6 @@ export const wineRouter = createTRPCRouter({
         vintage: z.number(),
         purchasedAt: z.date(),
         consumedAt: z.date(),
-        quantity: z.number(),
-        unitPrice: z.number(),
         description: z.string(),
         image: z.string(),
         servingTemperature: z.string(),
@@ -136,7 +134,7 @@ export const wineRouter = createTRPCRouter({
         },
         include: {
           wineColor: true,
-          formats: true,
+          wineBottles: true,
           tastingNotes: true,
         },
       });
@@ -161,8 +159,6 @@ export const wineRouter = createTRPCRouter({
           vintage: input.vintage,
           purchasedAt: input.purchasedAt,
           consumedAt: input.consumedAt,
-          quantity: input.quantity,
-          unitPrice: input.unitPrice,
           description: input.description,
           image: input.image,
           servingTemperature: input.servingTemperature,

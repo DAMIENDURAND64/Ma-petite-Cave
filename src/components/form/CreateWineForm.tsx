@@ -3,15 +3,22 @@ import {
   Container,
   Flex,
   NumberInput,
+  Select,
+  type SelectItem,
   TextInput,
   Textarea,
+  MultiSelect,
 } from "@mantine/core";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DateInput } from "@mantine/dates";
+import { api } from "~/utils/api";
+import Quantity from "./components/Quantity";
 
-type TFormValues = {
+export type TFormValues = {
   name: string;
+  color: string;
+  formats: string[];
   producer: string;
   country: string;
   region: string;
@@ -21,10 +28,15 @@ type TFormValues = {
   quantity: number;
   unitPrice: number;
   description: string;
+  servingTemperature: string;
+  varietal?: string[];
+  image: string;
 };
 
 const defaultValue = {
   name: "",
+  color: "",
+  formats: [],
   producer: "",
   country: "",
   region: "",
@@ -34,25 +46,38 @@ const defaultValue = {
   quantity: 1,
   unitPrice: 1,
   description: "",
+  servingTemperature: 1,
+  varietal: [],
+  image: "",
 };
 
 function WineForm() {
-  const { handleSubmit, control } = useForm<TFormValues>({
-    defaultValues: defaultValue,
-  });
-  const onSubmit = handleSubmit(async (data) => {
+  const [value, setValue] = useState<string[]>([]);
+
+  const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
+  const { data: wineColor } = api.color.getAll.useQuery();
+
+  const { control, handleSubmit } = useForm<TFormValues>();
+
+  const onSubmit = (data) => {
     console.log(data);
-  });
+  };
+  console.log(value);
 
   return (
     <div className="w-5/6">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Container>
           <Flex direction="column" gap="lg">
             <Controller
               name="name"
               control={control}
               render={({ field }) => <TextInput {...field} label="Name" />}
+            />
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => <TextInput {...field} label="image" />}
             />
             <Controller
               name="producer"
@@ -69,6 +94,26 @@ function WineForm() {
               control={control}
               render={({ field }) => <TextInput {...field} label="Region" />}
             />
+            {wineColor && (
+              <Controller
+                name="color"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    data={
+                      wineColor?.map((color) => ({
+                        value: color.id.toString(),
+                        label: color.name,
+                      })) as SelectItem[]
+                    }
+                    label="Color"
+                    placeholder="Select color"
+                    searchable
+                  />
+                )}
+              />
+            )}
             <Controller
               name="vintage"
               control={control}
@@ -82,6 +127,37 @@ function WineForm() {
                 />
               )}
             />
+            {bottleFormat && (
+              <Controller
+                name="formats"
+                control={control}
+                render={({ field }) => (
+                  <MultiSelect
+                    {...field}
+                    data={bottleFormat?.map((format) => ({
+                      value: format.capacity as string,
+                      label: format.capacity as string,
+                    }))}
+                    label="Formats"
+                    placeholder="Select formats"
+                    transitionProps={{
+                      duration: 150,
+                      transition: "pop-top-left",
+                      timingFunction: "ease",
+                    }}
+                    searchable
+                  />
+                )}
+              />
+            )}
+            {value && (
+              <Quantity
+                value={value}
+                bottleFormat={bottleFormat}
+                control={control}
+              />
+            )}
+
             <Controller
               name="purchasedAt"
               control={control}
@@ -108,14 +184,7 @@ function WineForm() {
                 />
               )}
             />
-            <Controller
-              name="quantity"
-              control={control}
-              defaultValue={1}
-              render={({ field }) => (
-                <NumberInput {...field} label="Quantity" max={100} />
-              )}
-            />
+
             <Controller
               name="unitPrice"
               control={control}
