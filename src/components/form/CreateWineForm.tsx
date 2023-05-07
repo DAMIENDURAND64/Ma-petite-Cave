@@ -15,10 +15,23 @@ import { DateInput } from "@mantine/dates";
 import { api } from "~/utils/api";
 import Quantity from "./components/Quantity";
 
+interface IFormat {
+  id: number;
+  capacity: string;
+  quantity: number;
+  unitPrice: number;
+}
+export type TFormat = {
+  id: number;
+  capacity: string; // add this line
+  quantity: number;
+  unitPrice: number;
+};
+
 export type TFormValues = {
   name: string;
   color: string;
-  formats: string[];
+  formats: TFormat[];
   producer: string;
   country: string;
   region: string;
@@ -33,7 +46,7 @@ export type TFormValues = {
   image: string;
 };
 
-const defaultValue = {
+const defaultValue: TFormValues = {
   name: "",
   color: "",
   formats: [],
@@ -46,16 +59,28 @@ const defaultValue = {
   quantity: 1,
   unitPrice: 1,
   description: "",
-  servingTemperature: 1,
+  servingTemperature: "",
   varietal: [],
   image: "",
 };
 
 function WineForm() {
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<TFormat[]>([]);
 
   const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
   const { data: wineColor } = api.color.getAll.useQuery();
+
+  const addFormat = () => {
+    setValue([
+      ...value,
+      { id: value.length + 1, capacity: "", quantity: 1, unitPrice: 1 },
+    ]);
+  };
+
+  const removeFormat = (index: number) => {
+    const newFormats = value.filter((_, i) => i !== index);
+    setValue(newFormats);
+  };
 
   const { control, handleSubmit } = useForm<TFormValues>();
 
@@ -134,10 +159,12 @@ function WineForm() {
                 render={({ field }) => (
                   <MultiSelect
                     {...field}
-                    data={bottleFormat?.map((format) => ({
-                      value: format.capacity as string,
-                      label: format.capacity as string,
-                    }))}
+                    data={
+                      bottleFormat?.map((format) => ({
+                        value: format.capacity as string,
+                        label: format.capacity as string,
+                      })) as SelectItem[]
+                    }
                     label="Formats"
                     placeholder="Select formats"
                     transitionProps={{
@@ -146,31 +173,51 @@ function WineForm() {
                       timingFunction: "ease",
                     }}
                     searchable
+                    value={value.map((format) => format.capacity)}
+                    onChange={setValue}
                   />
                 )}
               />
             )}
-            {value && (
-              <Quantity
-                value={value}
-                bottleFormat={bottleFormat}
-                control={control}
-              />
-            )}
-
-            <Controller
-              name="purchasedAt"
-              control={control}
-              defaultValue={new Date()}
-              render={({ field }) => (
-                <DateInput
-                  {...field}
-                  size="xs"
-                  valueFormat="YYYY MMM DD"
-                  label="Purchased At"
+            {value.map((format, index) => (
+              <div key={format.id} className="my-2 rounded-lg bg-gray-100 p-2">
+                <h3 className="mb-2 text-lg font-bold">Format {index + 1}</h3>
+                <Controller
+                  name="quantity"
+                  control={control}
+                  defaultValue={1}
+                  render={({ field }) => (
+                    <NumberInput
+                      {...field}
+                      label="Quantity"
+                      placeholder="Quantity"
+                      min={0}
+                      max={1000}
+                    />
+                  )}
                 />
-              )}
-            />
+                <Controller
+                  name="unitPrice"
+                  control={control}
+                  defaultValue={1}
+                  render={({ field }) => (
+                    <NumberInput
+                      {...field}
+                      label="Unit Price"
+                      placeholder="Enter unit price"
+                      min={0}
+                      max={1000}
+                    />
+                  )}
+                />
+              </div>
+            ))}
+            <button type="button" onClick={addFormat}>
+              Add format
+            </button>
+
+            <Quantity control={control} />
+
             <Controller
               name="consumedAt"
               control={control}
