@@ -1,32 +1,30 @@
 // Quantity.tsx
 import React from "react";
 import { TFormValues } from "../WineForm";
-import { Controller } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 import { NumberInput } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 
 type QuantityProps = {
-  value: string[];
-  bottleFormat: any;
-  control: any;
+  control: Control<TFormValues, any>;
 };
 
-function Quantity({ value, bottleFormat, control }: QuantityProps) {
+function Quantity({ control }: QuantityProps) {
   return (
     <>
-      {value.map((format, index) => {
-        const fieldName = `quantities.${format}`; // Use dynamic field name
-        return (
-          <Controller
-            key={index}
-            name={fieldName}
-            control={control}
-            defaultValue={1}
-            render={({ field }) => (
-              <NumberInput {...field} label={format} min={1} max={1000} />
-            )}
+      <Controller
+        name="purchasedAt"
+        control={control}
+        defaultValue={new Date()}
+        render={({ field }) => (
+          <DateInput
+            {...field}
+            size="xs"
+            valueFormat="YYYY MMM DD"
+            label="Purchased At"
           />
-        );
-      })}
+        )}
+      />
     </>
   );
 }
