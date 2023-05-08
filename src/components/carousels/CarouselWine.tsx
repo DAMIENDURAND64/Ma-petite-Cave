@@ -2,7 +2,7 @@ import React from "react";
 import { Carousel } from "@mantine/carousel";
 import { Button, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
-import type { Color, TastingNote, Wine, WineFormat } from "@prisma/client";
+import type { Color, TastingNote, Wine, WineBottle } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -10,7 +10,7 @@ type CarouselProps = {
   controlsProps?: string;
   colorData?: Color[];
   wineData?: (Wine & {
-    formats: WineFormat[];
+    wineBottles: WineBottle[];
     wineColor: Color;
     tastingNotes: TastingNote[];
   })[];

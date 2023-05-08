@@ -1,16 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
 }
 
@@ -27,7 +20,6 @@ model User {
   wines         Wine[]
 }
 
-// modèle Wine
 model Wine {
   id                 Int           @id @default(autoincrement())
   name               String
@@ -38,23 +30,19 @@ model Wine {
   vintage            Int
   purchasedAt        DateTime?
   consumedAt         DateTime?
-  quantity           Int?
-  unitPrice          Float?
   description        String?
   image              String?
   servingTemperature String?
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
-  // Relations
-  owner              User          @relation(fields: [ownerId], references: [id])
   ownerId            String
-  formats            WineFormat[]
-  wineColor          Color         @relation(fields: [wineColorId], references: [id])
   wineColorId        Int
-  tastingNotes       TastingNote[]
+  owner              User          @relation(fields: [ownerId], references: [id])
+  wineColor          Color         @relation(fields: [wineColorId], references: [id])
+  wineBottles        WineBottle[]
+  tastingNotes       TastingNote[] @relation("TastingNoteToWine")
 }
 
-// modèle Color
 model Color {
   id        Int      @id @default(autoincrement())
   name      String   @unique
@@ -64,50 +52,47 @@ model Color {
   wines     Wine[]
 }
 
-// modèle BottleFormat
 model BottleFormat {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  WineFormat WineFormat[]
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  capacity    String
+  wineBottles WineBottle[]
 }
 
-// modèle TastingNote
 model TastingNote {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  wines     Wine[]
+  wines     Wine[]   @relation("TastingNoteToWine")
 }
 
-// modèle WineFormat
-model WineFormat {
-  id        Int           @id @default(autoincrement())
-  quantity  Int
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  // Relations
-  format    BottleFormat? @relation(fields: [formatId], references: [id])
-  formatId  Int?
-  wine      Wine          @relation(fields: [wineId], references: [id])
+model WineBottle {
+  id        Int          @id @default(autoincrement())
   wineId    Int
+  formatId  Int
+  quantity  Int
+  price     Float
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  format    BottleFormat @relation(fields: [formatId], references: [id])
+  wine      Wine         @relation(fields: [wineId], references: [id])
 }
 
-// Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
