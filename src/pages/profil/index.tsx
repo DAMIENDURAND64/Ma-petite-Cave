@@ -14,7 +14,7 @@ function Profil() {
       enabled: !!sessionData?.user.id,
     }
   );
-
+  /* 
   const quantityAvailable = me.data?.wines
     .map((bottle) => bottle?.quantity ?? 0)
     .reduce((a, b) => a + b, 0);
@@ -26,7 +26,7 @@ function Profil() {
   const valueCave = me.data?.wines
     .map((bottle) => (bottle?.unitPrice ?? 0) * (bottle?.quantity ?? 0))
     .reduce((a, b) => a + b, 0);
-
+ */
   return (
     <div className="xy-center flexcol gap-5 p-3">
       <h1>Profil</h1>
@@ -70,7 +70,7 @@ function Profil() {
           </div>
         </div>
       </div>
-      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
+      {/*  <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
         {`${quantityAvailable as number} bouteilles disponibles`}
       </Paper>
       <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
@@ -78,7 +78,7 @@ function Profil() {
       </Paper>
       <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
         {`Valeur de ma cave : ${valueCave as number} € `}
-      </Paper>
+      </Paper> */}
     </div>
   );
 }
