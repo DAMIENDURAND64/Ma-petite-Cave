@@ -1,5 +1,5 @@
 import React from "react";
-import WineForm from "~/components/form/CreateWineForm";
+import WineForm from "~/components/form/CreateWineFormLogic";
 
 function addWine() {
   return (
