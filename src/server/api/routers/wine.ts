@@ -61,7 +61,6 @@ export const wineRouter = createTRPCRouter({
         region: z.string(),
         vintage: z.number(),
         purchasedAt: z.date(),
-        consumedAt: z.date(),
         description: z.string(),
         image: z.string(),
         servingTemperature: z.string(),

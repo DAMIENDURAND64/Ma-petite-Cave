@@ -2,17 +2,20 @@
 import React from "react";
 import { type Control, Controller } from "react-hook-form";
 import { NumberInput } from "@mantine/core";
-import { type TFormValues } from "../CreateWineForm";
+import { type TFormValues } from "../CreateWineFormLogic";
 
 type QuantityProps = {
   control: Control<TFormValues, unknown>;
+  formatId: string;
+  formatName: string;
 };
 
-function WineBottleForm({ control }: QuantityProps) {
+function WineBottleForm({ control, formatId, formatName }: QuantityProps) {
   return (
-    <>
+    <div className="rounded-md bg-slate-500 p-3">
+      <h3 className="text-lg font-semibold text-white">{formatName}</h3>
       <Controller
-        name="unitPrice"
+        name={`price_${formatId}`}
         control={control}
         defaultValue={1}
         render={({ field }) => (
@@ -24,26 +27,18 @@ function WineBottleForm({ control }: QuantityProps) {
                 ? `${value} €`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                 : " €"
             }
-            label="Unit Price"
+            label="Price"
             max={100000}
           />
         )}
       />
       <Controller
-        name={"quantity"}
+        name={`quantity_${formatId}`}
         control={control}
         defaultValue={1}
-        render={({ field }) => (
-          <NumberInput
-            {...field}
-            label="Quantity"
-            max={100000}
-            min={1}
-            placeholder="Quantity"
-          />
-        )}
+        render={({ field }) => <NumberInput {...field} label="Quantity" />}
       />
-    </>
+    </div>
   );
 }
 
