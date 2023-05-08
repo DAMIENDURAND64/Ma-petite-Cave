@@ -7,91 +7,100 @@ import {
   type SelectItem,
   TextInput,
   Textarea,
-  MultiSelect,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DateInput } from "@mantine/dates";
 import { api } from "~/utils/api";
-import Quantity from "./components/Quantity";
+import WineBottleForm from "./components/WineBottleForm";
+import { useSession } from "next-auth/react";
 
-interface IFormat {
-  id: number;
-  capacity: string;
-  quantity: number;
-  unitPrice: number;
+interface WineBottleProps {
+  wineBottles: {
+    quantity: number;
+    price: number;
+    format: {
+      id: number;
+    };
+  }[];
 }
+
 export type TFormat = {
   id: number;
-  capacity: string; // add this line
+  capacity: string;
   quantity: number;
   unitPrice: number;
 };
 
 export type TFormValues = {
   name: string;
-  color: string;
-  formats: TFormat[];
   producer: string;
+  varietal?: string[];
   country: string;
   region: string;
   vintage: number;
   purchasedAt: Date;
   consumedAt: Date;
+  description: string;
+  image: string;
+  servingTemperature: string;
+  ownerId: string;
+  wineColorId: string;
+  wineBottles: WineBottleProps;
   quantity: number;
   unitPrice: number;
-  description: string;
-  servingTemperature: string;
-  varietal?: string[];
-  image: string;
-};
-
-const defaultValue: TFormValues = {
-  name: "",
-  color: "",
-  formats: [],
-  producer: "",
-  country: "",
-  region: "",
-  vintage: 2020,
-  purchasedAt: new Date(),
-  consumedAt: new Date(),
-  quantity: 1,
-  unitPrice: 1,
-  description: "",
-  servingTemperature: "",
-  varietal: [],
-  image: "",
+  formats: string;
 };
 
 function WineForm() {
-  const [value, setValue] = useState<TFormat[]>([]);
+  const { data: sessionData } = useSession();
 
   const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
   const { data: wineColor } = api.color.getAll.useQuery();
 
-  const addFormat = () => {
-    setValue([
-      ...value,
-      { id: value.length + 1, capacity: "", quantity: 1, unitPrice: 1 },
-    ]);
-  };
-
-  const removeFormat = (index: number) => {
-    const newFormats = value.filter((_, i) => i !== index);
-    setValue(newFormats);
-  };
-
   const { control, handleSubmit } = useForm<TFormValues>();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const createWineMutation = api.wines.create.useMutation();
+
+  const onSubmit = (data: TFormValues) => {
+    if (sessionData) {
+      const payload = {
+        name: data.name,
+        producer: data.producer,
+        varietal: data.varietal,
+        country: data.country,
+        region: data.region,
+        vintage: data.vintage,
+        purchasedAt: data.purchasedAt || new Date(),
+        consumedAt: data.consumedAt,
+        description: data.description,
+        image: data.image,
+        servingTemperature: data.servingTemperature || "10-12",
+        ownerId: sessionData.user.id,
+        wineColorId: parseInt(data.wineColorId) || 1,
+        wineBottles: [
+          {
+            quantity: data.quantity,
+            price: data.unitPrice,
+            format: {
+              id: parseInt(data.formats),
+            },
+          },
+        ],
+      };
+      console.log(payload);
+
+      createWineMutation.mutate(payload);
+    }
   };
-  console.log(value);
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void handleSubmit(onSubmit)();
+  };
 
   return (
     <div className="w-5/6">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleFormSubmit}>
         <Container>
           <Flex direction="column" gap="lg">
             <Controller
@@ -121,7 +130,7 @@ function WineForm() {
             />
             {wineColor && (
               <Controller
-                name="color"
+                name="wineColorId"
                 control={control}
                 render={({ field }) => (
                   <Select
@@ -157,14 +166,12 @@ function WineForm() {
                 name="formats"
                 control={control}
                 render={({ field }) => (
-                  <MultiSelect
+                  <Select
                     {...field}
-                    data={
-                      bottleFormat?.map((format) => ({
-                        value: format.capacity as string,
-                        label: format.capacity as string,
-                      })) as SelectItem[]
-                    }
+                    data={bottleFormat?.map((format) => ({
+                      value: format.id.toString(),
+                      label: format.capacity,
+                    }))}
                     label="Formats"
                     placeholder="Select formats"
                     transitionProps={{
@@ -173,50 +180,11 @@ function WineForm() {
                       timingFunction: "ease",
                     }}
                     searchable
-                    value={value.map((format) => format.capacity)}
-                    onChange={setValue}
                   />
                 )}
               />
             )}
-            {value.map((format, index) => (
-              <div key={format.id} className="my-2 rounded-lg bg-gray-100 p-2">
-                <h3 className="mb-2 text-lg font-bold">Format {index + 1}</h3>
-                <Controller
-                  name="quantity"
-                  control={control}
-                  defaultValue={1}
-                  render={({ field }) => (
-                    <NumberInput
-                      {...field}
-                      label="Quantity"
-                      placeholder="Quantity"
-                      min={0}
-                      max={1000}
-                    />
-                  )}
-                />
-                <Controller
-                  name="unitPrice"
-                  control={control}
-                  defaultValue={1}
-                  render={({ field }) => (
-                    <NumberInput
-                      {...field}
-                      label="Unit Price"
-                      placeholder="Enter unit price"
-                      min={0}
-                      max={1000}
-                    />
-                  )}
-                />
-              </div>
-            ))}
-            <button type="button" onClick={addFormat}>
-              Add format
-            </button>
-
-            <Quantity control={control} />
+            <WineBottleForm control={control} />
 
             <Controller
               name="consumedAt"
@@ -232,27 +200,6 @@ function WineForm() {
               )}
             />
 
-            <Controller
-              name="unitPrice"
-              control={control}
-              defaultValue={1}
-              render={({ field }) => (
-                <NumberInput
-                  {...field}
-                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                  formatter={(value) =>
-                    !Number.isNaN(parseFloat(value))
-                      ? `${value} €`.replace(
-                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                          ","
-                        )
-                      : " €"
-                  }
-                  label="Unit Price"
-                  max={100000}
-                />
-              )}
-            />
             <Controller
               name="description"
               control={control}
