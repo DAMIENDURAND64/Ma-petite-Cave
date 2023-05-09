@@ -1,11 +1,17 @@
+import { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import CarouselWine from "~/components/carousels/CarouselWine";
 import { api } from "~/utils/api";
+import Trpc from "../api/trpc/[trpc]";
 
 function Homepage() {
   const { data: sessionData } = useSession();
-  const { data: wineColor = [] } = api.color.getAll.useQuery();
-  const { data: wines = [] } = api.wines.getAll.useQuery();
+  const { data: wineColor = [], isLoading: wineColorLoading } =
+    api.color.getAll.useQuery();
+  const { data: wines = [], isLoading: winesLoading } =
+    api.wines.getAll.useQuery();
+
+  const loading = wineColorLoading || winesLoading;
 
   if (sessionData === null) {
     return (
@@ -32,12 +38,14 @@ function Homepage() {
         colorData={wineColor}
         height="80px"
         controlsProps="10px"
+        loading={false} // Set the loading prop to false
       />
       <CarouselWine
         colors={colors}
         wineData={wines}
         controlsProps="100px"
         height="292px"
+        loading={false} // Set the loading prop to false
       />
     </div>
   );
