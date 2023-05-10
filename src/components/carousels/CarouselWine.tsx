@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Carousel } from "@mantine/carousel";
 import { Button, Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
@@ -25,7 +25,7 @@ function CarouselWine({
   height,
   colors,
   controlsProps,
-  loading = false,
+  loading,
 }: CarouselProps) {
   const router = useRouter();
   const theme = useMantineTheme();
@@ -33,15 +33,15 @@ function CarouselWine({
   return (
     <div>
       {colorData && (
-        <p className="mb-1 w-fit">
+        <div className="mb-2 w-fit">
           <Skeleton visible={loading}>Categories: </Skeleton>
-        </p>
+        </div>
       )}
       {wineData && (
-        <div className="mb-1 flex justify-between ">
-          <p>
+        <div className="mb-2 flex justify-between ">
+          <div>
             <Skeleton visible={loading}>Mes vins:</Skeleton>
-          </p>
+          </div>
           <div>
             <Skeleton visible={loading}>
               <Button
@@ -138,12 +138,12 @@ function CarouselWine({
                   <div
                     className={`flexcol y-center h-[270px]  rounded-md  text-center text-xs`}
                   >
-                    <div className="relative my-1 h-[180px] w-[70px]">
+                    <div className="relative mx-1 my-1 h-[180px] w-[110px]">
                       <Image
                         src={wine.image || "/images/black_crows.jpg"}
                         alt={wine.name}
                         fill
-                        className="rounded-md object-fill"
+                        className="rounded-md object-cover"
                       />
                     </div>
                     <p className="font-sans font-semibold">
