@@ -23,12 +23,8 @@ const Color = () => {
     }
   );
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (error || !wineColorQuery) {
+    return <div>error</div>;
   }
 
   if (sessionData === null) {
@@ -55,7 +51,7 @@ const Color = () => {
           retour
         </Button>
       </div>
-      <WineListTemplate wines={wineColorQuery} />
+      <WineListTemplate wines={wineColorQuery} loading={isLoading} />
     </div>
   );
 };

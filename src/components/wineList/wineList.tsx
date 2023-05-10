@@ -1,4 +1,4 @@
-import { Grid, useMantineTheme } from "@mantine/core";
+import { Grid, Skeleton, useMantineTheme } from "@mantine/core";
 import type { Color, Wine } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,7 @@ interface Props {
     | (Wine & {
         wineColor: Color;
       })[];
+  loading?: boolean;
 }
 
 const colors: { [key: number]: string } = {
@@ -20,7 +21,7 @@ const colors: { [key: number]: string } = {
   6: "bg-gradient-to-r from-green-900 to-green-500",
 };
 
-function WineListTemplate({ wines }: Props) {
+function WineListTemplate({ wines, loading }: Props) {
   const theme = useMantineTheme();
   return (
     <Grid justify="space-around" grow gutter="xs">
@@ -44,34 +45,59 @@ function WineListTemplate({ wines }: Props) {
                 query: { id: wine.id },
               }}
             >
-              <div className="flexrow h-fit max-h-[185px]">
+              <div className="flexrow h-fit max-h-[185px] ">
                 <div>
-                  <Image
-                    src={(wine.image as string) || "/images/black_crows.jpg"}
-                    alt={wine.name}
-                    width={50}
-                    height={50}
-                    className="h-[150px] w-[90px]  object-contain"
-                  />
+                  <Skeleton visible={loading}>
+                    <Image
+                      src={(wine.image as string) || "/images/black_crows.jpg"}
+                      alt={wine.name}
+                      width={50}
+                      height={50}
+                      className="h-[180px] w-[120px]  rounded-md object-cover"
+                    />
+                  </Skeleton>
                 </div>
-                <div className="w-full pl-3">
-                  <p>{wine.name.toUpperCase()}</p>
-                  <p className="font-sans">{capitalize(wine.region)}</p>
-                  <div className="flexrow items-center gap-1">
-                    <p className="font-sans">{wine.wineColor.name}</p>
-                    <div className={`${coloor} h-4 w-4 rounded-full`} />
+                <div className="w-full space-y-1 pl-3">
+                  <div className="w-fit">
+                    <Skeleton visible={loading}>
+                      <p>{wine.name.toUpperCase()}</p>
+                    </Skeleton>
                   </div>
-                  <p className="font-sans">{wine.vintage}</p>
-                  <p>
-                    Description:
-                    <br />
-                    <p className="font-sans text-xs">
-                      {truncateText(
-                        (wine.description as string) || "non defini",
-                        80
-                      )}
-                    </p>
-                  </p>
+                  <div className="w-fit">
+                    <Skeleton visible={loading}>
+                      <p className="font-sans">{capitalize(wine.region)}</p>
+                    </Skeleton>
+                  </div>
+                  <div className="flexrow w-fit items-center gap-1">
+                    <Skeleton visible={loading}>
+                      <p className="font-sans">{wine.wineColor.name}</p>
+                    </Skeleton>
+                    <div>
+                      <Skeleton visible={loading}>
+                        <div className={`${coloor} h-4 w-4 rounded-full`} />
+                      </Skeleton>
+                    </div>
+                  </div>
+                  <div className="w-fit">
+                    <Skeleton visible={loading}>
+                      <p className="font-sans">{wine.vintage}</p>
+                    </Skeleton>
+                  </div>
+                  <div className="w-fit">
+                    <Skeleton visible={loading}>
+                      <p>Description:</p>
+                    </Skeleton>
+                  </div>
+                  <div className="w-full">
+                    <Skeleton visible={loading}>
+                      <p className="font-sans text-xs">
+                        {truncateText(
+                          (wine.description as string) || "non defini",
+                          80
+                        )}
+                      </p>
+                    </Skeleton>
+                  </div>
                 </div>
               </div>
             </Link>
