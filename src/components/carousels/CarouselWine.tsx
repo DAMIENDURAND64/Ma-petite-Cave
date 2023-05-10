@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel } from "@mantine/carousel";
-import { Button, getStylesRef, useMantineTheme } from "@mantine/core";
+import { Button, Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
 import type { Color, TastingNote, Wine, WineBottle } from "@prisma/client";
 import Image from "next/image";
@@ -16,6 +16,7 @@ type CarouselProps = {
   })[];
   height?: string;
   colors: { [key: number]: string };
+  loading?: boolean;
 };
 
 function CarouselWine({
@@ -24,31 +25,42 @@ function CarouselWine({
   height,
   colors,
   controlsProps,
+  loading,
 }: CarouselProps) {
   const router = useRouter();
   const theme = useMantineTheme();
 
   return (
     <div>
-      {colorData && <p className="mb-1">Categories:</p>}
+      {colorData && (
+        <div className="mb-2 w-fit">
+          <Skeleton visible={loading}>Categories: </Skeleton>
+        </div>
+      )}
       {wineData && (
-        <div className="mb-1 flex justify-between ">
-          <p>Mes vins:</p>
-          <Button
-            variant="filled"
-            radius="xl"
-            compact
-            size="xs"
-            onClick={() => {
-              router.push("/wines").catch((err) => console.log(err));
-            }}
-            style={{
-              backgroundColor: theme.colors.violet[9],
-              fontSize: "12px",
-            }}
-          >
-            voir tout
-          </Button>
+        <div className="mb-2 flex justify-between ">
+          <div>
+            <Skeleton visible={loading}>Mes vins:</Skeleton>
+          </div>
+          <div>
+            <Skeleton visible={loading}>
+              <Button
+                variant="filled"
+                radius="xl"
+                compact
+                size="xs"
+                onClick={() => {
+                  router.push("/wines").catch((err) => console.log(err));
+                }}
+                style={{
+                  backgroundColor: theme.colors.violet[9],
+                  fontSize: "12px",
+                }}
+              >
+                Voir tout
+              </Button>
+            </Skeleton>
+          </div>
         </div>
       )}
       <Carousel
@@ -93,18 +105,20 @@ function CarouselWine({
           const coloor = colors[color.id] ?? "bg-gray-500";
           return (
             <Carousel.Slide key={color.id}>
-              <Link
-                href={{
-                  pathname: "/category/[id]",
-                  query: { id: color.id },
-                }}
-              >
-                <div className={`${coloor} relative h-10 rounded-lg`}>
-                  <p className="absolute-center font-sans text-sm  font-bold">
-                    {color.name}
-                  </p>
-                </div>
-              </Link>
+              <Skeleton visible={loading}>
+                <Link
+                  href={{
+                    pathname: "/category/[id]",
+                    query: { id: color.id },
+                  }}
+                >
+                  <div className={`${coloor} relative h-10 rounded-lg`}>
+                    <p className="absolute-center font-sans text-sm  font-bold">
+                      {color.name}
+                    </p>
+                  </div>
+                </Link>
+              </Skeleton>
             </Carousel.Slide>
           );
         })}
@@ -112,31 +126,33 @@ function CarouselWine({
           const coloor = colors[wine.wineColorId] ?? "bg-gray-500";
           return (
             <Carousel.Slide key={wine.id}>
-              <Link
-                key={wine.id}
-                href={{
-                  pathname: "/wines/[id]",
-                  query: { id: wine.id },
-                }}
-              >
-                <div className={`${coloor} h-2 w-full rounded-full`} />
-                <div
-                  className={`flexcol y-center h-[270px]  rounded-md  text-center text-xs`}
+              <Skeleton visible={loading}>
+                <Link
+                  key={wine.id}
+                  href={{
+                    pathname: "/wines/[id]",
+                    query: { id: wine.id },
+                  }}
                 >
-                  <div className="relative my-1 h-[180px] w-[70px]">
-                    <Image
-                      src={wine.image || "/images/black_crows.jpg"}
-                      alt={wine.name}
-                      fill
-                      className="rounded-md object-fill"
-                    />
+                  <div className={`${coloor} h-2 w-full rounded-full`} />
+                  <div
+                    className={`flexcol y-center h-[270px]  rounded-md  text-center text-xs`}
+                  >
+                    <div className="relative mx-1 my-1 h-[180px] w-[110px]">
+                      <Image
+                        src={wine.image || "/images/black_crows.jpg"}
+                        alt={wine.name}
+                        fill
+                        className="rounded-md object-cover"
+                      />
+                    </div>
+                    <p className="font-sans font-semibold">
+                      {wine.name.toUpperCase()}
+                    </p>
+                    <p className="font-sans font-semibold">{wine.vintage}</p>
                   </div>
-                  <p className="font-sans font-semibold">
-                    {wine.name.toUpperCase()}
-                  </p>
-                  <p className="font-sans font-semibold">{wine.vintage}</p>
-                </div>
-              </Link>
+                </Link>
+              </Skeleton>
             </Carousel.Slide>
           );
         })}
