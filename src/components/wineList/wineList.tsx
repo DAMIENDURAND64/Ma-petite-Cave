@@ -5,7 +5,7 @@ import Link from "next/link";
 import { capitalize, truncateText } from "~/utils/functions";
 
 interface Props {
-  wines:
+  wines?:
     | (Wine & {
         wineColor: Color;
       })[];

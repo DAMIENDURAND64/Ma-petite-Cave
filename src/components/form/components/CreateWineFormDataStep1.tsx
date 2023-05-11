@@ -1,5 +1,4 @@
 import {
-  Button,
   Container,
   Flex,
   MultiSelect,
@@ -7,7 +6,6 @@ import {
   Select,
   type SelectItem,
   TextInput,
-  Textarea,
 } from "@mantine/core";
 import React from "react";
 import {
@@ -30,7 +28,7 @@ type CreateWineFormDataProps = {
   setValue: UseFormSetValue<TFormValues>;
 };
 
-function CreateWineFormData({
+function CreateWineFormDataStep1({
   handleFormSubmit,
   control,
   wineColor,
@@ -49,13 +47,6 @@ function CreateWineFormData({
               control={control}
               render={({ field }) => (
                 <TextInput {...field} defaultValue="" label="Name" />
-              )}
-            />
-            <Controller
-              name="image"
-              control={control}
-              render={({ field }) => (
-                <TextInput {...field} defaultValue="" label="image" />
               )}
             />
             <Controller
@@ -109,7 +100,7 @@ function CreateWineFormData({
                   {...field}
                   placeholder="vintage"
                   defaultValue={2020}
-                  label="vintage"
+                  label="Vintage"
                 />
               )}
             />
@@ -135,7 +126,6 @@ function CreateWineFormData({
                 }}
               />
             )}
-
             {formatsValue?.map((formatId: string) => {
               const format = bottleFormat?.find(
                 (f) => f.id.toString() === formatId
@@ -154,7 +144,6 @@ function CreateWineFormData({
                 </div>
               );
             })}
-
             <Controller
               name="purchasedAt"
               control={control}
@@ -169,14 +158,6 @@ function CreateWineFormData({
                 />
               )}
             />
-
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <Textarea {...field} defaultValue="" label="description" />
-              )}
-            />
             <Controller
               name="servingTemperature"
               control={control}
@@ -189,15 +170,6 @@ function CreateWineFormData({
                 />
               )}
             />
-            <Controller
-              name="submit"
-              control={control}
-              render={({ field }) => (
-                <Button type="submit" {...field}>
-                  Add
-                </Button>
-              )}
-            />
           </Flex>
         </Container>
       </form>
@@ -205,4 +177,4 @@ function CreateWineFormData({
   );
 }
 
-export default CreateWineFormData;
+export default CreateWineFormDataStep1;
