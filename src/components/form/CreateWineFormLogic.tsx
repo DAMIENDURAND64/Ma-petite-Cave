@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import CreateWineFormData from "./components/CreateWineFormData";
+import { Button, Group, Stepper, useMantineTheme } from "@mantine/core";
+import CreateWineFormDataStep1 from "./components/CreateWineFormDataStep1";
+import CreateWineFormDataStep2 from "./components/CreateWineFormDataStep2";
+import { type FileWithPath } from "@mantine/dropzone";
 
 interface WineBottleProps {
   wineBottles: {
@@ -35,8 +38,16 @@ export type TFormValues = {
 } & { [key: string]: number };
 
 function CreateWineFormLogic() {
+  const theme = useMantineTheme();
   const { data: sessionData } = useSession();
   const [formatsValue, setFormatsValue] = useState<string[]>([]);
+  const [active, setActive] = useState(0);
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+
+  const nextStep = () =>
+    setActive((current) => (current < 1 ? current + 1 : current));
+  const prevStep = () =>
+    setActive((current) => (current > 0 ? current - 1 : current));
 
   const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
   const { data: wineColor } = api.color.getAll.useQuery();
@@ -52,6 +63,7 @@ function CreateWineFormLogic() {
   const createWineMutation = api.wines.create.useMutation();
 
   const onSubmit = (data: TFormValues) => {
+    console.log(data);
     if (sessionData && bottleFormat) {
       const wineBottles: WineBottleProps["wineBottles"] = [];
 
@@ -80,6 +92,7 @@ function CreateWineFormLogic() {
         purchasedAt: data.purchasedAt,
         description: data.description,
         image: data.image || "/images/black_crows.jpg",
+
         servingTemperature: data.servingTemperature,
         ownerId: sessionData.user.id,
         wineColorId: parseInt(data.wineColorId),
@@ -95,17 +108,72 @@ function CreateWineFormLogic() {
     e.preventDefault();
     void handleSubmit(onSubmit)();
   };
-
   return (
-    <CreateWineFormData
-      handleFormSubmit={handleFormSubmit}
-      control={control}
-      wineColor={wineColor}
-      bottleFormat={bottleFormat}
-      formatsValue={formatsValue}
-      setFormatsValue={setFormatsValue}
-      setValue={setValue}
-    />
+    <div className="flexcol w-full px-3">
+      <Stepper
+        active={active}
+        onStepClick={setActive}
+        radius="md"
+        color="violet"
+      >
+        <Stepper.Step>
+          <div className="flexcol y-center">
+            <CreateWineFormDataStep1
+              handleFormSubmit={handleFormSubmit}
+              control={control}
+              wineColor={wineColor}
+              bottleFormat={bottleFormat}
+              formatsValue={formatsValue}
+              setFormatsValue={setFormatsValue}
+              setValue={setValue}
+            />
+          </div>
+        </Stepper.Step>
+        <Stepper.Step>
+          <div className="flexcol y-center">
+            <CreateWineFormDataStep2
+              handleFormSubmit={handleFormSubmit}
+              control={control}
+              setFiles={setFiles}
+              files={files}
+            />
+          </div>
+        </Stepper.Step>
+      </Stepper>
+      <Group position="center" mt="xl" spacing="xl">
+        <Button
+          onClick={prevStep}
+          disabled={active === 0}
+          style={{ backgroundColor: theme.colors.violet[9] }}
+        >
+          Back
+        </Button>
+        {active === 1 ? (
+          <Button
+            type="submit"
+            onClick={handleFormSubmit}
+            style={{
+              backgroundImage: theme.fn.gradient({
+                from: "teal",
+                to: "lime",
+                deg: 45,
+              }),
+            }}
+          >
+            Add
+          </Button>
+        ) : (
+          <Button
+            onClick={nextStep}
+            style={{
+              backgroundColor: theme.colors.violet[9],
+            }}
+          >
+            Next step
+          </Button>
+        )}
+      </Group>
+    </div>
   );
 }
 
