@@ -1,65 +1,43 @@
 import {
+  Button,
   Container,
+  FileButton,
   Flex,
   Image,
-  SimpleGrid,
-  Text,
   Textarea,
 } from "@mantine/core";
 import React from "react";
 import { type Control, Controller } from "react-hook-form";
 import { type TFormValues } from "../CreateWineFormLogic";
-import {
-  Dropzone,
-  type FileWithPath,
-  IMAGE_MIME_TYPE,
-} from "@mantine/dropzone";
 
 type CreateWineFormDataProps = {
   handleFormSubmit: (e: React.FormEvent) => void;
   control: Control<TFormValues>;
-  setFiles: (files: FileWithPath[]) => void;
-  files: FileWithPath[];
+  setFile: (files: File) => void;
+  file: File | null;
 };
 
 function CreateWineFormDataStep2({
   handleFormSubmit,
   control,
-  setFiles,
-  files,
+  setFile,
+  file,
 }: CreateWineFormDataProps) {
-  const previews = files.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file);
-    console.log(imageUrl);
-    return (
-      <Controller
-        name="image"
-        key={index}
-        control={control}
-        render={({ field }) => (
-          <Image
-            {...field}
-            radius="md"
-            src={imageUrl}
-            alt="uploaded image"
-            imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
-          />
-        )}
-      />
-    );
-  });
-
   return (
     <div className="w-5/6">
       <form onSubmit={handleFormSubmit}>
         <Container>
           <Flex direction="column" gap="lg">
-            <>
-              <Dropzone accept={IMAGE_MIME_TYPE} onDrop={setFiles}>
-                <Text align="center">Drop images here</Text>
-              </Dropzone>
-              <SimpleGrid>{previews}</SimpleGrid>
-            </>
+            <FileButton onChange={setFile} accept="image/png,image/jpeg">
+              {(props) => <Button {...props}>Upload image</Button>}
+            </FileButton>
+            {file && (
+              <Image
+                radius="md"
+                src={URL.createObjectURL(file)}
+                alt="uploaded image"
+              />
+            )}
 
             <Controller
               name="description"
