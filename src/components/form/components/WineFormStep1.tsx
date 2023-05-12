@@ -1,41 +1,30 @@
 import {
   Container,
   Flex,
-  MultiSelect,
   NumberInput,
   Select,
   type SelectItem,
   TextInput,
 } from "@mantine/core";
 import React from "react";
-import {
-  type Control,
-  Controller,
-  type UseFormSetValue,
-} from "react-hook-form";
-import WineBottleForm from "./WineBottleForm";
+import { type Control, Controller, type FieldErrors } from "react-hook-form";
 import { DateInput } from "@mantine/dates";
-import { type TFormValues } from "../CreateWineFormLogic";
-import { type BottleFormat, type Color } from "@prisma/client";
+import { type TFormValues } from "../WineFormLogic";
+import { type Color } from "@prisma/client";
 
 type CreateWineFormDataProps = {
   handleFormSubmit: (e: React.FormEvent) => void;
   control: Control<TFormValues>;
   wineColor?: Color[];
-  bottleFormat?: BottleFormat[];
-  formatsValue: string[];
-  setFormatsValue: React.Dispatch<React.SetStateAction<string[]>>;
-  setValue: UseFormSetValue<TFormValues>;
+  errors: FieldErrors<TFormValues>;
 };
 
-function CreateWineFormDataStep1({
+function WineFormStep1({
   handleFormSubmit,
   control,
   wineColor,
-  bottleFormat,
-  formatsValue,
-  setFormatsValue,
-  setValue,
+
+  errors,
 }: CreateWineFormDataProps) {
   return (
     <div className="w-5/6">
@@ -46,28 +35,59 @@ function CreateWineFormDataStep1({
               name="name"
               control={control}
               render={({ field }) => (
-                <TextInput {...field} defaultValue="" label="Name" />
+                <TextInput
+                  {...field}
+                  label="Name"
+                  error={!!errors.name}
+                  placeholder={
+                    errors.name ? errors.name.message : "Domaine de Trevallon"
+                  }
+                />
               )}
             />
+
             <Controller
               name="producer"
               control={control}
               render={({ field }) => (
-                <TextInput {...field} defaultValue="" label="Producer" />
+                <TextInput
+                  {...field}
+                  label="Producer"
+                  error={!!errors.producer}
+                  placeholder={
+                    errors.producer
+                      ? errors.producer.message
+                      : "Famille DÜRRBACH"
+                  }
+                />
               )}
             />
             <Controller
               name="country"
               control={control}
               render={({ field }) => (
-                <TextInput {...field} defaultValue="" label="Country" />
+                <TextInput
+                  {...field}
+                  label="Country"
+                  error={!!errors.country}
+                  placeholder={
+                    errors.country ? errors.country.message : "France"
+                  }
+                />
               )}
             />
             <Controller
               name="region"
               control={control}
               render={({ field }) => (
-                <TextInput {...field} defaultValue="" label="Region" />
+                <TextInput
+                  {...field}
+                  label="Region"
+                  error={!!errors.region}
+                  placeholder={
+                    errors.region ? errors.region.message : "Provence"
+                  }
+                />
               )}
             />
             {wineColor && (
@@ -84,9 +104,15 @@ function CreateWineFormDataStep1({
                       })) as SelectItem[]
                     }
                     label="Color"
-                    placeholder="Select color"
-                    defaultValue=""
+                    placeholder={
+                      errors.wineColorId ? errors.wineColorId.message : "Rouge"
+                    }
                     searchable
+                    transitionProps={{
+                      duration: 350,
+                      transition: "pop",
+                    }}
+                    error={!!errors.wineColorId}
                   />
                 )}
               />
@@ -94,56 +120,17 @@ function CreateWineFormDataStep1({
             <Controller
               name="vintage"
               control={control}
-              defaultValue={2020}
               render={({ field }) => (
                 <NumberInput
                   {...field}
-                  placeholder="vintage"
-                  defaultValue={2020}
+                  placeholder={errors.vintage ? errors.vintage.message : "2022"}
                   label="Vintage"
+                  hideControls
+                  error={!!errors.vintage}
                 />
               )}
             />
-            {bottleFormat && (
-              <MultiSelect
-                data={bottleFormat?.map((format) => ({
-                  value: format.id.toString(),
-                  label: `${format.name} (${format.capacity})`,
-                }))}
-                label="Formats"
-                placeholder="Select formats"
-                transitionProps={{
-                  duration: 150,
-                  transition: "pop-top-left",
-                  timingFunction: "ease",
-                }}
-                searchable
-                defaultValue={[]}
-                value={formatsValue}
-                onChange={(value) => {
-                  setFormatsValue(value);
-                  setValue("formats", value);
-                }}
-              />
-            )}
-            {formatsValue?.map((formatId: string) => {
-              const format = bottleFormat?.find(
-                (f) => f.id.toString() === formatId
-              );
-              const formatName = format
-                ? `${format.name} (${format.capacity})`
-                : "Unknown";
-              return (
-                <div key={formatId}>
-                  <WineBottleForm
-                    control={control}
-                    key={formatId}
-                    formatId={formatId}
-                    formatName={formatName}
-                  />
-                </div>
-              );
-            })}
+
             <Controller
               name="purchasedAt"
               control={control}
@@ -177,4 +164,4 @@ function CreateWineFormDataStep1({
   );
 }
 
-export default CreateWineFormDataStep1;
+export default WineFormStep1;

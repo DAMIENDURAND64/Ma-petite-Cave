@@ -1,4 +1,4 @@
-import { Paper, useMantineTheme } from "@mantine/core";
+import { useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
