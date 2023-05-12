@@ -19,18 +19,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: [
-      "cdn.pixabay.com",
-      "png.pngtree.com",
-      "dictionary.cambridge.org",
-      "infinities-wines.com",
-      "static.millesima.com",
-      "lh3.googleusercontent.com",
-      "cdn.wallpapersafari.com",
-      "img.pixers.pics",
-      "encrypted-tbn0.gstatic.com",
-      "static.vecteezy.com",
-    ],
+    domains: ["res.cloudinary.com"],
   },
 };
 export default config;

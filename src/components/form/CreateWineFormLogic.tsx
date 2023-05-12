@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { Button, Group, Stepper, useMantineTheme } from "@mantine/core";
 import CreateWineFormDataStep1 from "./components/CreateWineFormDataStep1";
 import CreateWineFormDataStep2 from "./components/CreateWineFormDataStep2";
-import { type FileWithPath } from "@mantine/dropzone";
 
 interface WineBottleProps {
   wineBottles: {
@@ -16,6 +15,9 @@ interface WineBottleProps {
       capacity: string;
     };
   }[];
+}
+interface CloudinaryResponse {
+  secure_url: string;
 }
 
 export type TFormValues = {
@@ -42,7 +44,7 @@ function CreateWineFormLogic() {
   const { data: sessionData } = useSession();
   const [formatsValue, setFormatsValue] = useState<string[]>([]);
   const [active, setActive] = useState(0);
-  const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [file, setFile] = useState<File | null>(null);
 
   const nextStep = () =>
     setActive((current) => (current < 1 ? current + 1 : current));
@@ -62,9 +64,38 @@ function CreateWineFormLogic() {
 
   const createWineMutation = api.wines.create.useMutation();
 
-  const onSubmit = (data: TFormValues) => {
+  const uploadFileToCloud = async (file: File) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "";
+    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_KEY || "";
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "";
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", apiKey);
+    formData.append("upload_preset", uploadPreset);
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.status === 400) {
+      throw new Error("Upload failed");
+    }
+
+    const data = (await response.json()) as CloudinaryResponse;
+    return data.secure_url;
+  };
+
+  const onSubmit = async (data: TFormValues) => {
     console.log(data);
     if (sessionData && bottleFormat) {
+      let imageUrl = "/images/black_crows.jpg";
+      if (file) {
+        imageUrl = await uploadFileToCloud(file);
+      }
+
       const wineBottles: WineBottleProps["wineBottles"] = [];
 
       data.formats?.forEach((formatId: string) => {
@@ -91,8 +122,7 @@ function CreateWineFormLogic() {
         vintage: data.vintage,
         purchasedAt: data.purchasedAt,
         description: data.description,
-        image: data.image || "/images/black_crows.jpg",
-
+        image: imageUrl,
         servingTemperature: data.servingTemperature,
         ownerId: sessionData.user.id,
         wineColorId: parseInt(data.wineColorId),
@@ -134,8 +164,8 @@ function CreateWineFormLogic() {
             <CreateWineFormDataStep2
               handleFormSubmit={handleFormSubmit}
               control={control}
-              setFiles={setFiles}
-              files={files}
+              setFile={setFile}
+              file={file}
             />
           </div>
         </Stepper.Step>
