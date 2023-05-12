@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import React from "react";
 import { type Control, Controller } from "react-hook-form";
-import { type TFormValues } from "../CreateWineFormLogic";
+import { type TFormValues } from "../WineFormLogic";
 
 type CreateWineFormDataProps = {
   handleFormSubmit: (e: React.FormEvent) => void;
@@ -17,7 +17,7 @@ type CreateWineFormDataProps = {
   file: File | null;
 };
 
-function CreateWineFormDataStep2({
+function WineFormStep3({
   handleFormSubmit,
   control,
   setFile,
@@ -27,9 +27,20 @@ function CreateWineFormDataStep2({
     <div className="w-5/6">
       <form onSubmit={handleFormSubmit}>
         <Container>
-          <Flex direction="column" gap="lg">
+          <Flex direction="column" gap="lg" align="center">
             <FileButton onChange={setFile} accept="image/png,image/jpeg">
-              {(props) => <Button {...props}>Upload image</Button>}
+              {(props) => (
+                <Button
+                  style={{
+                    width: "150px",
+                  }}
+                  variant="outline"
+                  color="violet"
+                  {...props}
+                >
+                  Upload image
+                </Button>
+              )}
             </FileButton>
             {file && (
               <Image
@@ -40,15 +51,20 @@ function CreateWineFormDataStep2({
             )}
 
             <Controller
+              rules={{
+                required: "Description is required",
+              }}
               name="description"
               control={control}
               render={({ field }) => (
                 <Textarea
                   {...field}
-                  defaultValue=""
                   label="Description"
                   minRows={4}
                   autosize
+                  style={{
+                    width: "100%",
+                  }}
                 />
               )}
             />
@@ -59,4 +75,4 @@ function CreateWineFormDataStep2({
   );
 }
 
-export default CreateWineFormDataStep2;
+export default WineFormStep3;

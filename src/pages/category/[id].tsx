@@ -23,7 +23,7 @@ const Color = () => {
     }
   );
 
-  if (error || !wineColorQuery) {
+  if (error) {
     return <div>error</div>;
   }
 
