@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { type Control, Controller, type FieldErrors } from "react-hook-form";
 import { DateInput } from "@mantine/dates";
-import { type TFormValues } from "../WineFormLogic";
+import { type TFormValues } from "../FormType";
 import { type Color } from "@prisma/client";
 
 type CreateWineFormDataProps = {

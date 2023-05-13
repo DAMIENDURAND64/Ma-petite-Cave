@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import React from "react";
 import { type Control, Controller } from "react-hook-form";
-import { type TFormValues } from "../WineFormLogic";
+import { type TFormValues } from "../FormType";
 
 type CreateWineFormDataProps = {
   handleFormSubmit: (e: React.FormEvent) => void;

@@ -1,6 +1,5 @@
 import React, { type Dispatch } from "react";
 import { Button, Group, Stepper, useMantineTheme } from "@mantine/core";
-import { type TFormValues } from "../WineFormLogic";
 import {
   type FieldErrors,
   type Control,
@@ -10,6 +9,7 @@ import { type BottleFormat, type Color } from "@prisma/client";
 import WineFormStep2 from "./WineFormStep2";
 import WineFormStep3 from "./WineFormStep3";
 import WineFormStep1 from "./WineFormStep1";
+import { type TFormValues } from "../FormType";
 
 type StepperFormProps = {
   formatsValue: string[];

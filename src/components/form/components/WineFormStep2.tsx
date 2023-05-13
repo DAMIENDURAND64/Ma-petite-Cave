@@ -1,6 +1,6 @@
 import { MultiSelect } from "@mantine/core";
 import React, { type Dispatch } from "react";
-import { type TFormValues } from "../WineFormLogic";
+import { type TFormValues } from "../FormType";
 import { type BottleFormat } from "@prisma/client";
 import { type UseFormSetValue, type Control } from "react-hook-form";
 import WineBottleForm from "./WineBottleFormatForm";
