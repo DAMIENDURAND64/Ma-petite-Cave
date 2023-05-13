@@ -8,36 +8,7 @@ import { useSession } from "next-auth/react";
 
 import { uploadFileToCloud } from "~/utils/cloudinary";
 import StepperForm from "./components/StepperForm";
-
-interface WineBottleProps {
-  wineBottles: {
-    quantity: number;
-    price: number;
-    format: {
-      id: number;
-      capacity: string;
-    };
-  }[];
-}
-
-export type TFormValues = {
-  name: string;
-  producer: string;
-  varietal?: string[];
-  country: string;
-  region: string;
-  vintage: number;
-  purchasedAt: Date;
-  description: string;
-  image: string;
-  servingTemperature: string;
-  ownerId: string;
-  wineColorId: string;
-  wineBottles: WineBottleProps["wineBottles"];
-  quantity: number;
-  unitPrice: number;
-  formats: string[];
-} & { [key: string]: number };
+import { type TFormValues, type WineBottleProps } from "./FormType";
 
 function CreateWineFormLogic() {
   const { data: sessionData } = useSession();
