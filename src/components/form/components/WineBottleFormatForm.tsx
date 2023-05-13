@@ -2,7 +2,7 @@
 import React from "react";
 import { type Control, Controller } from "react-hook-form";
 import { NumberInput } from "@mantine/core";
-import { type TFormValues } from "../WineFormLogic";
+import { type TFormValues } from "../FormType";
 
 type QuantityProps = {
   control: Control<TFormValues, unknown>;

@@ -47,6 +47,11 @@ function GetOneWine() {
       </div>
       <h1>Wine</h1>
       <p>{wine?.name}</p>
+      <p>{wine?.producer}</p>
+      <p>{wine?.varietal}</p>
+      <p>{wine?.country}</p>
+      <p>{wine?.region}</p>
+      <p>{wine?.vintage}</p>
     </div>
   );
 }
