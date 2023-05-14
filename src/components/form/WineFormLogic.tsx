@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
@@ -9,9 +11,11 @@ import { useSession } from "next-auth/react";
 import { uploadFileToCloud } from "~/utils/cloudinary";
 import StepperForm from "./components/StepperForm";
 import { type TFormValues, type WineBottleProps } from "./FormType";
+import { useRouter } from "next/router";
 
-function CreateWineFormLogic() {
+const CreateWineFormLogic = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
   const [formatsValue, setFormatsValue] = useState<string[]>([]);
   const [active, setActive] = useState(0);
   const [file, setFile] = useState<File | null>(null);
@@ -28,42 +32,36 @@ function CreateWineFormLogic() {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     producer: Yup.string().required("Producer is required"),
-    varietal: Yup.string(),
     country: Yup.string().required("Country is required"),
     region: Yup.string().required("Region is required"),
     vintage: Yup.number().required("Vintage is required"),
     purchasedAt: Yup.date().required("Purchased at is required"),
     description: Yup.string().required("Description is required"),
-    image: Yup.string().required("Image is required"),
     servingTemperature: Yup.string().required(
       "Serving temperature is required"
     ),
-    ownerId: Yup.string().required("Owner is required"),
+    formats: Yup.array().of(Yup.string().required("Format is required")),
+    price: Yup.number().required("Price is required"),
+    quantity: Yup.number().required("Quantity is required"),
     wineColorId: Yup.string().required("Color is required"),
-    wineBottles: Yup.array().of(
-      Yup.object().shape({
-        quantity: Yup.number().required("Quantity is required"),
-        price: Yup.number().required("Price is required"),
-        format: Yup.object().shape({
-          id: Yup.number().required("Format is required"),
-          capacity: Yup.string().required("Capacity is required"),
-        }),
-      })
-    ),
+  });
+
+  const methods = useForm<TFormValues>({
+    resolver: yupResolver(validationSchema),
   });
 
   const {
-    control,
+    register,
     handleSubmit,
+    control,
     setValue,
     formState: { errors },
-  } = useForm<TFormValues>({
-    resolver: yupResolver(validationSchema),
-  });
+  } = methods;
 
   const createWineMutation = api.wines.create.useMutation();
 
   const onSubmit = async (data: TFormValues) => {
+    console.log(data);
     setLoading(true);
 
     if (sessionData && bottleFormat) {
@@ -111,29 +109,33 @@ function CreateWineFormLogic() {
     }
     setLoading(false);
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    void handleSubmit(onSubmit)();
+  const handleFormSubmit = async () => {
+    await handleSubmit(onSubmit)();
+    await router.push("/homepage");
   };
   return (
-    <StepperForm
-      bottleFormat={bottleFormat}
-      formatsValue={formatsValue}
-      setFormatsValue={setFormatsValue}
-      active={active}
-      setActive={setActive}
-      setFile={setFile}
-      loading={loading}
-      nextStep={nextStep}
-      prevStep={prevStep}
-      wineColor={wineColor}
-      control={control}
-      setValue={setValue}
-      handleFormSubmit={handleFormSubmit}
-      file={file}
-      errors={errors}
-    />
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <StepperForm
+          bottleFormat={bottleFormat}
+          formatsValue={formatsValue}
+          setFormatsValue={setFormatsValue}
+          active={active}
+          setActive={setActive}
+          setFile={setFile}
+          loading={loading}
+          nextStep={nextStep}
+          prevStep={prevStep}
+          wineColor={wineColor}
+          control={control}
+          setValue={setValue}
+          file={file}
+          errors={errors}
+          register={register}
+        />
+      </form>
+    </FormProvider>
   );
-}
+};
 
 export default CreateWineFormLogic;

@@ -4,6 +4,7 @@ import {
   type FieldErrors,
   type Control,
   type UseFormSetValue,
+  type UseFormRegister,
 } from "react-hook-form";
 import { type BottleFormat, type Color } from "@prisma/client";
 import WineFormStep2 from "./WineFormStep2";
@@ -14,7 +15,6 @@ import { type TFormValues } from "../FormType";
 type StepperFormProps = {
   formatsValue: string[];
   setFormatsValue: Dispatch<React.SetStateAction<string[]>>;
-  handleFormSubmit: (e: React.FormEvent) => void;
   control: Control<TFormValues>;
   wineColor?: Color[];
   bottleFormat?: BottleFormat[];
@@ -27,12 +27,12 @@ type StepperFormProps = {
   active: number;
   setFile: (files: File) => void;
   errors: FieldErrors<TFormValues>;
+  register: UseFormRegister<TFormValues>;
 };
 
 const StepperForm = ({
   formatsValue,
   setFormatsValue,
-  handleFormSubmit,
   control,
   wineColor,
   bottleFormat,
@@ -45,9 +45,9 @@ const StepperForm = ({
   setFile,
   active,
   errors,
+  register,
 }: StepperFormProps) => {
   const theme = useMantineTheme();
-  console.log(bottleFormat);
 
   return (
     <div className="flexcol w-full px-3">
@@ -60,32 +60,34 @@ const StepperForm = ({
         <Stepper.Step>
           <div className="flexcol y-center">
             <WineFormStep1
-              handleFormSubmit={handleFormSubmit}
               control={control}
               wineColor={wineColor}
               errors={errors}
+              register={register}
             />
           </div>
         </Stepper.Step>
         <Stepper.Step>
           <div className="flexcol y-center">
             <WineFormStep2
-              handleFormSubmit={handleFormSubmit}
               bottleFormat={bottleFormat}
               setValue={setValue}
               formatsValue={formatsValue}
               control={control}
               setFormatsValue={setFormatsValue}
+              errors={errors}
+              register={register}
             />
           </div>
         </Stepper.Step>
         <Stepper.Step>
           <div className="flexcol y-center">
             <WineFormStep3
-              handleFormSubmit={handleFormSubmit}
               control={control}
               setFile={setFile}
               file={file}
+              errors={errors}
+              register={register}
             />
           </div>
         </Stepper.Step>
@@ -98,10 +100,9 @@ const StepperForm = ({
         >
           Back
         </Button>
-        {active === 2 ? (
+        {active === 2 && (
           <Button
             type="submit"
-            onClick={handleFormSubmit}
             style={{
               backgroundImage: theme.fn.gradient({
                 from: "teal",
@@ -113,16 +114,16 @@ const StepperForm = ({
           >
             Add
           </Button>
-        ) : (
-          <Button
-            onClick={nextStep}
-            style={{
-              backgroundColor: theme.colors.violet[9],
-            }}
-          >
-            Next step
-          </Button>
         )}
+        <Button
+          onClick={nextStep}
+          style={{
+            backgroundColor: theme.colors.violet[9],
+            display: active === 2 ? "none" : "block",
+          }}
+        >
+          Next step
+        </Button>
       </Group>
     </div>
   );
