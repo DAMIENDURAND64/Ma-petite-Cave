@@ -41,8 +41,7 @@ const CreateWineFormLogic = () => {
       "Serving temperature is required"
     ),
     formats: Yup.array().of(Yup.string().required("Format is required")),
-    price: Yup.number().required("Price is required"),
-    quantity: Yup.number().required("Quantity is required"),
+
     wineColorId: Yup.string().required("Color is required"),
   });
 
