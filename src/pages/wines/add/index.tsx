@@ -7,14 +7,13 @@ function AddWine() {
 
   if (sessionData === null) {
     return (
-      <div className="p-3">
-        <h1>Homepage</h1>
-        <p>Sign in to see your homepage</p>
+      <div className="flexcol xy-center w-full gap-3">
+        <p>Sign in to add a wine</p>
       </div>
     );
   }
   return (
-    <div className="xy-center flexcol w-full gap-5  p-3">
+    <div className="flexcol xy-center w-full gap-3 px-3">
       <h1>Add a wine</h1>
       <WineForm />
     </div>

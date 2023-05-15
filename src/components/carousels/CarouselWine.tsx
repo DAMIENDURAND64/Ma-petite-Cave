@@ -1,10 +1,11 @@
 import React from "react";
 import { Carousel } from "@mantine/carousel";
-import { Button, Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
+import { Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
 import type { Color, TastingNote, Wine, WineBottle } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import NavigationButton from "../buttons/NavigationButton";
 
 type CarouselProps = {
   controlsProps?: string;
@@ -44,21 +45,12 @@ function CarouselWine({
           </div>
           <div>
             <Skeleton visible={loading}>
-              <Button
-                variant="filled"
-                radius="xl"
-                compact
-                size="xs"
+              <NavigationButton
                 onClick={() => {
                   router.push("/wines").catch((err) => console.log(err));
                 }}
-                style={{
-                  backgroundColor: theme.colors.violet[9],
-                  fontSize: "12px",
-                }}
-              >
-                Voir tout
-              </Button>
+                label="Voir tous"
+              />
             </Skeleton>
           </div>
         </div>

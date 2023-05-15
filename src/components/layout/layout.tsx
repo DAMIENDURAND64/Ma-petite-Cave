@@ -3,12 +3,13 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { Avatar, UnstyledButton } from "@mantine/core";
+import { Avatar, Button, useMantineTheme } from "@mantine/core";
 import { removedFamilyName } from "~/utils/functions";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Layout = ({ children }: PropsWithChildren) => {
+  const theme = useMantineTheme();
   const { data: sessionData } = useSession();
   const router = useRouter();
 
@@ -59,12 +60,17 @@ const Layout = ({ children }: PropsWithChildren) => {
       {children}
       {sessionData && showAddButton && (
         <div className="fixed bottom-5 flex w-full justify-center">
-          <div
+          <Button
+            radius="xl"
+            style={{
+              backgroundColor: theme.colors.violet[9],
+              fontSize: "12px",
+              width: "250px",
+            }}
             onClick={handleNavigation}
-            className="flex h-10 w-4/6 justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500"
           >
-            <UnstyledButton>AJOUTER UN VIN</UnstyledButton>
-          </div>
+            Ajouter un vin
+          </Button>
         </div>
       )}
     </>

@@ -34,14 +34,15 @@ const CreateWineFormLogic = () => {
     producer: Yup.string().required("Producer is required"),
     country: Yup.string().required("Country is required"),
     region: Yup.string().required("Region is required"),
-    vintage: Yup.number().required("Vintage is required"),
+    vintage: Yup.number()
+      .required("Vintage is required")
+      .test("len", "Max 4 numbers", (val) => val.toString().length <= 4),
     purchasedAt: Yup.date().required("Purchased at is required"),
     description: Yup.string().required("Description is required"),
     servingTemperature: Yup.string().required(
       "Serving temperature is required"
     ),
     formats: Yup.array().of(Yup.string().required("Format is required")),
-
     wineColorId: Yup.string().required("Color is required"),
   });
 
@@ -60,9 +61,7 @@ const CreateWineFormLogic = () => {
   const createWineMutation = api.wines.create.useMutation();
 
   const onSubmit = async (data: TFormValues) => {
-    console.log(data);
     setLoading(true);
-
     if (sessionData && bottleFormat) {
       let imageUrl = "/images/black_crows.jpg";
       if (file) {
@@ -101,9 +100,6 @@ const CreateWineFormLogic = () => {
         wineColorId: parseInt(data.wineColorId),
         wineBottles: wineBottles,
       };
-
-      console.log(payload);
-
       createWineMutation.mutate(payload);
     }
     setLoading(false);
@@ -113,27 +109,29 @@ const CreateWineFormLogic = () => {
     await router.push("/homepage");
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <StepperForm
-          bottleFormat={bottleFormat}
-          formatsValue={formatsValue}
-          setFormatsValue={setFormatsValue}
-          active={active}
-          setActive={setActive}
-          setFile={setFile}
-          loading={loading}
-          nextStep={nextStep}
-          prevStep={prevStep}
-          wineColor={wineColor}
-          control={control}
-          setValue={setValue}
-          file={file}
-          errors={errors}
-          register={register}
-        />
-      </form>
-    </FormProvider>
+    <div className="w-full p-3">
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <StepperForm
+            bottleFormat={bottleFormat}
+            formatsValue={formatsValue}
+            setFormatsValue={setFormatsValue}
+            active={active}
+            setActive={setActive}
+            setFile={setFile}
+            loading={loading}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            wineColor={wineColor}
+            control={control}
+            setValue={setValue}
+            file={file}
+            errors={errors}
+            register={register}
+          />
+        </form>
+      </FormProvider>
+    </div>
   );
 };
 
