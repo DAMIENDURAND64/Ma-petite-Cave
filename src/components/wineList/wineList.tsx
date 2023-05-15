@@ -24,7 +24,7 @@ const colors: { [key: number]: string } = {
 function WineListTemplate({ wines, loading }: Props) {
   const theme = useMantineTheme();
   return (
-    <Grid justify="space-around" grow gutter="xs">
+    <Grid justify="space-around" grow gutter="xl">
       {wines?.map((wine) => {
         const coloor = colors[wine.wineColor.id] ?? "bg-gray-500";
         return (
@@ -34,9 +34,13 @@ function WineListTemplate({ wines, loading }: Props) {
             md={3}
             lg={3}
             style={{
-              border: `2px solid ${theme.colors.violet[9]}`,
-              margin: "3px",
+              margin: "9px",
               borderRadius: "10px",
+              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+              backgroundColor:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[5]
+                  : theme.colors.gray[1],
             }}
           >
             <Link
@@ -45,7 +49,7 @@ function WineListTemplate({ wines, loading }: Props) {
                 query: { id: wine.id },
               }}
             >
-              <div className="flexrow h-fit max-h-[185px] ">
+              <div className="flexrow h-fit max-h-[180px] ">
                 <div>
                   <Skeleton visible={loading}>
                     <Image
@@ -53,7 +57,7 @@ function WineListTemplate({ wines, loading }: Props) {
                       alt={wine.name}
                       width={50}
                       height={50}
-                      className="h-[180px] w-[120px]  rounded-md object-cover"
+                      className="h-[180px] w-[140px]  rounded-md object-cover"
                     />
                   </Skeleton>
                 </div>

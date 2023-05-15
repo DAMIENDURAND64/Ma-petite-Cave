@@ -30,7 +30,7 @@ const WineFormStep2 = ({
   register,
 }: WineFormStep2Props) => {
   return (
-    <div className="w-5/6">
+    <div className="flexcol gap-4 px-3">
       {bottleFormat && (
         <MultiSelect
           {...register("formats")}
@@ -40,7 +40,9 @@ const WineFormStep2 = ({
           }))}
           label="Formats"
           placeholder={
-            errors.formats ? errors.formats.message : "Select formats"
+            errors.formats
+              ? "At least one format is required"
+              : "Select formats"
           }
           transitionProps={{
             duration: 150,
@@ -57,7 +59,7 @@ const WineFormStep2 = ({
           error={!!errors.formats}
         />
       )}
-      <div className="mt-5">
+      <div>
         {formatsValue?.map((formatId: string) => {
           const format = bottleFormat?.find(
             (f) => f.id.toString() === formatId

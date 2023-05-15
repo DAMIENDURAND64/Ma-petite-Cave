@@ -1,5 +1,11 @@
 import React, { type Dispatch } from "react";
-import { Button, Group, Stepper, useMantineTheme } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Stepper,
+  createStyles,
+  useMantineTheme,
+} from "@mantine/core";
 import {
   type FieldErrors,
   type Control,
@@ -11,6 +17,7 @@ import WineFormStep2 from "./WineFormStep2";
 import WineFormStep3 from "./WineFormStep3";
 import WineFormStep1 from "./WineFormStep1";
 import { type TFormValues } from "../FormType";
+import { IconCircleX } from "@tabler/icons-react";
 
 type StepperFormProps = {
   formatsValue: string[];
@@ -29,6 +36,14 @@ type StepperFormProps = {
   errors: FieldErrors<TFormValues>;
   register: UseFormRegister<TFormValues>;
 };
+
+const stepperStyle = createStyles((theme) => ({
+  error: {
+    ".mantine-ttrh0a": {
+      backgroundColor: `${theme.colors.red[4]} !important`,
+    },
+  },
+}));
 
 const StepperForm = ({
   formatsValue,
@@ -49,47 +64,66 @@ const StepperForm = ({
 }: StepperFormProps) => {
   const theme = useMantineTheme();
 
+  const { classes } = stepperStyle();
+
+  const hasErrors = Object.values(errors).some((error) => !!error);
+
+  const hasErrorsStep1 =
+    hasErrors &&
+    (errors.name ||
+      errors.producer ||
+      errors.country ||
+      errors.region ||
+      errors.wineColorId ||
+      errors.vintage ||
+      errors.purchasedAt ||
+      errors.servingTemperature);
+
   return (
-    <div className="flexcol w-full px-3">
+    <div>
       <Stepper
         active={active}
         onStepClick={setActive}
         radius="md"
         color="violet"
+        className={hasErrors ? classes.error : ""}
       >
-        <Stepper.Step>
-          <div className="flexcol y-center">
-            <WineFormStep1
-              control={control}
-              wineColor={wineColor}
-              errors={errors}
-              register={register}
-            />
-          </div>
+        <Stepper.Step
+          color={hasErrorsStep1 ? "red" : "violet"}
+          completedIcon={hasErrorsStep1 ? <IconCircleX /> : ""}
+        >
+          <WineFormStep1
+            control={control}
+            wineColor={wineColor}
+            errors={errors}
+            register={register}
+          />
         </Stepper.Step>
-        <Stepper.Step>
-          <div className="flexcol y-center">
-            <WineFormStep2
-              bottleFormat={bottleFormat}
-              setValue={setValue}
-              formatsValue={formatsValue}
-              control={control}
-              setFormatsValue={setFormatsValue}
-              errors={errors}
-              register={register}
-            />
-          </div>
+        <Stepper.Step
+          color={errors.formats ? "red" : "violet"}
+          completedIcon={errors.formats && <IconCircleX />}
+        >
+          <WineFormStep2
+            bottleFormat={bottleFormat}
+            setValue={setValue}
+            formatsValue={formatsValue}
+            control={control}
+            setFormatsValue={setFormatsValue}
+            errors={errors}
+            register={register}
+          />
         </Stepper.Step>
-        <Stepper.Step>
-          <div className="flexcol y-center">
-            <WineFormStep3
-              control={control}
-              setFile={setFile}
-              file={file}
-              errors={errors}
-              register={register}
-            />
-          </div>
+        <Stepper.Step
+          color={errors.description ? "red" : "violet"}
+          completedIcon={errors.description && <IconCircleX />}
+        >
+          <WineFormStep3
+            control={control}
+            setFile={setFile}
+            file={file}
+            errors={errors}
+            register={register}
+          />
         </Stepper.Step>
       </Stepper>
       <Group position="center" mt="xl" spacing="xl">
