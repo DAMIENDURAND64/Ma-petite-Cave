@@ -12,7 +12,15 @@ export const wineRouter = createTRPCRouter({
       },
       include: {
         wineColor: true,
-        wineBottles: true,
+        wineBottles: {
+          include: {
+            format: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
         tastingNotes: true,
       },
     });
@@ -45,7 +53,16 @@ export const wineRouter = createTRPCRouter({
         },
         include: {
           wineColor: true,
-          wineBottles: true,
+          wineBottles: {
+            include: {
+              format: {
+                select: {
+                  name: true,
+                  capacity: true,
+                },
+              },
+            },
+          },
           tastingNotes: true,
         },
       });

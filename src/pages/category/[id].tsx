@@ -34,16 +34,19 @@ const Color = () => {
     );
   }
   return (
-    <div className="px-5">
-      <div className="my-2">
+    <div className="flexcol gap-3">
+      <div className="ml-1 mt-1">
         <NavigationButton
+          size="md"
           label="retour"
           onClick={() => {
             router.push("/homepage").catch((err) => console.log(err));
           }}
         />
       </div>
-      <WineListTemplate wines={wineColorQuery} loading={isLoading} />
+      <div className="mx-6">
+        <WineListTemplate wines={wineColorQuery} loading={isLoading} />
+      </div>
     </div>
   );
 };

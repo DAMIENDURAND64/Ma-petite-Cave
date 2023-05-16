@@ -11,10 +11,11 @@ const WineList = () => {
   const { data: wines, isLoading } = api.wines.getAll.useQuery();
 
   return (
-    <div className="px-5">
-      <div className="my-2 w-fit">
+    <div className="flexcol gap-3">
+      <div className="ml-1 mt-1">
         <Skeleton visible={isLoading}>
           <NavigationButton
+            size="md"
             label="retour"
             onClick={() => {
               router.push("/homepage").catch((err) => console.log(err));
@@ -22,7 +23,9 @@ const WineList = () => {
           />
         </Skeleton>
       </div>
-      <WineListTemplate wines={wines} loading={isLoading} />
+      <div className="mx-6">
+        <WineListTemplate wines={wines} loading={isLoading} />
+      </div>
     </div>
   );
 };

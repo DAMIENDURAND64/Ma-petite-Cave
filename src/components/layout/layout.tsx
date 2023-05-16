@@ -16,7 +16,8 @@ const Layout = ({ children }: PropsWithChildren) => {
   const handleNavigation = () => {
     router.push("/wines/add").catch((err) => console.log(err));
   };
-  const showAddButton = router.pathname !== "/wines/add";
+  const showAddButton =
+    router.pathname !== "/wines/add" && router.pathname !== "/wines/[id]";
   return (
     <>
       <div className=" w-full border-b-4 border-slate-400">
