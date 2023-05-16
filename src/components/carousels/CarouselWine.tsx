@@ -46,6 +46,7 @@ function CarouselWine({
           <div>
             <Skeleton visible={loading}>
               <NavigationButton
+                size="md"
                 onClick={() => {
                   router.push("/wines").catch((err) => console.log(err));
                 }}
