@@ -1,8 +1,16 @@
+import {
+  type Color,
+  type TastingNote,
+  type Wine,
+  type WineBottle,
+} from "@prisma/client";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import { api } from "~/utils/api";
+import { Colors } from "~/utils/colors/Colors";
 
 function GetOneWine() {
   const { data: sessionData } = useSession();
@@ -17,7 +25,17 @@ function GetOneWine() {
     }
   );
 
-  const wine = wineQuery.data;
+  const wine:
+    | (Wine & {
+        wineColor: Color;
+        wineBottles: (WineBottle & {
+          format: { name: string; capacity: string };
+        })[];
+        tastingNotes: TastingNote[];
+      })
+    | null
+    | undefined = wineQuery.data;
+  console.log(wine);
 
   if (sessionData === null) {
     return (
@@ -27,24 +45,69 @@ function GetOneWine() {
       </div>
     );
   }
+  const wineColorId: number | undefined = wine?.wineColorId;
+  const coloor: string =
+    Colors[wineColorId !== undefined ? wineColorId : 0] ?? "bg-gray-500";
+
+  if (!wine) return <div>loading...</div>;
 
   return (
-    <div className="px-5">
-      <div className="my-2">
+    <div className="flexcol gap-3">
+      <div className="ml-3 mt-1">
         <NavigationButton
+          size="md"
           label="retour"
           onClick={() => {
             router.push("/wines").catch((err) => console.log(err));
           }}
         />
       </div>
-      <h1>Wine</h1>
-      <p>{wine?.name}</p>
-      <p>{wine?.producer}</p>
-      <p>{wine?.varietal}</p>
-      <p>{wine?.country}</p>
-      <p>{wine?.region}</p>
-      <p>{wine?.vintage}</p>
+      <div className="flexcol xy-center mx-3">
+        <Image
+          src={wine?.image || "/images/wine.png"}
+          alt="wine image"
+          width={200}
+          height={200}
+          className="rounded-md"
+        />
+      </div>
+      <div className="flexcol m-3 gap-2">
+        <h2>{`Nom: ${wine.name.toUpperCase()}`}</h2>
+        <div className="y-center flex gap-3">
+          <p>{`Producteur: ${wine?.producer}`}</p>
+          <p className={`${coloor} h-3 w-3 rounded-full`} />
+        </div>
+        <p>{`Pays: ${wine.country}`}</p>
+        <p>{`Region: ${wine.region}`}</p>
+        <p>{`Millésime: ${wine.vintage}`}</p>
+        <p>{`Cépage(s): ${
+          wine.varietal.length === 0
+            ? "aucun cepage(s) selectionné(s)"
+            : (wine.varietal as unknown as string)
+        }`}</p>
+        <p>{`T° idéale: ${wine.servingTemperature || "pas de données"}°`}</p>
+        <p>{`Date d'achat: ${
+          wine.purchasedAt
+            ? wine.purchasedAt.toLocaleDateString()
+            : "pas de date"
+        }`}</p>
+        <p>{`Description: ${wine.description || "pas de description"}`}</p>
+
+        <div className="flex flex-wrap gap-3">
+          {wine.wineBottles.map((wineBottle) => (
+            <div
+              className="w-fit rounded-md bg-slate-500 p-3"
+              key={wineBottle.id}
+            >
+              <h3 className="text-lg font-semibold text-white">{`${wineBottle.format.name} (${wineBottle.format.capacity})`}</h3>
+              <p className="text-white">{`${
+                wineBottle.quantity > 1 ? "quantités" : "quantité"
+              } : ${wineBottle.quantity}`}</p>
+              <p className="text-white">{`prix:  ${wineBottle.price}€`}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
