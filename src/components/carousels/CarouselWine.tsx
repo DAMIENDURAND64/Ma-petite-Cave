@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Carousel } from "@mantine/carousel";
 import { Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
@@ -17,7 +17,6 @@ type CarouselProps = {
   })[];
   height?: string;
   colors: { [key: number]: string };
-  loading?: boolean;
 };
 
 function CarouselWine({
@@ -26,11 +25,17 @@ function CarouselWine({
   height,
   colors,
   controlsProps,
-  loading,
 }: CarouselProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true);
   const theme = useMantineTheme();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div>
       {colorData && (

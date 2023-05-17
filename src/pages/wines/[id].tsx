@@ -103,7 +103,7 @@ function GetOneWine() {
               <p className="text-white">{`${
                 wineBottle.quantity > 1 ? "quantités" : "quantité"
               } : ${wineBottle.quantity}`}</p>
-              <p className="text-white">{`prix:  ${wineBottle.price}€`}</p>
+              <p className="text-white">{`prix:  ${wineBottle.price}€ /b`}</p>
             </div>
           ))}
         </div>
