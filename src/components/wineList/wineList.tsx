@@ -2,6 +2,7 @@ import { Grid, Skeleton, useMantineTheme } from "@mantine/core";
 import type { Color, Wine } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { capitalize, truncateText } from "~/utils/functions";
 
 interface Props {
@@ -21,8 +22,17 @@ const colors: { [key: number]: string } = {
   6: "bg-gradient-to-r from-green-900 to-green-500",
 };
 
-function WineListTemplate({ wines, loading }: Props) {
+function WineListTemplate({ wines }: Props) {
+  const [loading, setLoading] = useState<boolean>(true);
   const theme = useMantineTheme();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Grid justify="space-around" grow gutter="xl">
       {wines?.map((wine) => {
@@ -40,7 +50,7 @@ function WineListTemplate({ wines, loading }: Props) {
               backgroundColor:
                 theme.colorScheme === "dark"
                   ? theme.colors.dark[5]
-                  : theme.colors.gray[1],
+                  : theme.colors.gray[3],
             }}
           >
             <Link
