@@ -5,10 +5,9 @@ import { Colors } from "~/utils/colors/Colors";
 
 function Homepage() {
   const { data: sessionData } = useSession();
-  const { data: wineColor = [], isLoading: wineColorLoading } =
+  const { data: wineColor = [], error: wineColorError } =
     api.color.getAll.useQuery();
-  const { data: wines = [], isLoading: winesLoading } =
-    api.wines.getAll.useQuery();
+  const { data: wines = [], error: wineError } = api.wines.getAll.useQuery();
 
   if (sessionData === null) {
     return (
@@ -19,6 +18,10 @@ function Homepage() {
     );
   }
 
+  if (wineColorError || wineError) {
+    return <div>No Data available</div>;
+  }
+
   return (
     <div className="h-screen overflow-y-auto p-3">
       <CarouselWine
@@ -26,14 +29,12 @@ function Homepage() {
         colorData={wineColor}
         height="80px"
         controlsProps="10px"
-        loading={wineColorLoading}
       />
       <CarouselWine
         colors={Colors}
         wineData={wines}
         controlsProps="100px"
         height="292px"
-        loading={winesLoading}
       />
     </div>
   );

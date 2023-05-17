@@ -8,22 +8,15 @@ const Color = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { id } = router.query;
+
   const wineColorId = parseInt(id as string, 10);
 
-  const {
-    data: wineColorQuery,
-    isLoading,
-    error,
-  } = api.wines.getAllByColor.useQuery(
+  const { data: wineColorQuery, error } = api.wines.getAllByColor.useQuery(
     { wineColorId },
     {
       enabled: !!id,
     }
   );
-
-  if (error) {
-    return <div>error</div>;
-  }
 
   if (sessionData === null) {
     return (
@@ -33,6 +26,11 @@ const Color = () => {
       </div>
     );
   }
+
+  if (error) {
+    return <div>error</div>;
+  }
+
   return (
     <div className="flexcol gap-3">
       <div className="ml-1 mt-1">
@@ -45,7 +43,7 @@ const Color = () => {
         />
       </div>
       <div className="mx-6">
-        <WineListTemplate wines={wineColorQuery} loading={isLoading} />
+        <WineListTemplate wines={wineColorQuery} />
       </div>
     </div>
   );

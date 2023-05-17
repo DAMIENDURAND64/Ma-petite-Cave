@@ -3,24 +3,64 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { Avatar, Button, useMantineTheme } from "@mantine/core";
+import { Avatar, useMantineTheme } from "@mantine/core";
 import { removedFamilyName } from "~/utils/functions";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FaChartBar } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
+import { HiOutlineHome } from "react-icons/hi";
+import { RiAddCircleFill } from "react-icons/ri";
+import { motion } from "framer-motion";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
   const { data: sessionData } = useSession();
   const router = useRouter();
 
-  const handleNavigation = () => {
+  const handleNavigationAddWine = () => {
     router.push("/wines/add").catch((err) => console.log(err));
   };
-  const showAddButton =
-    router.pathname !== "/wines/add" && router.pathname !== "/wines/[id]";
+  const handleNavigationHome = () => {
+    router.push("/homepage").catch((err) => console.log(err));
+  };
+  const handleNavigationProfil = () => {
+    router.push("/profil").catch((err) => console.log(err));
+  };
+  const handleNavigationStats = () => {
+    router.push("/stats").catch((err) => console.log(err));
+  };
+
+  const footerIcons = [
+    {
+      name: "Home",
+      icon: <HiOutlineHome size="2rem" onClick={handleNavigationHome} />,
+    },
+    {
+      name: "Profil",
+      icon: <CgProfile size="2rem" onClick={handleNavigationProfil} />,
+    },
+    {
+      name: "Stats",
+      icon: <FaChartBar size="2rem" onClick={handleNavigationStats} />,
+    },
+    {
+      name: "Ajouter un vin",
+      icon: <RiAddCircleFill size="2rem" onClick={handleNavigationAddWine} />,
+    },
+  ];
+
   return (
     <>
-      <div className=" w-full border-b-4 border-slate-400">
+      <div
+        className=" w-full border-b-4 border-slate-400"
+        style={{
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[4]
+              : theme.colors.dark[1],
+        }}
+      >
         <div className="flex h-32 justify-between p-3">
           <div className="flex">
             <Logo />
@@ -58,22 +98,27 @@ const Layout = ({ children }: PropsWithChildren) => {
           )}
         </div>
       </div>
-      {children}
-      {sessionData && showAddButton && (
-        <div className="fixed bottom-5 flex w-full justify-center">
-          <Button
-            radius="xl"
-            style={{
-              backgroundColor: theme.colors.violet[9],
-              fontSize: "12px",
-              width: "250px",
-            }}
-            onClick={handleNavigation}
+      <div className="pb-16"> {children}</div>
+      <div
+        className="flexrow xy-center fixed bottom-0 h-16 w-full justify-around border-slate-400"
+        style={{
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[4]
+              : theme.colors.dark[1],
+        }}
+      >
+        {footerIcons.map((item) => (
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            key={item.name}
+            className="flexcol xy-center text-[11px]"
           >
-            Ajouter un vin
-          </Button>
-        </div>
-      )}
+            {item.icon}
+            <span>{item.name}</span>
+          </motion.div>
+        ))}
+      </div>
     </>
   );
 };
