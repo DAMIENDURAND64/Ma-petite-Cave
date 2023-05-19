@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import CarouselWine from "~/components/carousels/CarouselWine";
+import SearchBar from "~/components/searchBar/searchBar";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
 
@@ -23,7 +24,8 @@ function Homepage() {
   }
 
   return (
-    <div className="h-screen overflow-y-auto p-3">
+    <div className="h-screen w-full overflow-y-auto p-3">
+      <SearchBar wineData={wines} />
       <CarouselWine
         colors={Colors}
         colorData={wineColor}
