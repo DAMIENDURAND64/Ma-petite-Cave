@@ -35,7 +35,6 @@ function GetOneWine() {
       })
     | null
     | undefined = wineQuery.data;
-  console.log(wine);
 
   if (sessionData === null) {
     return (
@@ -55,7 +54,7 @@ function GetOneWine() {
     <div className="flexcol gap-3">
       <div className="ml-3 mt-1">
         <NavigationButton
-          size="md"
+          size="sm"
           label="retour"
           onClick={() => {
             router.push("/wines").catch((err) => console.log(err));

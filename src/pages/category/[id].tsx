@@ -35,7 +35,7 @@ const Color = () => {
     <div className="flexcol gap-3">
       <div className="ml-1 mt-1">
         <NavigationButton
-          size="md"
+          size="sm"
           label="retour"
           onClick={() => {
             router.push("/homepage").catch((err) => console.log(err));

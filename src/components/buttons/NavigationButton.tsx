@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button, useMantineTheme } from "@mantine/core";
 import React from "react";
 
 type NavigationButtonProps = {
@@ -18,6 +18,7 @@ const NavigationButton = ({
   onClick,
   label,
 }: NavigationButtonProps) => {
+  const theme = useMantineTheme();
   return (
     <Button
       variant={variant ?? "outline"}
@@ -26,6 +27,17 @@ const NavigationButton = ({
       size={size ?? "xs"}
       onClick={onClick}
       color={color ?? "violet"}
+      style={{
+        borderColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.violet[9]
+            : theme.colors.dark[9],
+        color:
+          theme.colorScheme === "dark"
+            ? theme.colors.violet[9]
+            : theme.colors.dark[9],
+        fontFamily: "open sans",
+      }}
     >
       {label}
     </Button>

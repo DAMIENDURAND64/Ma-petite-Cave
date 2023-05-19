@@ -15,7 +15,7 @@ const WineList = () => {
       <div className="ml-1 mt-1">
         <Skeleton visible={isLoading}>
           <NavigationButton
-            size="md"
+            size="sm"
             label="retour"
             onClick={() => {
               router.push("/homepage").catch((err) => console.log(err));
