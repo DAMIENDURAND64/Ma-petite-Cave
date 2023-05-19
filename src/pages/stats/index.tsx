@@ -4,8 +4,18 @@ import React from "react";
 import { DoughnutForNumOfBottles } from "~/components/charts/DoughnutForNumOfBottles";
 import { DoughnutForValOfBottles } from "~/components/charts/DoughnutForValOfBottles";
 import { api } from "~/utils/api";
+import { Colors } from "~/utils/colors/Colors";
 
 const Index = () => {
+  const labels = [
+    "Rouge",
+    "Blanc",
+    "Rosé",
+    "Pétillant",
+    "Spiritueux",
+    "Liqueurs",
+  ];
+
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
 
@@ -73,6 +83,16 @@ const Index = () => {
         >
           <p>Nombre de bouteilles de vins : {totalWineBottles}</p>
           <DoughnutForNumOfBottles wineBottlesByColor={wineBottlesByColor} />
+          <div className="flex w-full justify-around gap-3">
+            {Object.entries(Colors).map(([key, color], index) => {
+              return (
+                <div className="flexcol xy-center" key={index}>
+                  <div className={`${color} relative h-3 w-3 rounded-lg`} />
+                  <p className="text-xs">{labels[parseInt(key) - 1]}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div
           className={`w-full rounded-md border border-gray-500 ${
@@ -81,6 +101,16 @@ const Index = () => {
         >
           <p>Valeur de ma Cave : {totalWineBottlesValue}€ </p>
           <DoughnutForValOfBottles wineBottlesValues={wineBottlesValues} />
+          <div className="flex w-full justify-around gap-3">
+            {Object.entries(Colors).map(([key, color], index) => {
+              return (
+                <div className="flexcol xy-center" key={index}>
+                  <div className={`${color} relative h-3 w-3 rounded-lg`} />
+                  <p className="text-xs">{labels[parseInt(key) - 1]}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
