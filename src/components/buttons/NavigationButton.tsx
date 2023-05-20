@@ -36,7 +36,6 @@ const NavigationButton = ({
           theme.colorScheme === "dark"
             ? theme.colors.violet[9]
             : theme.colors.dark[9],
-        fontFamily: "open sans",
       }}
     >
       {label}
