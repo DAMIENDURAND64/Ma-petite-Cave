@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import WineListTemplate from "~/components/wineList/wineList";
 import { api } from "~/utils/api";
+import { Colors } from "~/utils/colors/Colors";
 
 const Color = () => {
   const { data: sessionData } = useSession();
@@ -31,16 +32,25 @@ const Color = () => {
     return <div>error</div>;
   }
 
+  console.log(id);
   return (
     <div className="flexcol gap-3">
-      <div className="ml-1 mt-1">
+      <div className="m-2 flex gap-2">
         <NavigationButton
           size="sm"
           label="retour"
+          radius="md"
           onClick={() => {
             router.push("/homepage").catch((err) => console.log(err));
           }}
         />
+        <div
+          className={`${
+            Colors[wineColorId] as string
+          } xy-center flex h-[26px] w-full rounded-md`}
+        >
+          <h1 className="text-lg">{wineColorQuery?.[0]?.wineColor?.name}</h1>
+        </div>
       </div>
       <div className="mx-6">
         <WineListTemplate wines={wineColorQuery} />

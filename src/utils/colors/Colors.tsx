@@ -6,3 +6,13 @@ export const Colors: { [key: number]: string } = {
   5: "bg-gradient-to-r from-amber-900 to-amber-500",
   6: "bg-gradient-to-r from-green-900 to-green-500",
 };
+
+export const ColorFromId = ({ id }: { id: number }) => {
+  return (
+    <div
+      className={
+        `${Colors[id] as string} h-3 w-3 rounded-full` || "h-4 w-4 rounded-full"
+      }
+    />
+  );
+};

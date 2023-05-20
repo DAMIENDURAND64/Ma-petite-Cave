@@ -87,10 +87,10 @@ export function DoughnutForNumOfBottles({ wineBottlesByColor }: DoughnutProps) {
             return getLiquorsGradient(chart) || "rgba(19, 158, 1, 1)";
           }
         },
-        borderRadius: 6,
+        borderRadius: 3,
         spacing: 6,
         hoverOffset: 40,
-        cutout: 60,
+        cutout: 80,
         offset: 10,
         radius: 110,
       },

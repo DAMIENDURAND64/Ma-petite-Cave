@@ -86,10 +86,10 @@ export function DoughnutForValOfBottles({ wineBottlesValues }: DoughnutProps) {
           }
         },
 
-        borderRadius: 6,
+        borderRadius: 3,
         spacing: 6,
         hoverOffset: 40,
-        cutout: 60,
+        cutout: 80,
         offset: 10,
         radius: 110,
       },

@@ -4,27 +4,52 @@ import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 import React, { useState } from "react";
+import { ColorFromId } from "~/utils/colors/Colors";
 
-type Props = {
+type SearchBarProps = {
   wineData: Wine[];
 };
 
-const SearchBar = ({ wineData }: Props) => {
+const SearchBar = ({ wineData }: SearchBarProps) => {
   const theme = useMantineTheme();
   const router = useRouter();
   const [value, setValue] = useState("");
 
-  const data = wineData.map((wine) => {
-    return {
-      value: wine.name,
-      label: wine.name,
-      id: wine.id,
-    };
-  });
+  const data = value
+    ? wineData.map((wine) => {
+        return {
+          value: wine.name,
+          label: wine.name,
+          id: wine.id,
+          wineColor: wine.wineColorId,
+        };
+      })
+    : [];
 
-  const handleClickWine = (id: number) => {
+  const handleClickWine = ({ id }: { id: number }) => {
     router.push(`/wines/${id}`).catch((err) => console.log(err));
   };
+
+  console.log(data);
+
+  const autoCompleteItem = ({
+    value,
+    wineColor,
+    id,
+  }: {
+    value: string;
+    id: number;
+    wineColor: number;
+  }) => (
+    <div
+      className="y-center flex w-full gap-3 px-3"
+      key={id}
+      onClick={() => handleClickWine({ id })}
+    >
+      <ColorFromId id={wineColor} />
+      {value}
+    </div>
+  );
 
   return (
     <div className="x-center mb-2 flex">
@@ -41,11 +66,15 @@ const SearchBar = ({ wineData }: Props) => {
             />
           }
           value={value}
+          maxDropdownHeight={150}
           onChange={setValue}
           data={data}
+          minLength={1}
+          itemComponent={autoCompleteItem}
           placeholder="Chercher un vin"
           radius="md"
-          onItemSubmit={(value) => handleClickWine(value.id as number)}
+          shadow="xl"
+          transitionProps={{ duration: 300 }}
           styles={(theme) => ({
             input: {
               borderColor:
