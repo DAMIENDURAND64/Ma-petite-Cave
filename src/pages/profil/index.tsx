@@ -2,6 +2,7 @@ import { useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
+import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 
 function Profil() {
@@ -14,19 +15,11 @@ function Profil() {
       enabled: !!sessionData?.user.id,
     }
   );
-  /* 
-  const quantityAvailable = me.data?.wines
-    .map((bottle) => bottle?.quantity ?? 0)
-    .reduce((a, b) => a + b, 0);
 
-  const totalConsumedQuantity = me.data?.wines
-    .filter((wine) => wine.consumedAt !== null)
-    .reduce((acc, wine) => acc + (wine.quantity ?? 0), 0);
+  if (sessionData === null) {
+    return <Unauthorized />;
+  }
 
-  const valueCave = me.data?.wines
-    .map((bottle) => (bottle?.unitPrice ?? 0) * (bottle?.quantity ?? 0))
-    .reduce((a, b) => a + b, 0);
- */
   return (
     <div className="xy-center flexcol gap-5 p-3">
       <h1>Profil</h1>
