@@ -15,6 +15,8 @@ import {
   getSpiritsGradient,
   getWhiteGradient,
 } from "./gradients";
+import { Colors } from "~/utils/colors/Colors";
+import { labels } from "~/utils/labels/label";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -96,5 +98,25 @@ export function DoughnutForNumOfBottles({ wineBottlesByColor }: DoughnutProps) {
       },
     ],
   };
-  return <Doughnut data={data} />;
+  return (
+    <div className="w-full">
+      {!wineBottlesByColor ? (
+        <div className="xy-center flex h-44">
+          Ajoute un vin pour voir tes stats
+        </div>
+      ) : (
+        <Doughnut data={data} />
+      )}
+      <div className="flex w-full justify-around gap-3 ">
+        {Object.entries(Colors).map(([key, color], index) => {
+          return (
+            <div className="flexcol xy-center" key={index}>
+              <div className={`${color} relative h-5 w-5 rounded-lg`} />
+              <p className="text-xs">{labels[parseInt(key) - 1]}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
