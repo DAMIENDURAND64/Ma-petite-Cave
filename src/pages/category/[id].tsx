@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import NavigationButton from "~/components/buttons/NavigationButton";
+import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
@@ -20,12 +21,7 @@ const Color = () => {
   );
 
   if (sessionData === null) {
-    return (
-      <div className="p-3">
-        <h1>Homepage</h1>
-        <p>Sign in to see your homepage</p>
-      </div>
-    );
+    return <Unauthorized />;
   }
 
   if (error) {
@@ -35,7 +31,7 @@ const Color = () => {
   console.log(id);
   return (
     <div className="flexcol gap-3">
-      <div className="m-2 flex gap-2">
+      <div className="flex gap-2">
         <NavigationButton
           size="sm"
           label="retour"
@@ -52,7 +48,7 @@ const Color = () => {
           <h1 className="text-lg">{wineColorQuery?.[0]?.wineColor?.name}</h1>
         </div>
       </div>
-      <div className="mx-6">
+      <div className="mx-5">
         <WineListTemplate wines={wineColorQuery} />
       </div>
     </div>

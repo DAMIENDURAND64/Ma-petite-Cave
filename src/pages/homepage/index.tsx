@@ -1,30 +1,33 @@
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { RiAddCircleFill } from "react-icons/ri";
 import CarouselWine from "~/components/carousels/CarouselWine";
 import SearchBar from "~/components/searchBar/searchBar";
+import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
 
 function Homepage() {
+  const router = useRouter();
   const { data: sessionData } = useSession();
   const { data: wineColor = [], error: wineColorError } =
     api.color.getAll.useQuery();
   const { data: wines = [], error: wineError } = api.wines.getAll.useQuery();
 
   if (sessionData === null) {
-    return (
-      <div className="p-3">
-        <h1>Homepage</h1>
-        <p>Sign in to see your homepage</p>
-      </div>
-    );
+    return <Unauthorized />;
   }
 
   if (wineColorError || wineError) {
     return <div>No Data available</div>;
   }
 
+  const handleNavigationAddWine = () => {
+    router.push("/wines/add").catch((err) => console.log(err));
+  };
+
   return (
-    <div className="h-screen w-full overflow-y-auto p-3">
+    <div className="w-full overflow-y-auto">
       <SearchBar wineData={wines} />
       <CarouselWine
         colors={Colors}
@@ -32,12 +35,19 @@ function Homepage() {
         height="80px"
         controlsProps="10px"
       />
-      <CarouselWine
-        colors={Colors}
-        wineData={wines}
-        controlsProps="100px"
-        height="292px"
-      />
+      {wines.length > 0 ? (
+        <CarouselWine
+          colors={Colors}
+          wineData={wines}
+          height="300px"
+          controlsProps="10px"
+        />
+      ) : (
+        <div className="flexcol xy-center gap-2 pt-10 text-center text-2xl font-bold">
+          Aucun vin en cave
+          <RiAddCircleFill size="3rem" onClick={handleNavigationAddWine} />
+        </div>
+      )}
     </div>
   );
 }
