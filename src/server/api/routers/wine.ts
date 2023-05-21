@@ -46,6 +46,9 @@ export const wineRouter = createTRPCRouter({
   getOne: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(({ ctx, input }) => {
+      if (!ctx.session?.user.id) {
+        throw new Error("User must be logged in to view wine records");
+      }
       return ctx.prisma.wine.findFirst({
         where: {
           ownerId: ctx.session?.user.id,

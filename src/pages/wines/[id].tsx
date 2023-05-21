@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
+import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
 
@@ -37,13 +38,9 @@ function GetOneWine() {
     | undefined = wineQuery.data;
 
   if (sessionData === null) {
-    return (
-      <div className="p-3">
-        <h1>Homepage</h1>
-        <p>Sign in to see your homepage</p>
-      </div>
-    );
+    return <Unauthorized />;
   }
+
   const wineColorId: number | undefined = wine?.wineColorId;
   const coloor: string =
     Colors[wineColorId !== undefined ? wineColorId : 0] ?? "bg-gray-500";
