@@ -43,6 +43,18 @@ const stepperStyle = createStyles((theme) => ({
       backgroundColor: `${theme.colors.red[4]} !important`,
     },
   },
+  background: {
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? `${theme.colors.violet[9]} !important`
+        : `${theme.colors.violet[6]} !important`,
+  },
+  borderColor: {
+    borderColor:
+      theme.colorScheme === "dark"
+        ? `${theme.colors.violet[9]} !important`
+        : `${theme.colors.violet[6]} !important`,
+  },
 }));
 
 const StepperForm = ({
@@ -89,7 +101,13 @@ const StepperForm = ({
         className={hasErrors ? classes.error : ""}
       >
         <Stepper.Step
-          color={hasErrorsStep1 ? "red" : "violet"}
+          color={
+            hasErrorsStep1
+              ? "red"
+              : theme.colorScheme === "dark"
+              ? theme.colors.violet[9]
+              : theme.colors.violet[6]
+          }
           completedIcon={hasErrorsStep1 ? <IconCircleX /> : ""}
         >
           <WineFormStep1
@@ -100,7 +118,13 @@ const StepperForm = ({
           />
         </Stepper.Step>
         <Stepper.Step
-          color={errors.formats ? "red" : "violet"}
+          color={
+            errors.formats
+              ? "red"
+              : theme.colorScheme === "dark"
+              ? theme.colors.violet[9]
+              : theme.colors.violet[6]
+          }
           completedIcon={errors.formats && <IconCircleX />}
         >
           <WineFormStep2
@@ -114,7 +138,13 @@ const StepperForm = ({
           />
         </Stepper.Step>
         <Stepper.Step
-          color={errors.description ? "red" : "violet"}
+          color={
+            errors.description
+              ? "red"
+              : theme.colorScheme === "dark"
+              ? theme.colors.violet[9]
+              : theme.colors.violet[6]
+          }
           completedIcon={errors.description && <IconCircleX />}
         >
           <WineFormStep3
@@ -123,6 +153,7 @@ const StepperForm = ({
             file={file}
             errors={errors}
             register={register}
+            theme={theme}
           />
         </Stepper.Step>
       </Stepper>
@@ -130,7 +161,7 @@ const StepperForm = ({
         <Button
           onClick={prevStep}
           disabled={active === 0}
-          style={{ backgroundColor: theme.colors.violet[9] }}
+          className={classes.background}
         >
           Back
         </Button>
@@ -152,9 +183,9 @@ const StepperForm = ({
         <Button
           onClick={nextStep}
           style={{
-            backgroundColor: theme.colors.violet[9],
             display: active === 2 ? "none" : "block",
           }}
+          className={classes.background}
         >
           Next step
         </Button>

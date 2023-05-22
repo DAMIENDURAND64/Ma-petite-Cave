@@ -5,7 +5,7 @@ import React from "react";
 const Logo = () => {
   return (
     <Link href="/homepage">
-      <div className="xy-center flexrow gap-1">
+      <div className="flexrow items-end">
         <h1 className="text-2xl font-extrabold">
           Ma <br /> petite <br />
           Cave.
@@ -13,7 +13,7 @@ const Logo = () => {
         <Image
           src="/images/dropWine.png"
           alt="Drop of wine"
-          width={80}
+          width={90}
           height={80}
         />
       </div>

@@ -1,4 +1,4 @@
-import { Button, FileButton, Textarea } from "@mantine/core";
+import { Button, FileButton, type MantineTheme, Textarea } from "@mantine/core";
 import React from "react";
 import {
   type Control,
@@ -14,6 +14,7 @@ type CreateWineFormDataProps = {
   file: File | null;
   errors: FieldErrors<TFormValues>;
   register: UseFormRegister<TFormValues>;
+  theme: MantineTheme;
 };
 
 function WineFormStep3({
@@ -21,6 +22,7 @@ function WineFormStep3({
   file,
   errors,
   register,
+  theme,
 }: CreateWineFormDataProps) {
   return (
     <div className="flexcol xy-center gap-4 px-3">
@@ -36,7 +38,11 @@ function WineFormStep3({
           />
         </div>
       ) : (
-        <div className="h-56 max-h-56 w-full rounded-md border border-dashed border-purple-600" />
+        <div
+          className={`h-56 max-h-56 w-full rounded-md border border-dashed border-${
+            theme.colorScheme === "dark" ? "[#373A40]" : "[#ced4da]"
+          } `}
+        />
       )}
       <FileButton onChange={setFile} accept="image/png,image/jpeg">
         {(props) => (
@@ -45,8 +51,23 @@ function WineFormStep3({
               width: "150px",
             }}
             variant="outline"
-            color="violet"
             {...props}
+            styles={(theme) => ({
+              root: {
+                border: `2px solid ${
+                  theme.colorScheme === "dark"
+                    ? `${theme.colors.violet[9]} !important`
+                    : `${theme.colors.violet[6]} !important`
+                }}`,
+              },
+              inner: {
+                color: `${
+                  theme.colorScheme === "dark"
+                    ? `${theme.colors.violet[9]} !important`
+                    : `${theme.colors.violet[6]} !important`
+                }`,
+              },
+            })}
           >
             Upload image
           </Button>

@@ -2,6 +2,7 @@ import { useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
+import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 
@@ -9,7 +10,11 @@ function Profil() {
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
 
-  const me = api.user.getOne.useQuery(
+  const {
+    data: me,
+    isLoading,
+    error,
+  } = api.user.getOne.useQuery(
     { id: sessionData?.user.id as string },
     {
       enabled: !!sessionData?.user.id,
@@ -20,6 +25,17 @@ function Profil() {
     return <Unauthorized />;
   }
 
+  if (isLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>something wrong happened</div>;
+  }
   return (
     <div className="xy-center flexcol gap-5 p-3">
       <h1>Profil</h1>
@@ -43,7 +59,7 @@ function Profil() {
         >
           Nom :
           <div className="w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-2 font-sans">
-            {me.data?.name as string}
+            {me?.name as string}
           </div>
         </div>
       </div>
@@ -59,19 +75,10 @@ function Profil() {
         >
           Mail :
           <div className="w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-2 font-sans">
-            {me.data?.email as string}
+            {me?.email as string}
           </div>
         </div>
       </div>
-      {/*  <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
-        {`${quantityAvailable as number} bouteilles disponibles`}
-      </Paper>
-      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
-        {`${totalConsumedQuantity as number} bouteilles bues`}
-      </Paper>
-      <Paper radius="lg" p="xs" withBorder style={{ marginTop: 8 }}>
-        {`Valeur de ma cave : ${valueCave as number} € `}
-      </Paper> */}
     </div>
   );
 }

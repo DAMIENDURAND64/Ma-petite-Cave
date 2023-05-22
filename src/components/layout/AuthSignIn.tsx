@@ -11,11 +11,12 @@ const AuthSignIn: React.FC = () => {
     <div>
       {sessionData ? (
         <ActionIcon
-          variant="outline"
-          className="h-7 w-7"
+          variant="filled"
+          size="lg"
           style={{
-            color: dark ? theme.colors.violet[9] : theme.colors.dark[9],
-            borderColor: dark ? theme.colors.violet[9] : theme.colors.dark[9],
+            backgroundColor: dark
+              ? theme.colors.violet[9]
+              : theme.colors.violet[6],
           }}
           onClick={() =>
             void signOut({
