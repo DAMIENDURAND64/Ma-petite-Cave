@@ -14,13 +14,15 @@ const ThemeToggler = () => {
   return (
     <div className="flex justify-end">
       <ActionIcon
-        variant="outline"
+        variant="filled"
         onClick={() => toggleColorScheme()}
         title="Toggle color scheme"
-        className="h-7 w-7"
+        size="lg"
         style={{
-          color: dark ? theme.colors.violet[9] : theme.colors.dark[9],
-          borderColor: dark ? theme.colors.violet[9] : theme.colors.dark[9],
+          backgroundColor: dark
+            ? theme.colors.violet[9]
+            : theme.colors.violet[6],
+          borderColor: dark ? theme.colors.violet[9] : theme.colors.violet[6],
         }}
       >
         {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Carousel } from "@mantine/carousel";
 import { Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
-import type { Color, TastingNote, Wine, WineBottle } from "@prisma/client";
+import type {
+  BottleFormat,
+  Color,
+  TastingNote,
+  Wine,
+  WineBottle,
+} from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import NavigationButton from "../buttons/NavigationButton";
@@ -16,12 +22,14 @@ type CarouselProps = {
     tastingNotes: TastingNote[];
   })[];
   height?: string;
-  colors: { [key: number]: string };
+  colors?: { [key: number]: string };
+  wineBottlesFormat?: BottleFormat[];
 };
 
 function CarouselWine({
   colorData,
   wineData,
+  wineBottlesFormat,
   height,
   colors,
   controlsProps,
@@ -59,6 +67,11 @@ function CarouselWine({
               />
             </Skeleton>
           </div>
+        </div>
+      )}
+      {wineBottlesFormat && (
+        <div className="mb-2 flex justify-between ">
+          <Skeleton visible={loading}>Formats:</Skeleton>
         </div>
       )}
       <Carousel
@@ -100,9 +113,9 @@ function CarouselWine({
         }}
       >
         {colorData?.map((color: Color) => {
-          const coloor = colors[color.id] ?? "bg-gray-500";
+          const coloor = (colors && colors[color.id]) ?? "bg-gray-500";
           return (
-            <Carousel.Slide key={color.id}>
+            <Carousel.Slide key={color.id} style={{ margin: "5px" }}>
               <Skeleton visible={loading}>
                 <Link
                   href={{
@@ -121,7 +134,7 @@ function CarouselWine({
           );
         })}
         {wineData?.map((wine) => {
-          const coloor = colors[wine.wineColorId] ?? "bg-gray-500";
+          const coloor = (colors && colors[wine.wineColorId]) ?? "bg-gray-500";
           return (
             <Carousel.Slide key={wine.id}>
               <Skeleton visible={loading}>
@@ -148,6 +161,37 @@ function CarouselWine({
                       {wine.name.toUpperCase()}
                     </p>
                     <p className="font-sans font-semibold">{wine.vintage}</p>
+                  </div>
+                </Link>
+              </Skeleton>
+            </Carousel.Slide>
+          );
+        })}
+        {wineBottlesFormat?.map((format: BottleFormat) => {
+          return (
+            <Carousel.Slide
+              key={format.id}
+              style={{
+                boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[5]
+                    : theme.colors.gray[3],
+                borderRadius: "10px",
+                margin: "8px 5px",
+                padding: "2px 15px 2px 15px",
+              }}
+            >
+              <Skeleton visible={loading}>
+                <Link
+                  href={{
+                    pathname: "/wines/format/[id]",
+                    query: { id: format.id },
+                  }}
+                >
+                  <div className="flexcol xy-center truncate">
+                    <p className="font-sans text-sm font-bold">{format.name}</p>
+                    <p className="font-sans text-sm font-bold">{`(${format.capacity})`}</p>
                   </div>
                 </Link>
               </Skeleton>

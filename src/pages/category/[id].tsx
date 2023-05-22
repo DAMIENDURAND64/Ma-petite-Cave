@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import NavigationButton from "~/components/buttons/NavigationButton";
+import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
 import { api } from "~/utils/api";
@@ -13,7 +14,11 @@ const Color = () => {
 
   const wineColorId = parseInt(id as string, 10);
 
-  const { data: wineColorQuery, error } = api.wines.getAllByColor.useQuery(
+  const {
+    data: wineColorQuery,
+    error,
+    isLoading,
+  } = api.wines.getAllByColor.useQuery(
     { wineColorId },
     {
       enabled: !!id,
@@ -27,8 +32,14 @@ const Color = () => {
   if (error) {
     return <div>error</div>;
   }
+  if (isLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
+  }
 
-  console.log(id);
   return (
     <div className="flexcol gap-3">
       <div className="flex gap-2">

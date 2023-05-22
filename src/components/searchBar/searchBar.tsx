@@ -1,4 +1,4 @@
-import { Autocomplete, useMantineTheme } from "@mantine/core";
+import { Autocomplete } from "@mantine/core";
 import { type Wine } from "@prisma/client";
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -11,7 +11,6 @@ type SearchBarProps = {
 };
 
 const SearchBar = ({ wineData }: SearchBarProps) => {
-  const theme = useMantineTheme();
   const router = useRouter();
   const [value, setValue] = useState("");
 
@@ -53,18 +52,9 @@ const SearchBar = ({ wineData }: SearchBarProps) => {
 
   return (
     <div className="x-center mb-2 flex">
-      <div className="w-3/4">
+      <div className="w-5/6">
         <Autocomplete
-          icon={
-            <IconSearch
-              style={{
-                color:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.violet[9]
-                    : theme.colors.dark[9],
-              }}
-            />
-          }
+          icon={<IconSearch />}
           value={value}
           maxDropdownHeight={150}
           onChange={setValue}
@@ -77,22 +67,18 @@ const SearchBar = ({ wineData }: SearchBarProps) => {
           transitionProps={{ duration: 300 }}
           styles={(theme) => ({
             input: {
-              borderColor:
+              fontFamily: "Helvetica",
+              fontSize: "1.1rem",
+              border: `3px solid ${
                 theme.colorScheme === "dark"
-                  ? theme.colors.violet[9]
-                  : theme.colors.dark[9],
-              color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.violet[9]
-                  : theme.colors.dark[9],
-              "::placeholder": {
-                color:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.violet[9]
-                    : theme.colors.dark[9],
-              },
+                  ? `${theme.colors.violet[9]} !important`
+                  : `${theme.colors.violet[6]} !important`
+              }}`,
             },
           })}
+          style={{
+            fontFamily: "Helvetica",
+          }}
         />
       </div>
     </div>

@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
+import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
@@ -19,7 +20,7 @@ function GetOneWine() {
   const { id } = router.query;
   const wineId = parseInt(id as string, 10);
 
-  const wineQuery = api.wines.getOne.useQuery(
+  const { data: wineQuery, isLoading } = api.wines.getOne.useQuery(
     { id: wineId },
     {
       enabled: !!id,
@@ -35,10 +36,18 @@ function GetOneWine() {
         tastingNotes: TastingNote[];
       })
     | null
-    | undefined = wineQuery.data;
+    | undefined = wineQuery;
 
   if (sessionData === null) {
     return <Unauthorized />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
   }
 
   const wineColorId: number | undefined = wine?.wineColorId;
@@ -49,14 +58,18 @@ function GetOneWine() {
 
   return (
     <div className="flexcol gap-3">
-      <div className="ml-3 mt-1">
+      <div className="flex gap-2">
         <NavigationButton
           size="sm"
           label="retour"
+          radius="md"
           onClick={() => {
             router.push("/wines").catch((err) => console.log(err));
           }}
         />
+        <div className={`${coloor} xy-center flex h-[26px] w-full rounded-md`}>
+          <h1 className="text-lg">{wine?.wineColor?.name}</h1>
+        </div>
       </div>
       <div className="flexcol xy-center mx-3">
         <Image
@@ -71,7 +84,6 @@ function GetOneWine() {
         <h2>{`Nom: ${wine.name.toUpperCase()}`}</h2>
         <div className="y-center flex gap-3">
           <p>{`Producteur: ${wine?.producer}`}</p>
-          <p className={`${coloor} h-3 w-3 rounded-full`} />
         </div>
         <p>{`Pays: ${wine.country}`}</p>
         <p>{`Region: ${wine.region}`}</p>

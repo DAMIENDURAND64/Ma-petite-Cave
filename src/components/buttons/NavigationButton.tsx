@@ -14,28 +14,23 @@ const NavigationButton = ({
   variant,
   radius,
   size,
-  color,
   onClick,
   label,
 }: NavigationButtonProps) => {
   const theme = useMantineTheme();
   return (
     <Button
-      variant={variant ?? "outline"}
+      variant={variant ?? "filled"}
       radius={radius ?? "xl"}
       compact
       size={size ?? "xs"}
       onClick={onClick}
-      color={color ?? "violet"}
       style={{
-        borderColor:
+        backgroundColor:
           theme.colorScheme === "dark"
             ? theme.colors.violet[9]
-            : theme.colors.dark[9],
-        color:
-          theme.colorScheme === "dark"
-            ? theme.colors.violet[9]
-            : theme.colors.dark[9],
+            : theme.colors.violet[6],
+        fontFamily: "Helvetica",
       }}
     >
       {label}

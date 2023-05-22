@@ -8,6 +8,7 @@ import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { api } from "~/utils/api";
 import { IconPlus } from "@tabler/icons-react";
 import useStyles from "~/utils/mantineStyle/AccordionStyle";
+import { LoaderRing } from "~/components/loader/loaderRing";
 
 const IndexStats = () => {
   const { data: sessionData } = useSession();
@@ -15,11 +16,21 @@ const IndexStats = () => {
     "Bouteilles",
   ]);
   const { classes } = useStyles();
-  const { data: allWinesData } = api.wines.getAll.useQuery();
-  const { data: allFormatsData } = api.bottleFormat.getAll.useQuery();
+  const { data: allWinesData, isLoading: allWinesDataLoading } =
+    api.wines.getAll.useQuery();
+  const { data: allFormatsData, isLoading: allFormatsDataLoading } =
+    api.bottleFormat.getAll.useQuery();
 
   if (sessionData === null) {
     return <Unauthorized />;
+  }
+
+  if (allWinesDataLoading || allFormatsDataLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
   }
 
   const controlStyle = accordion?.includes(
@@ -109,7 +120,7 @@ const IndexStats = () => {
         styles={{
           chevron: {
             "&[data-rotate]": {
-              transform: "rotate(45deg)",
+              transform: "rotate(135deg)",
             },
           },
         }}
