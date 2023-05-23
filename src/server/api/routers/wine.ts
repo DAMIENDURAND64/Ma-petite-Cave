@@ -43,6 +43,40 @@ export const wineRouter = createTRPCRouter({
         },
       });
     }),
+  getAllByBottleFormat: publicProcedure
+    .input(z.object({ formatId: z.number() }))
+    .query(({ ctx, input }) => {
+      if (!ctx.session?.user.id) {
+        throw new Error("User must be logged in to view wine records");
+      }
+      return ctx.prisma.wine.findMany({
+        where: {
+          ownerId: ctx.session?.user.id,
+          wineBottles: {
+            some: {
+              formatId: input.formatId,
+            },
+          },
+        },
+        include: {
+          wineColor: true,
+          wineBottles: {
+            where: {
+              formatId: input.formatId,
+            },
+            include: {
+              format: {
+                select: {
+                  name: true,
+                  capacity: true,
+                },
+              },
+            },
+          },
+          tastingNotes: true,
+        },
+      });
+    }),
   getOne: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(({ ctx, input }) => {
