@@ -29,8 +29,6 @@ const SearchBar = ({ wineData }: SearchBarProps) => {
     router.push(`/wines/${id}`).catch((err) => console.log(err));
   };
 
-  console.log(data);
-
   const autoCompleteItem = ({
     value,
     wineColor,

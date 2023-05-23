@@ -1,4 +1,4 @@
-import { Skeleton } from "@mantine/core";
+import { Skeleton, useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 
 import { useRouter } from "next/router";
@@ -11,8 +11,10 @@ import { api } from "~/utils/api";
 
 const WineList = () => {
   const { data: sessionData } = useSession();
+  const theme = useMantineTheme();
   const router = useRouter();
   const { data: wines, isLoading } = api.wines.getAll.useQuery();
+  const dark = theme.colorScheme === "dark";
 
   if (sessionData === null) {
     return <Unauthorized />;
@@ -27,8 +29,8 @@ const WineList = () => {
   }
   return (
     <div className="flexcol gap-3">
-      <div className="ml-1 mt-1">
-        <Skeleton visible={isLoading}>
+      <Skeleton visible={isLoading}>
+        <div className="flex gap-2">
           <NavigationButton
             size="sm"
             radius="md"
@@ -37,8 +39,16 @@ const WineList = () => {
               router.push("/homepage").catch((err) => console.log(err));
             }}
           />
-        </Skeleton>
-      </div>
+
+          <div
+            className={`xy-center flex h-[26px] w-full rounded-md ${
+              dark ? "bg-[#2C2E33]" : "bg-[#DEE2E6]"
+            }`}
+          >
+            <h1 className="text-lg">Ma Cave</h1>
+          </div>
+        </div>
+      </Skeleton>
       <div className="mx-6">
         <WineListTemplate wines={wines} loading={isLoading} />
       </div>

@@ -42,6 +42,21 @@ const Layout = ({ children }: PropsWithChildren) => {
       name: "Stats",
       icon: <FaChartBar size="2rem" onClick={handleNavigationStats} />,
     },
+    {
+      name: "Ajouter un vin",
+      icon: (
+        <RiAddCircleFill
+          color={
+            theme.colorScheme === "dark"
+              ? theme.colors.violet[9]
+              : theme.colors.violet[6]
+          }
+          style={{ backgroundColor: "white", borderRadius: "50%" }}
+          size="2rem"
+          onClick={handleNavigationAddWine}
+        />
+      ),
+    },
   ];
 
   return (
@@ -99,33 +114,19 @@ const Layout = ({ children }: PropsWithChildren) => {
             className="flexcol xy-center text-[11px]"
           >
             {item.icon}
-            <span>{item.name}</span>
+            <span
+              className={
+                item.name === "Ajouter un vin"
+                  ? theme.colorScheme === "dark"
+                    ? "text-[#5F3DC4]"
+                    : "text-[#7950F2]"
+                  : ""
+              }
+            >
+              {item.name}
+            </span>
           </motion.div>
         ))}
-        <motion.div className="flexcol xy-center text-[11px]">
-          <div
-            className={`rounded-full border-4 border-${
-              theme.colorScheme === "dark" ? "[#5F3DC4]" : "[#7950F2]"
-            } bg-white`}
-          >
-            <RiAddCircleFill
-              color={
-                theme.colorScheme === "dark"
-                  ? theme.colors.violet[9]
-                  : theme.colors.violet[6]
-              }
-              size="2rem"
-              onClick={handleNavigationAddWine}
-            />
-          </div>
-          <p
-            className={
-              theme.colorScheme === "dark" ? "text-[#5F3DC4]" : "text-[#7950F2]"
-            }
-          >
-            Ajouter un vin
-          </p>
-        </motion.div>
       </div>
     </>
   );

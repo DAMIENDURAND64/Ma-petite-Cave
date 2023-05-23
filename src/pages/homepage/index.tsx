@@ -47,24 +47,17 @@ function Homepage() {
       </div>
     );
   }
-  console.log(wineBottlesFormat);
   return (
-    <div className="w-full overflow-y-auto">
+    <div className="flexcol w-full gap-4 overflow-y-auto">
       <SearchBar wineData={wines} />
 
       <CarouselWine
         colors={Colors}
         colorData={wineColor}
-        height="75px"
         controlsProps="10px"
       />
       {wines.length > 0 ? (
-        <CarouselWine
-          colors={Colors}
-          wineData={wines}
-          height="280px"
-          controlsProps="10px"
-        />
+        <CarouselWine colors={Colors} wineData={wines} controlsProps="10px" />
       ) : (
         <div className="flexcol xy-center gap-2 pt-10 text-center text-2xl font-bold">
           Aucun vin en cave
@@ -73,7 +66,6 @@ function Homepage() {
       )}
       <CarouselWine
         wineBottlesFormat={wineBottlesFormat}
-        height="90px"
         controlsProps="10px"
       />
     </div>

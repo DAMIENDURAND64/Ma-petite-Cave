@@ -34,7 +34,7 @@ function WineListTemplate({ wines }: Props) {
   }, []);
 
   return (
-    <Grid justify="space-around" grow gutter="xl">
+    <Grid justify="space-around" grow gutter="xl" style={{ marginTop: "1px" }}>
       {wines?.map((wine) => {
         const coloor = colors[wine.wineColor.id] ?? "bg-gray-500";
         return (
