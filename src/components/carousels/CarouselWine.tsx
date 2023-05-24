@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Carousel } from "@mantine/carousel";
-import { Skeleton, getStylesRef, useMantineTheme } from "@mantine/core";
+import React, { useCallback, useEffect, useState } from "react";
+import { Carousel, type Embla } from "@mantine/carousel";
+import { Progress, Skeleton, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
 import type {
   BottleFormat,
@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import NavigationButton from "../buttons/NavigationButton";
 
 type CarouselProps = {
-  controlsProps?: string;
   colorData?: Color[];
   wineData?: (Wine & {
     wineBottles: WineBottle[];
@@ -30,11 +29,12 @@ function CarouselWine({
   wineData,
   wineBottlesFormat,
   colors,
-  controlsProps,
 }: CarouselProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useMantineTheme();
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [embla, setEmbla] = useState<Embla | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,6 +42,19 @@ function CarouselWine({
     }, 300);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleScroll = useCallback(() => {
+    if (!embla) return;
+    const progress = Math.max(0, Math.min(1, embla.scrollProgress()));
+    setScrollProgress(progress * 100);
+  }, [embla, setScrollProgress]);
+
+  useEffect(() => {
+    if (embla) {
+      embla.on("scroll", handleScroll);
+      handleScroll();
+    }
+  }, [embla, handleScroll]);
   return (
     <div>
       {colorData && (
@@ -74,7 +87,8 @@ function CarouselWine({
         </div>
       )}
       <Carousel
-        withIndicators={false}
+        withControls={false}
+        getEmblaApi={setEmbla}
         slideSize="30%"
         loop
         align="start"
@@ -82,18 +96,7 @@ function CarouselWine({
         slideGap={3}
         speed={5}
         styles={{
-          controls: {
-            ref: getStylesRef("controls"),
-            transition: "opacity 150ms ease",
-            opacity: 0,
-            top: controlsProps,
-          },
           root: {
-            "&:hover": {
-              [`& .${getStylesRef("controls")}`]: {
-                opacity: 1,
-              },
-            },
             ".mantine-1my8u2w": {
               paddingLeft: "6px !important",
             },
@@ -101,14 +104,16 @@ function CarouselWine({
         }}
       >
         {colorData?.map((color: Color) => {
-          const coloor = (colors && colors[color.id]) ?? "bg-gray-500";
+          const coloor = colors ? colors[color.id] : "bg-gray-500";
           return (
             <Carousel.Slide
               key={color.id}
               style={{
-                margin: "8px",
-                boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+                margin: "3px",
+                boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
                 borderRadius: "10px",
+                marginTop: "10px",
+                marginBottom: "10px",
                 width: "128px",
               }}
             >
@@ -119,7 +124,11 @@ function CarouselWine({
                     query: { id: color.id },
                   }}
                 >
-                  <div className={`${coloor} relative h-10 w-32 rounded-md `}>
+                  <div
+                    className={`${
+                      coloor as string
+                    } relative h-10 w-32 rounded-md `}
+                  >
                     <p className="absolute-center font-sans text-sm font-bold">
                       {color.name}
                     </p>
@@ -130,7 +139,7 @@ function CarouselWine({
           );
         })}
         {wineData?.map((wine) => {
-          const coloor = (colors && colors[wine.wineColorId]) ?? "bg-gray-500";
+          const coloor = colors ? colors[wine.wineColorId] : "bg-gray-500";
           return (
             <Carousel.Slide
               key={wine.id}
@@ -139,10 +148,12 @@ function CarouselWine({
                   theme.colorScheme === "dark"
                     ? theme.colors.dark[6]
                     : theme.colors.gray[1],
-                boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+                boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
                 borderRadius: "10px",
-                margin: "8px ",
+                margin: "3px ",
                 padding: "10px",
+                marginTop: "10px",
+                marginBottom: "10px",
               }}
             >
               <Skeleton visible={loading}>
@@ -154,7 +165,9 @@ function CarouselWine({
                   }}
                 >
                   <div className="w-36">
-                    <div className={`${coloor} h-3 w-full rounded-t-md`} />
+                    <div
+                      className={`${coloor as string} h-3 w-full rounded-t-md`}
+                    />
                     <div
                       className={`flexcol y-center h-[255px]  rounded-md  text-center text-xs`}
                     >
@@ -182,13 +195,15 @@ function CarouselWine({
             <Carousel.Slide
               key={format.id}
               style={{
-                boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+                boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
                 backgroundColor:
                   theme.colorScheme === "dark"
                     ? theme.colors.dark[6]
                     : theme.colors.gray[1],
                 borderRadius: "10px",
-                margin: "8px",
+                margin: "3px",
+                marginTop: "10px",
+                marginBottom: "10px",
                 padding: "5px",
               }}
             >
@@ -209,6 +224,25 @@ function CarouselWine({
           );
         })}
       </Carousel>
+      <Progress
+        value={scrollProgress}
+        styles={{
+          bar: {
+            transitionDuration: "100ms",
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[1]
+                : theme.colors.gray[5],
+          },
+          root: {
+            maxWidth: "250px",
+            marginTop: "5px !important",
+          },
+        }}
+        size="sm"
+        mt="xl"
+        mx="auto"
+      />
     </div>
   );
 }
