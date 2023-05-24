@@ -50,24 +50,16 @@ function Homepage() {
   return (
     <div className="flexcol w-full gap-4 overflow-y-auto">
       <SearchBar wineData={wines} />
-
-      <CarouselWine
-        colors={Colors}
-        colorData={wineColor}
-        controlsProps="10px"
-      />
+      <CarouselWine colors={Colors} colorData={wineColor} />
       {wines.length > 0 ? (
-        <CarouselWine colors={Colors} wineData={wines} controlsProps="10px" />
+        <CarouselWine colors={Colors} wineData={wines} />
       ) : (
         <div className="flexcol xy-center gap-2 pt-10 text-center text-2xl font-bold">
           Aucun vin en cave
           <RiAddCircleFill size="3rem" onClick={handleNavigationAddWine} />
         </div>
       )}
-      <CarouselWine
-        wineBottlesFormat={wineBottlesFormat}
-        controlsProps="10px"
-      />
+      <CarouselWine wineBottlesFormat={wineBottlesFormat} />
     </div>
   );
 }
