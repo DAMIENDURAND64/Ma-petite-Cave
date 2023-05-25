@@ -1,11 +1,6 @@
 // Quantity.tsx
 import React from "react";
-import {
-  type Control,
-  Controller,
-  type FieldErrors,
-  UseFormRegister,
-} from "react-hook-form";
+import { type Control, Controller, type FieldErrors } from "react-hook-form";
 import { NumberInput } from "@mantine/core";
 import { type TFormValues } from "../FormType";
 
@@ -14,7 +9,6 @@ type QuantityProps = {
   formatId: string;
   formatName: string;
   errors: FieldErrors<TFormValues>;
-  register: UseFormRegister<TFormValues>;
 };
 
 function WineBottleForm({
@@ -22,7 +16,6 @@ function WineBottleForm({
   formatId,
   formatName,
   errors,
-  register,
 }: QuantityProps) {
   return (
     <div className="rounded-md bg-slate-500 p-3">
@@ -34,6 +27,8 @@ function WineBottleForm({
           <NumberInput
             parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             label="Price"
+            min={1}
+            defaultValue={1}
             max={100000}
             hideControls
             error={errors.price?.message}
@@ -50,6 +45,9 @@ function WineBottleForm({
           <NumberInput
             label="Quantity"
             hideControls
+            min={1}
+            defaultValue={1}
+            max={100000}
             error={errors.quantity?.message}
             placeholder={!errors.quantity?.message ? "0" : ""}
             value={field.value}

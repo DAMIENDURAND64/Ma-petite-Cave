@@ -38,7 +38,6 @@ const CreateWineFormLogic = () => {
     handleSubmit,
     control,
     setValue,
-    setError,
     watch,
     getValues,
     formState: { errors },
@@ -47,7 +46,6 @@ const CreateWineFormLogic = () => {
   const createWineMutation = api.wines.create.useMutation();
 
   const onSubmit: SubmitHandler<TFormValues> = async (data) => {
-    console.log(data);
     setLoading(true);
 
     if (sessionData && bottleFormat) {
@@ -69,34 +67,9 @@ const CreateWineFormLogic = () => {
           const quantity = data[`quantity_${formatId}`];
           const price = data[`price_${formatId}`];
 
-          if (quantity === undefined || price === undefined) {
-            setError(`quantity_${formatId}`, {
-              type: "required",
-              message: "Quantity is required",
-            });
-            setError(`price_${formatId}`, {
-              type: "required",
-              message: "Price is required",
-            });
-            setLoading(false);
-            return;
-          }
-          if (quantity <= 0 || price <= 0) {
-            setError(`quantity_${formatId}`, {
-              type: "min",
-              message: "Quantity must be greater than 0",
-            });
-            setError(`price_${formatId}`, {
-              type: "min",
-              message: "Price must be greater than 0",
-            });
-            setLoading(false);
-            return;
-          }
-
           wineBottles.push({
-            quantity: quantity,
-            price: price,
+            quantity: quantity || 1,
+            price: price || 1,
             format: {
               id: parseInt(formatId),
               capacity: format.capacity,
@@ -120,7 +93,7 @@ const CreateWineFormLogic = () => {
         wineColorId: parseInt(data.wineColorId),
         wineBottles: wineBottles,
       };
-      console.log(payload, "payload");
+
       try {
         await createWineMutation.mutateAsync(payload);
       } catch (err) {
