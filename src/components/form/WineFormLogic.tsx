@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import { FormProvider, type SubmitHandler, useForm } from "react-hook-form";
 
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
@@ -12,6 +9,8 @@ import { uploadFileToCloud } from "~/utils/cloudinary";
 import StepperForm from "./components/StepperForm";
 import { type TFormValues, type WineBottleProps } from "./FormType";
 import { useRouter } from "next/router";
+import { yupResolver } from "@hookform/resolvers/yup";
+import schema from "./components/ValidationSchema";
 
 const CreateWineFormLogic = () => {
   const { data: sessionData } = useSession();
@@ -29,25 +28,9 @@ const CreateWineFormLogic = () => {
   const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
   const { data: wineColor } = api.color.getAll.useQuery();
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    producer: Yup.string().required("Producer is required"),
-    country: Yup.string().required("Country is required"),
-    region: Yup.string().required("Region is required"),
-    vintage: Yup.number()
-      .required("Vintage is required")
-      .test("len", "Max 4 numbers", (val) => val.toString().length <= 4),
-    purchasedAt: Yup.date().required("Purchased at is required"),
-    description: Yup.string().required("Description is required"),
-    servingTemperature: Yup.string().required(
-      "Serving temperature is required"
-    ),
-    formats: Yup.array().of(Yup.string().required("Format is required")),
-    wineColorId: Yup.string().required("Color is required"),
-  });
-
   const methods = useForm<TFormValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(schema),
+    mode: "onChange",
   });
 
   const {
@@ -55,17 +38,26 @@ const CreateWineFormLogic = () => {
     handleSubmit,
     control,
     setValue,
+    setError,
+    watch,
+    getValues,
     formState: { errors },
   } = methods;
 
   const createWineMutation = api.wines.create.useMutation();
 
-  const onSubmit = async (data: TFormValues) => {
+  const onSubmit: SubmitHandler<TFormValues> = async (data) => {
+    console.log(data);
     setLoading(true);
+
     if (sessionData && bottleFormat) {
       let imageUrl = "/images/black_crows.jpg";
       if (file) {
-        imageUrl = await uploadFileToCloud(file);
+        try {
+          imageUrl = await uploadFileToCloud(file);
+        } catch (err) {
+          console.log(err);
+        }
       }
 
       const wineBottles: WineBottleProps["wineBottles"] = [];
@@ -74,9 +66,37 @@ const CreateWineFormLogic = () => {
         const format = bottleFormat.find((f) => f.id.toString() === formatId);
 
         if (format) {
+          const quantity = data[`quantity_${formatId}`];
+          const price = data[`price_${formatId}`];
+
+          if (quantity === undefined || price === undefined) {
+            setError(`quantity_${formatId}`, {
+              type: "required",
+              message: "Quantity is required",
+            });
+            setError(`price_${formatId}`, {
+              type: "required",
+              message: "Price is required",
+            });
+            setLoading(false);
+            return;
+          }
+          if (quantity <= 0 || price <= 0) {
+            setError(`quantity_${formatId}`, {
+              type: "min",
+              message: "Quantity must be greater than 0",
+            });
+            setError(`price_${formatId}`, {
+              type: "min",
+              message: "Price must be greater than 0",
+            });
+            setLoading(false);
+            return;
+          }
+
           wineBottles.push({
-            quantity: data[`quantity_${formatId}`] || 1,
-            price: data[`price_${formatId}`] || 1,
+            quantity: quantity,
+            price: price,
             format: {
               id: parseInt(formatId),
               capacity: format.capacity,
@@ -100,18 +120,29 @@ const CreateWineFormLogic = () => {
         wineColorId: parseInt(data.wineColorId),
         wineBottles: wineBottles,
       };
-      createWineMutation.mutate(payload);
+      console.log(payload, "payload");
+      try {
+        await createWineMutation.mutateAsync(payload);
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+        return;
+      }
     }
+
     setLoading(false);
+
+    try {
+      await router.push("/wines");
+    } catch (err) {
+      console.log(err);
+    }
   };
-  const handleFormSubmit = async () => {
-    await handleSubmit(onSubmit)();
-    await router.push("/homepage");
-  };
+
   return (
     <div className="w-full p-3">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <StepperForm
             bottleFormat={bottleFormat}
             formatsValue={formatsValue}
@@ -128,6 +159,8 @@ const CreateWineFormLogic = () => {
             file={file}
             errors={errors}
             register={register}
+            watch={watch}
+            getValues={getValues}
           />
         </form>
       </FormProvider>

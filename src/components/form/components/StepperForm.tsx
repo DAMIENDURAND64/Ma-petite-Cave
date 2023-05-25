@@ -11,6 +11,8 @@ import {
   type Control,
   type UseFormSetValue,
   type UseFormRegister,
+  type UseFormGetValues,
+  type UseFormWatch,
 } from "react-hook-form";
 import { type BottleFormat, type Color } from "@prisma/client";
 import WineFormStep2 from "./WineFormStep2";
@@ -35,6 +37,8 @@ type StepperFormProps = {
   setFile: (files: File) => void;
   errors: FieldErrors<TFormValues>;
   register: UseFormRegister<TFormValues>;
+  getValues: UseFormGetValues<TFormValues>;
+  watch: UseFormWatch<TFormValues>;
 };
 
 const stepperStyle = createStyles((theme) => ({
@@ -58,12 +62,9 @@ const stepperStyle = createStyles((theme) => ({
 }));
 
 const StepperForm = ({
-  formatsValue,
-  setFormatsValue,
   control,
   wineColor,
   bottleFormat,
-  setValue,
   nextStep,
   prevStep,
   setActive,
@@ -73,6 +74,7 @@ const StepperForm = ({
   active,
   errors,
   register,
+  watch,
 }: StepperFormProps) => {
   const theme = useMantineTheme();
 
@@ -91,6 +93,9 @@ const StepperForm = ({
       errors.purchasedAt ||
       errors.servingTemperature);
 
+  const hasErrorsStep2 =
+    hasErrors && (errors.formats || errors.price || errors.quantity);
+
   return (
     <div>
       <Stepper
@@ -101,13 +106,13 @@ const StepperForm = ({
         className={hasErrors ? classes.error : ""}
       >
         <Stepper.Step
-          color={
-            hasErrorsStep1
-              ? "red"
-              : theme.colorScheme === "dark"
-              ? theme.colors.violet[9]
-              : theme.colors.violet[6]
-          }
+          color={hasErrorsStep1 ? "red" : ""}
+          style={{
+            borderColor:
+              theme.colorScheme === "dark"
+                ? `${theme.colors.violet[9]} !important`
+                : `${theme.colors.violet[6]} !important`,
+          }}
           completedIcon={hasErrorsStep1 ? <IconCircleX /> : ""}
         >
           <WineFormStep1
@@ -118,33 +123,31 @@ const StepperForm = ({
           />
         </Stepper.Step>
         <Stepper.Step
-          color={
-            errors.formats
-              ? "red"
-              : theme.colorScheme === "dark"
-              ? theme.colors.violet[9]
-              : theme.colors.violet[6]
-          }
+          color={hasErrorsStep2 ? "red" : ""}
+          style={{
+            borderColor:
+              theme.colorScheme === "dark"
+                ? `${theme.colors.violet[9]} !important`
+                : `${theme.colors.violet[6]} !important`,
+          }}
           completedIcon={errors.formats && <IconCircleX />}
         >
           <WineFormStep2
             bottleFormat={bottleFormat}
-            setValue={setValue}
-            formatsValue={formatsValue}
             control={control}
-            setFormatsValue={setFormatsValue}
             errors={errors}
+            watch={watch}
             register={register}
           />
         </Stepper.Step>
         <Stepper.Step
-          color={
-            errors.description
-              ? "red"
-              : theme.colorScheme === "dark"
-              ? theme.colors.violet[9]
-              : theme.colors.violet[6]
-          }
+          color={errors.description ? "red" : ""}
+          style={{
+            borderColor:
+              theme.colorScheme === "dark"
+                ? `${theme.colors.violet[9]} !important`
+                : `${theme.colors.violet[6]} !important`,
+          }}
           completedIcon={errors.description && <IconCircleX />}
         >
           <WineFormStep3
