@@ -25,17 +25,14 @@ function WineBottleForm({
         control={control}
         render={({ field }) => (
           <NumberInput
-            name="price"
             parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-            formatter={(value) =>
-              !Number.isNaN(parseFloat(value))
-                ? `${value} €`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                : " 1 €"
-            }
             label="Price"
+            min={1}
+            defaultValue={1}
             max={100000}
             hideControls
-            error={!!errors.price}
+            error={errors.price?.message}
+            placeholder={!errors.price?.message ? "0" : ""}
             value={field.value}
             onChange={(value) => field.onChange(value)}
           />
@@ -48,8 +45,11 @@ function WineBottleForm({
           <NumberInput
             label="Quantity"
             hideControls
-            error={!!errors.quantity}
-            placeholder={errors.quantity ? errors.quantity.message : "0"}
+            min={1}
+            defaultValue={1}
+            max={100000}
+            error={errors.quantity?.message}
+            placeholder={!errors.quantity?.message ? "0" : ""}
             value={field.value}
             onChange={(value) => field.onChange(value)}
           />
