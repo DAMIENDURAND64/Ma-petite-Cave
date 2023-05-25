@@ -1,66 +1,62 @@
 import { MultiSelect } from "@mantine/core";
-import React, { type Dispatch } from "react";
+import React from "react";
 import { type TFormValues } from "../FormType";
 import { type BottleFormat } from "@prisma/client";
 import {
-  type UseFormSetValue,
   type Control,
   type FieldErrors,
-  type UseFormRegister,
+  Controller,
+  type UseFormWatch,
+  UseFormRegister,
 } from "react-hook-form";
 import WineBottleForm from "./WineBottleFormatForm";
 
 type WineFormStep2Props = {
   bottleFormat?: BottleFormat[];
   control: Control<TFormValues>;
-  formatsValue: string[];
-  setValue: UseFormSetValue<TFormValues>;
-  setFormatsValue: Dispatch<React.SetStateAction<string[]>>;
   errors: FieldErrors<TFormValues>;
+  watch: UseFormWatch<TFormValues>;
   register: UseFormRegister<TFormValues>;
 };
 
 const WineFormStep2 = ({
   bottleFormat,
   control,
-  formatsValue,
-  setFormatsValue,
-  setValue,
   errors,
+  watch,
   register,
 }: WineFormStep2Props) => {
+  const selectedFormats = watch("formats");
+
   return (
     <div className="flexcol gap-4 px-3">
       {bottleFormat && (
-        <MultiSelect
-          {...register("formats")}
-          data={bottleFormat?.map((format) => ({
-            value: format.id.toString(),
-            label: `${format.name} (${format.capacity})`,
-          }))}
-          label="Formats"
-          placeholder={
-            errors.formats
-              ? "At least one format is required"
-              : "Select formats"
-          }
-          transitionProps={{
-            duration: 150,
-            transition: "pop-top-left",
-            timingFunction: "ease",
-          }}
-          searchable
-          defaultValue={[]}
-          value={formatsValue}
-          onChange={(value) => {
-            setFormatsValue(value);
-            setValue("formats", value);
-          }}
-          error={!!errors.formats}
+        <Controller
+          name="formats"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              data={bottleFormat?.map((format) => ({
+                value: format.id.toString(),
+                label: `${format.name} (${format.capacity})`,
+              }))}
+              label="Formats"
+              placeholder="Select formats"
+              transitionProps={{
+                duration: 150,
+                transition: "pop-top-left",
+                timingFunction: "ease",
+              }}
+              searchable
+              {...field}
+              onChange={(value) => field.onChange(value)}
+              error={errors.formats?.message}
+            />
+          )}
         />
       )}
       <div>
-        {formatsValue?.map((formatId: string) => {
+        {selectedFormats?.map((formatId: string) => {
           const format = bottleFormat?.find(
             (f) => f.id.toString() === formatId
           );
@@ -75,6 +71,7 @@ const WineFormStep2 = ({
                 formatId={formatId}
                 formatName={formatName}
                 errors={errors}
+                register={register}
               />
             </div>
           );

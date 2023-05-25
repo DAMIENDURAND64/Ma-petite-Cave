@@ -28,28 +28,28 @@ const WineFormStep1 = ({
       <TextInput
         {...register("name")}
         label="Name"
-        error={!!errors.name}
-        placeholder={errors.name ? errors.name.message : "Domaine de Trevallon"}
+        error={errors.name?.message}
+        placeholder={!errors.name ? "Domaine de Trevallon" : ""}
       />
+
       <TextInput
         {...register("producer")}
         label="Producer"
-        error={!!errors.producer}
-        placeholder={
-          errors.producer ? errors.producer.message : "Famille DÜRRBACH"
-        }
+        error={errors.producer?.message}
+        placeholder={!errors.producer ? "Famille DÜRRBACH" : ""}
       />
+
       <TextInput
         {...register("country")}
         label="Country"
-        error={!!errors.country}
-        placeholder={errors.country ? errors.country.message : "France"}
+        error={errors.country?.message}
+        placeholder={!errors.country ? "France" : ""}
       />
       <TextInput
         {...register("region")}
         label="Region"
-        error={!!errors.region}
-        placeholder={errors.region ? errors.region.message : "Provence"}
+        error={errors.region?.message}
+        placeholder={!errors.region ? "Provence" : ""}
       />
       {wineColor && (
         <Controller
@@ -65,15 +65,13 @@ const WineFormStep1 = ({
                 })) as SelectItem[]
               }
               label="Color"
-              placeholder={
-                errors.wineColorId ? errors.wineColorId.message : "Rouge"
-              }
+              placeholder={!errors.wineColorId ? "Rouge" : ""}
               searchable
               transitionProps={{
                 duration: 350,
                 transition: "pop",
               }}
-              error={!!errors.wineColorId}
+              error={errors.wineColorId?.message}
               onChange={(value) => field.onChange(value)}
               value={field.value}
             />
@@ -85,12 +83,13 @@ const WineFormStep1 = ({
         control={control}
         render={({ field }) => (
           <NumberInput
-            placeholder={errors.vintage ? errors.vintage.message : "2022"}
+            placeholder={!errors.vintage ? "2023" : ""}
             label="Vintage"
             hideControls
-            error={!!errors.vintage}
             onChange={(value) => field.onChange(value)}
             value={field.value}
+            error={errors.vintage?.message}
+            type="number"
           />
         )}
       />
@@ -101,28 +100,21 @@ const WineFormStep1 = ({
           <DateInput
             size="xs"
             valueFormat="YYYY MMM DD"
+            maxDate={new Date()}
+            minDate={new Date(1900, 1, 1)}
             label="Purchased At"
-            error={!!errors.purchasedAt}
+            error={errors.purchasedAt?.message}
             value={field.value}
             onChange={(value) => field.onChange({ target: { value } })}
-            placeholder={
-              errors.purchasedAt
-                ? errors.purchasedAt.message
-                : new Date().toDateString()
-            }
+            placeholder={!errors.purchasedAt ? new Date().toDateString() : ""}
           />
         )}
       />
-
       <TextInput
         {...register("servingTemperature")}
         label="Serving temperature"
-        placeholder={
-          errors.servingTemperature
-            ? errors.servingTemperature.message
-            : "10/12°C"
-        }
-        error={!!errors.servingTemperature}
+        placeholder={!errors.servingTemperature ? "10/12°C" : ""}
+        error={errors.servingTemperature?.message}
       />
     </div>
   );
