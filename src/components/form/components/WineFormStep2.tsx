@@ -7,7 +7,6 @@ import {
   type FieldErrors,
   Controller,
   type UseFormWatch,
-  UseFormRegister,
 } from "react-hook-form";
 import WineBottleForm from "./WineBottleFormatForm";
 
@@ -16,7 +15,6 @@ type WineFormStep2Props = {
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
   watch: UseFormWatch<TFormValues>;
-  register: UseFormRegister<TFormValues>;
 };
 
 const WineFormStep2 = ({
@@ -24,7 +22,6 @@ const WineFormStep2 = ({
   control,
   errors,
   watch,
-  register,
 }: WineFormStep2Props) => {
   const selectedFormats = watch("formats");
 
@@ -71,7 +68,6 @@ const WineFormStep2 = ({
                 formatId={formatId}
                 formatName={formatName}
                 errors={errors}
-                register={register}
               />
             </div>
           );

@@ -55,18 +55,6 @@ const schema = yup
       .of(yup.string())
       .required("Select at least one format"),
 
-    quantity: yup
-      .number()
-      .typeError("Quantity must be a number")
-      .required("Quantity is required")
-      .min(1, "Quantity must be greater than 0"),
-
-    price: yup
-      .number()
-      .typeError("Price must be a number")
-      .required("Price is required")
-      .min(1, "Price must be greater than 0"),
-
     description: yup.string().required("Description is required"),
   })
   .required();

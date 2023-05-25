@@ -137,7 +137,6 @@ const StepperForm = ({
             control={control}
             errors={errors}
             watch={watch}
-            register={register}
           />
         </Stepper.Step>
         <Stepper.Step
