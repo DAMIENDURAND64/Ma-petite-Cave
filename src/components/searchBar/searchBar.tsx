@@ -1,5 +1,5 @@
 import { Autocomplete } from "@mantine/core";
-import { type Wine } from "@prisma/client";
+import { type BottleFormat, type Color, type Wine } from "@prisma/client";
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
@@ -8,9 +8,15 @@ import { ColorFromId } from "~/utils/colors/Colors";
 
 type SearchBarProps = {
   wineData: Wine[];
+  winesBottleData: BottleFormat[];
+  winesColorData: Color[];
 };
 
-const SearchBar = ({ wineData }: SearchBarProps) => {
+const SearchBar = ({
+  wineData,
+  winesBottleData,
+  winesColorData,
+}: SearchBarProps) => {
   const router = useRouter();
   const [value, setValue] = useState("");
 
@@ -21,29 +27,62 @@ const SearchBar = ({ wineData }: SearchBarProps) => {
           label: wine.name,
           id: wine.id,
           wineColor: wine.wineColorId,
+          group: "Wines",
         };
       })
     : [];
 
-  const handleClickWine = ({ id }: { id: number }) => {
-    router.push(`/wines/${id}`).catch((err) => console.log(err));
+  const dataBottle = value
+    ? winesBottleData.map((wine) => {
+        return {
+          value: wine.name,
+          label: wine.name,
+          id: wine.id,
+          group: "Bottles",
+        };
+      })
+    : [];
+
+  const dataColor = value
+    ? winesColorData.map((color) => {
+        return {
+          value: color.name,
+          label: color.name,
+          id: color.id,
+          colorId: color.id,
+          group: "Colors",
+        };
+      })
+    : [];
+
+  const handleClickWine = ({ id, group }: { id: number; group: string }) => {
+    if (group === "Bottles")
+      router.push(`wines/format/${id}`).catch((err) => console.log(err));
+    if (group === "Colors")
+      router.push(`/category/${id}`).catch((err) => console.log(err));
+    if (group === "Wines")
+      router.push(`/wines/${id}`).catch((err) => console.log(err));
   };
 
   const autoCompleteItem = ({
     value,
     wineColor,
     id,
+    colorId,
+    group,
   }: {
     value: string;
     id: number;
     wineColor: number;
+    colorId: number;
+    group: string;
   }) => (
     <div
-      className="y-center flex w-full gap-3 px-3"
+      className="y-center flex w-full gap-2 px-3"
       key={id}
-      onClick={() => handleClickWine({ id })}
+      onClick={() => handleClickWine({ id, group })}
     >
-      <ColorFromId id={wineColor} />
+      <ColorFromId id={wineColor ?? colorId} />
       {value}
     </div>
   );
@@ -56,7 +95,7 @@ const SearchBar = ({ wineData }: SearchBarProps) => {
           value={value}
           maxDropdownHeight={150}
           onChange={setValue}
-          data={data}
+          data={[...data, ...dataBottle, ...dataColor]}
           minLength={1}
           itemComponent={autoCompleteItem}
           placeholder="Chercher un vin"
