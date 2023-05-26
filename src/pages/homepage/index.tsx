@@ -49,7 +49,11 @@ function Homepage() {
   }
   return (
     <div className="flexcol w-full gap-4 overflow-y-auto">
-      <SearchBar wineData={wines} />
+      <SearchBar
+        wineData={wines}
+        winesBottleData={wineBottlesFormat}
+        winesColorData={wineColor}
+      />
       <CarouselWine colors={Colors} colorData={wineColor} />
       {wines.length > 0 ? (
         <CarouselWine colors={Colors} wineData={wines} />
