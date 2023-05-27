@@ -19,13 +19,16 @@ const ThemeToggler = () => {
         title="Toggle color scheme"
         size="lg"
         style={{
-          backgroundColor: dark
-            ? theme.colors.violet[9]
-            : theme.colors.violet[6],
-          borderColor: dark ? theme.colors.violet[9] : theme.colors.violet[6],
+          border: dark
+            ? `2px solid ${theme.colors.violet[9]}`
+            : `2px solid ${theme.colors.violet[6]}`,
         }}
       >
-        {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+        {dark ? (
+          <IconSun size="1.5rem" color={dark ? "white" : "black"} />
+        ) : (
+          <IconMoonStars size="1.5rem" color={dark ? "white" : "black"} />
+        )}
       </ActionIcon>
     </div>
   );

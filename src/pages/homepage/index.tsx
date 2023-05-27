@@ -5,6 +5,7 @@ import CarouselWine from "~/components/carousels/CarouselWine";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import SearchBar from "~/components/searchBar/searchBar";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
+import { getWines } from "~/utils/APICalls/wines";
 import { api } from "~/utils/api";
 import { Colors } from "~/utils/colors/Colors";
 
@@ -16,17 +17,18 @@ function Homepage() {
     isLoading: wineColorLoading,
     error: wineColorError,
   } = api.color.getAll.useQuery();
-  const {
-    data: wines = [],
-    isLoading: winesLoading,
-    error: wineError,
-  } = api.wines.getAll.useQuery();
 
   const {
     data: wineBottlesFormat = [],
     isLoading: wineBottlesFormatLoading,
     error: wineBottlesFormatError,
   } = api.bottleFormat.getAll.useQuery();
+
+  const {
+    data: wines = [],
+    isLoading: winesLoading,
+    error: wineError,
+  } = getWines();
 
   if (sessionData === null) {
     return <Unauthorized />;
@@ -49,11 +51,11 @@ function Homepage() {
   }
   return (
     <div className="flexcol w-full gap-4 overflow-y-auto">
-      <SearchBar
+      {/*    <SearchBar
         wineData={wines}
         winesBottleData={wineBottlesFormat}
         winesColorData={wineColor}
-      />
+      /> */}
       <CarouselWine colors={Colors} colorData={wineColor} />
       {wines.length > 0 ? (
         <CarouselWine colors={Colors} wineData={wines} />
