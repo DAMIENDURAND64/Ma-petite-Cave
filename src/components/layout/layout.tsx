@@ -3,16 +3,19 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { Avatar, useMantineTheme } from "@mantine/core";
+import { ActionIcon, useMantineTheme } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FaChartBar } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { BiSearchAlt } from "react-icons/bi";
 import { HiOutlineHome } from "react-icons/hi";
 import { RiAddCircleFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
+  const dark = theme.colorScheme === "dark";
+
   const { data: sessionData } = useSession();
   const router = useRouter();
 
@@ -80,13 +83,18 @@ const Layout = ({ children }: PropsWithChildren) => {
                 <ThemeToggler />
                 <AuthSignIn />
               </div>
-              <div>
-                <Avatar
-                  src={sessionData.user.image}
-                  alt={sessionData.user.name as string}
+              <div className="xy-center flex">
+                <ActionIcon
+                  variant="outline"
                   size="lg"
-                  radius="md"
-                />
+                  style={{
+                    border: dark
+                      ? `2px solid ${theme.colors.violet[9]}`
+                      : `2px solid ${theme.colors.violet[6]}`,
+                  }}
+                >
+                  <BiSearchAlt size="1.5rem" color={dark ? "white" : "black"} />
+                </ActionIcon>
               </div>
             </div>
           ) : (
