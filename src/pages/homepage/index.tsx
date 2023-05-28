@@ -5,30 +5,32 @@ import CarouselWine from "~/components/carousels/CarouselWine";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import SearchBar from "~/components/searchBar/searchBar";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { getWines } from "~/utils/APICalls/wines";
-import { api } from "~/utils/api";
+import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
+import { UseGetAllWines } from "~/utils/APICalls/wines";
 import { Colors } from "~/utils/colors/Colors";
 
 function Homepage() {
   const router = useRouter();
   const { data: sessionData } = useSession();
+
   const {
     data: wineColor = [],
     isLoading: wineColorLoading,
     error: wineColorError,
-  } = api.color.getAll.useQuery();
+  } = useGetAllWineColor();
 
   const {
     data: wineBottlesFormat = [],
     isLoading: wineBottlesFormatLoading,
     error: wineBottlesFormatError,
-  } = api.bottleFormat.getAll.useQuery();
+  } = useGetAllBottlesFormat();
 
   const {
     data: wines = [],
     isLoading: winesLoading,
     error: wineError,
-  } = getWines();
+  } = UseGetAllWines();
 
   if (sessionData === null) {
     return <Unauthorized />;

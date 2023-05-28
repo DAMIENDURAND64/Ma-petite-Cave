@@ -11,6 +11,11 @@ import { BiSearchAlt } from "react-icons/bi";
 import { HiOutlineHome } from "react-icons/hi";
 import { RiAddCircleFill } from "react-icons/ri";
 import { motion } from "framer-motion";
+import SearchBar from "../searchBar/searchBar";
+import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
+import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { UseGetAllWines } from "~/utils/APICalls/wines";
+import { LoaderRing } from "../loader/loaderRing";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
@@ -18,6 +23,36 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   const { data: sessionData } = useSession();
   const router = useRouter();
+
+  const {
+    data: wineColor = [],
+    isLoading: wineColorLoading,
+    error: wineColorError,
+  } = useGetAllWineColor();
+
+  const {
+    data: wineBottlesFormat = [],
+    isLoading: wineBottlesFormatLoading,
+    error: wineBottlesFormatError,
+  } = useGetAllBottlesFormat();
+
+  const {
+    data: wines = [],
+    isLoading: winesLoading,
+    error: wineError,
+  } = UseGetAllWines();
+
+  if (wineColorLoading || winesLoading || wineBottlesFormatLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
+  }
+
+  if (wineColorError || wineError || wineBottlesFormatError) {
+    return <div>No Data available</div>;
+  }
 
   const handleNavigationAddWine = () => {
     router.push("/wines/add").catch((err) => console.log(err));
@@ -83,18 +118,12 @@ const Layout = ({ children }: PropsWithChildren) => {
                 <ThemeToggler />
                 <AuthSignIn />
               </div>
-              <div className="xy-center flex">
-                <ActionIcon
-                  variant="outline"
-                  size="lg"
-                  style={{
-                    border: dark
-                      ? `2px solid ${theme.colors.violet[9]}`
-                      : `2px solid ${theme.colors.violet[6]}`,
-                  }}
-                >
-                  <BiSearchAlt size="1.5rem" color={dark ? "white" : "black"} />
-                </ActionIcon>
+              <div>
+                <SearchBar
+                  wineData={wines}
+                  winesBottleData={wineBottlesFormat}
+                  winesColorData={wineColor}
+                />
               </div>
             </div>
           ) : (

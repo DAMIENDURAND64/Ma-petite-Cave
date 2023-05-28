@@ -11,7 +11,7 @@ import React from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { api } from "~/utils/api";
+import { useGetOneWine } from "~/utils/APICalls/wines";
 import { Colors } from "~/utils/colors/Colors";
 
 function GetOneWine() {
@@ -20,12 +20,7 @@ function GetOneWine() {
   const { id } = router.query;
   const wineId = parseInt(id as string, 10);
 
-  const { data: wineQuery, isLoading } = api.wines.getOne.useQuery(
-    { id: wineId },
-    {
-      enabled: !!id,
-    }
-  );
+  const { data: wineQuery, isLoading } = useGetOneWine(wineId);
 
   const wine:
     | (Wine & {

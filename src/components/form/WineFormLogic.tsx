@@ -11,6 +11,8 @@ import { type TFormValues, type WineBottleProps } from "./FormType";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from "./components/ValidationSchema";
+import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
 
 const CreateWineFormLogic = () => {
   const { data: sessionData } = useSession();
@@ -25,8 +27,8 @@ const CreateWineFormLogic = () => {
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
-  const { data: bottleFormat } = api.bottleFormat.getAll.useQuery();
-  const { data: wineColor } = api.color.getAll.useQuery();
+  const { data: bottleFormat } = useGetAllBottlesFormat();
+  const { data: wineColor } = useGetAllWineColor();
 
   const methods = useForm<TFormValues>({
     resolver: yupResolver(schema),
