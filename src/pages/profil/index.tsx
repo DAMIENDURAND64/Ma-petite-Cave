@@ -4,22 +4,13 @@ import Image from "next/image";
 import React from "react";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { api } from "~/utils/api";
+import { UseGetMe } from "~/utils/APICalls/user";
 
 function Profil() {
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
 
-  const {
-    data: me,
-    isLoading,
-    error,
-  } = api.user.getOne.useQuery(
-    { id: sessionData?.user.id as string },
-    {
-      enabled: !!sessionData?.user.id,
-    }
-  );
+  const { data: me, isLoading, error } = UseGetMe();
 
   if (sessionData === null) {
     return <Unauthorized />;

@@ -88,8 +88,8 @@ const SearchBar = ({
   );
 
   return (
-    <div className="x-center mb-2 flex">
-      <div className="w-5/6">
+    <div className="flex justify-end">
+      <div className="w-11/12">
         <Autocomplete
           icon={<IconSearch />}
           value={value}
@@ -106,7 +106,7 @@ const SearchBar = ({
             input: {
               fontFamily: "Helvetica",
               fontSize: "1.1rem",
-              border: `3px solid ${
+              border: `1px solid ${
                 theme.colorScheme === "dark"
                   ? `${theme.colors.violet[9]} !important`
                   : `${theme.colors.violet[6]} !important`

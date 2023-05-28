@@ -7,13 +7,13 @@ import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
-import { api } from "~/utils/api";
+import { UseGetAllWines } from "~/utils/APICalls/wines";
 
 const WineList = () => {
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
   const router = useRouter();
-  const { data: wines, isLoading } = api.wines.getAll.useQuery();
+  const { data: wines, isLoading } = UseGetAllWines();
   const dark = theme.colorScheme === "dark";
 
   if (sessionData === null) {
