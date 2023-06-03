@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { RiAddCircleFill } from "react-icons/ri";
 import CarouselWine from "~/components/carousels/CarouselWine";
 import { LoaderRing } from "~/components/loader/loaderRing";
-import SearchBar from "~/components/searchBar/searchBar";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
 import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
@@ -53,14 +52,14 @@ function Homepage() {
   }
   return (
     <div className="flexcol w-full gap-4 overflow-y-auto">
-      {/*    <SearchBar
-        wineData={wines}
-        winesBottleData={wineBottlesFormat}
-        winesColorData={wineColor}
-      /> */}
-      <CarouselWine colors={Colors} colorData={wineColor} />
+      <CarouselWine colors={Colors} colorData={wineColor} align="center" />
       {wines.length > 0 ? (
-        <CarouselWine colors={Colors} wineData={wines} />
+        <CarouselWine
+          colors={Colors}
+          wineData={wines}
+          align="center"
+          paddingProps="0px !important"
+        />
       ) : (
         <div className="flexcol xy-center gap-2 pt-10 text-center text-2xl font-bold">
           Aucun vin en cave
