@@ -22,6 +22,8 @@ type CarouselProps = {
   })[];
   colors?: { [key: number]: string };
   wineBottlesFormat?: BottleFormat[];
+  align?: "start" | "center" | "end";
+  paddingProps?: string;
 };
 
 function CarouselWine({
@@ -29,6 +31,8 @@ function CarouselWine({
   wineData,
   wineBottlesFormat,
   colors,
+  align,
+  paddingProps,
 }: CarouselProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,13 +61,8 @@ function CarouselWine({
   }, [embla, handleScroll]);
   return (
     <div>
-      {colorData && (
-        <div className="w-fit">
-          <Skeleton visible={loading}>Categories: </Skeleton>
-        </div>
-      )}
       {wineData && (
-        <div className="mb-2 flex justify-between ">
+        <div className="mb-2 flex justify-between">
           <div>
             <Skeleton visible={loading}>Mes vins:</Skeleton>
           </div>
@@ -89,16 +88,16 @@ function CarouselWine({
       <Carousel
         withControls={false}
         getEmblaApi={setEmbla}
-        slideSize="30%"
+        slideSize="26%"
         loop
-        align="start"
+        align={align ?? "start"}
         dragFree
-        slideGap={3}
+        slideGap={1}
         speed={5}
         styles={{
           root: {
             ".mantine-1my8u2w": {
-              paddingLeft: "6px !important",
+              paddingLeft: paddingProps ?? "6px !important",
             },
           },
         }}
@@ -106,35 +105,35 @@ function CarouselWine({
         {colorData?.map((color: Color) => {
           const coloor = colors ? colors[color.id] : "bg-gray-500";
           return (
-            <Carousel.Slide
-              key={color.id}
-              style={{
-                margin: "3px",
-                boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
-                borderRadius: "10px",
-                marginTop: "10px",
-                marginBottom: "10px",
-                width: "128px",
-              }}
-            >
-              <Skeleton visible={loading}>
-                <Link
-                  href={{
-                    pathname: "/category/[id]",
-                    query: { id: color.id },
-                  }}
-                >
-                  <div
-                    className={`${
-                      coloor as string
-                    } relative h-10 w-32 rounded-md `}
+            <Carousel.Slide key={color.id} style={{}}>
+              <Link
+                href={{
+                  pathname: "/category/[id]",
+                  query: { id: color.id },
+                }}
+              >
+                <div className=" flexcol xy-center gap-2 ">
+                  <Skeleton
+                    visible={loading}
+                    height={40}
+                    width={40}
+                    radius="xl"
                   >
-                    <p className="absolute-center font-sans text-sm font-bold">
+                    <div className="flex w-fit rounded-full border-2 border-gray-400 p-[2px]">
+                      <div
+                        className={`${
+                          coloor as string
+                        }  h-10 w-10  rounded-full`}
+                      />
+                    </div>
+                  </Skeleton>
+                  <Skeleton visible={loading}>
+                    <p className="x-center flex w-full  font-sans text-sm font-bold">
                       {color.name}
                     </p>
-                  </div>
-                </Link>
-              </Skeleton>
+                  </Skeleton>
+                </div>
+              </Link>
             </Carousel.Slide>
           );
         })}
@@ -149,11 +148,9 @@ function CarouselWine({
                     ? theme.colors.dark[6]
                     : theme.colors.gray[1],
                 boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
-                borderRadius: "10px",
-                margin: "3px ",
-                padding: "10px",
-                marginTop: "10px",
-                marginBottom: "10px",
+                borderRadius: "6px",
+                margin: "8px ",
+                width: "192px",
               }}
             >
               <Skeleton visible={loading}>
@@ -164,25 +161,27 @@ function CarouselWine({
                     query: { id: wine.id },
                   }}
                 >
-                  <div className="w-36">
+                  <div className="w-48">
                     <div
-                      className={`${coloor as string} h-3 w-full rounded-t-md`}
+                      className={`${coloor as string} h-3 w-48 rounded-t-md`}
                     />
-                    <div
-                      className={`flexcol y-center h-[255px]  rounded-md  text-center text-xs`}
-                    >
-                      <div className="relative mx-1 mb-2  h-[190px] w-full">
+                    <div className="flexcol y-center h-[255px] w-48 rounded-md  text-center text-xs">
+                      <div className="relative h-full w-full">
                         <Image
-                          src={wine.image || "/images/black_crows.jpg"}
+                          src={wine.image ?? "/images/black_crows.jpg"}
                           alt={wine.name}
                           fill
                           className="rounded-b-md object-cover"
                         />
                       </div>
-                      <p className="font-sans font-semibold">
-                        {wine.name.toUpperCase()}
-                      </p>
-                      <p className="font-sans font-semibold">{wine.vintage}</p>
+                      <div className="absolute bottom-0 z-10 h-16 w-[192px] rounded-b-md bg-white p-2 text-left  font-bold text-black opacity-60">
+                        <div className="flexcol flex h-full justify-around">
+                          <p className="truncate text-[14px]">
+                            {wine.name.toUpperCase()}
+                          </p>
+                          <p className="">{wine.vintage}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Link>

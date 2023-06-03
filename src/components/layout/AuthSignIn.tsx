@@ -11,12 +11,12 @@ const AuthSignIn: React.FC = () => {
     <div>
       {sessionData ? (
         <ActionIcon
-          variant="filled"
+          variant="outline"
           size="lg"
           style={{
-            backgroundColor: dark
-              ? theme.colors.violet[9]
-              : theme.colors.violet[6],
+            border: dark
+              ? `2px solid ${theme.colors.violet[9]}`
+              : `2px solid ${theme.colors.violet[6]}`,
           }}
           onClick={() =>
             void signOut({
@@ -24,7 +24,7 @@ const AuthSignIn: React.FC = () => {
             })
           }
         >
-          <Logout size="1.1rem" />
+          <Logout size="1.5rem" color={dark ? "white" : "black"} />
         </ActionIcon>
       ) : (
         <Button

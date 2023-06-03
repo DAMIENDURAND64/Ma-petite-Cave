@@ -6,7 +6,8 @@ import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
-import { api } from "~/utils/api";
+import { useGetOneBottleFormat } from "~/utils/APICalls/bottleFormat";
+import { useGetAllWineByFormat } from "~/utils/APICalls/wines";
 
 const BottleFormatPage = () => {
   const { data: sessionData } = useSession();
@@ -22,17 +23,13 @@ const BottleFormatPage = () => {
     data: wineListData,
     error,
     isLoading,
-  } = api.wines.getAllByBottleFormat.useQuery(
-    { formatId: wineBottleFormatId },
-    {
-      enabled: !!id,
-    }
-  );
+  } = useGetAllWineByFormat(wineBottleFormatId);
+
   const {
     data: BottleFormat,
     error: errorBottleFormat,
     isLoading: isLoadingBottleFormat,
-  } = api.bottleFormat.getOne.useQuery({ id: wineBottleFormatId });
+  } = useGetOneBottleFormat(wineBottleFormatId);
 
   if (sessionData === null) {
     return <Unauthorized />;

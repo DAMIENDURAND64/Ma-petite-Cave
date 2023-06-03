@@ -5,10 +5,11 @@ import { DoughnutForFormatOfBottles } from "~/components/charts/DoughnutForForma
 import { DoughnutForNumOfBottles } from "~/components/charts/DoughnutForNumOfBottles";
 import { DoughnutForValOfBottles } from "~/components/charts/DoughnutForValOfBottles";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { api } from "~/utils/api";
 import { IconPlus } from "@tabler/icons-react";
 import useStyles from "~/utils/mantineStyle/AccordionStyle";
 import { LoaderRing } from "~/components/loader/loaderRing";
+import { UseGetAllWines } from "~/utils/APICalls/wines";
+import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
 
 const IndexStats = () => {
   const { data: sessionData } = useSession();
@@ -17,9 +18,9 @@ const IndexStats = () => {
   ]);
   const { classes } = useStyles();
   const { data: allWinesData, isLoading: allWinesDataLoading } =
-    api.wines.getAll.useQuery();
+    UseGetAllWines();
   const { data: allFormatsData, isLoading: allFormatsDataLoading } =
-    api.bottleFormat.getAll.useQuery();
+    useGetAllBottlesFormat();
 
   if (sessionData === null) {
     return <Unauthorized />;
