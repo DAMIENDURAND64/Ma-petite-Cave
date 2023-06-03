@@ -3,11 +3,10 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { ActionIcon, useMantineTheme } from "@mantine/core";
+import { useMantineTheme } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FaChartBar } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-import { BiSearchAlt } from "react-icons/bi";
 import { HiOutlineHome } from "react-icons/hi";
 import { RiAddCircleFill } from "react-icons/ri";
 import { motion } from "framer-motion";
@@ -19,7 +18,6 @@ import { LoaderRing } from "../loader/loaderRing";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
-  const dark = theme.colorScheme === "dark";
 
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -134,7 +132,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           )}
         </div>
       </div>
-      <div className="px-3 pb-16 pt-3"> {children}</div>
+      <div className="px-3 pb-20 pt-3"> {children}</div>
       <div
         className="flexrow xy-center fixed bottom-0 h-16 w-full justify-around border-slate-400"
         style={{
