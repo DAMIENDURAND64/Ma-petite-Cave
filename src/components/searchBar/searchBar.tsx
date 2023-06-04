@@ -1,27 +1,50 @@
 import { Autocomplete } from "@mantine/core";
-import { type BottleFormat, type Color, type Wine } from "@prisma/client";
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 import React, { useState } from "react";
 import { ColorFromId } from "~/utils/colors/Colors";
+import { LoaderRing } from "../loader/loaderRing";
+import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
+import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { UseGetAllWines } from "~/utils/APICalls/wines";
 
-type SearchBarProps = {
-  wineData: Wine[];
-  winesBottleData: BottleFormat[];
-  winesColorData: Color[];
-};
-
-const SearchBar = ({
-  wineData,
-  winesBottleData,
-  winesColorData,
-}: SearchBarProps) => {
+const SearchBar = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
 
+  const {
+    data: wineColor = [],
+    isLoading: wineColorLoading,
+    error: wineColorError,
+  } = useGetAllWineColor();
+
+  const {
+    data: wineBottlesFormat = [],
+    isLoading: wineBottlesFormatLoading,
+    error: wineBottlesFormatError,
+  } = useGetAllBottlesFormat();
+
+  const {
+    data: wines = [],
+    isLoading: winesLoading,
+    error: wineError,
+  } = UseGetAllWines();
+
+  if (wineColorLoading || winesLoading || wineBottlesFormatLoading) {
+    return (
+      <div className="xy-center flex h-full w-full">
+        <LoaderRing />
+      </div>
+    );
+  }
+
+  if (wineColorError || wineError || wineBottlesFormatError) {
+    return <div>No Data available</div>;
+  }
+
   const data = value
-    ? wineData.map((wine) => {
+    ? wines.map((wine) => {
         return {
           value: wine.name,
           label: wine.name,
@@ -33,7 +56,7 @@ const SearchBar = ({
     : [];
 
   const dataBottle = value
-    ? winesBottleData.map((wine) => {
+    ? wineBottlesFormat.map((wine) => {
         return {
           value: wine.name,
           label: wine.name,
@@ -44,7 +67,7 @@ const SearchBar = ({
     : [];
 
   const dataColor = value
-    ? winesColorData.map((color) => {
+    ? wineColor.map((color) => {
         return {
           value: color.name,
           label: color.name,
@@ -78,7 +101,7 @@ const SearchBar = ({
     group: string;
   }) => (
     <div
-      className="y-center flex w-full gap-2 px-3"
+      className="y-center flex w-full gap-2"
       key={id}
       onClick={() => handleClickWine({ id, group })}
     >
@@ -89,7 +112,7 @@ const SearchBar = ({
 
   return (
     <div className="flex justify-end">
-      <div className="w-11/12">
+      <div className="w-full">
         <Autocomplete
           icon={<IconSearch />}
           value={value}
