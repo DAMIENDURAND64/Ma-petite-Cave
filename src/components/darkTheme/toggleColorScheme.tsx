@@ -22,6 +22,9 @@ const ThemeToggler = () => {
           border: dark
             ? `2px solid ${theme.colors.violet[9]}`
             : `2px solid ${theme.colors.violet[6]}`,
+          backgroundColor: dark
+            ? theme.colors.violet[9]
+            : theme.colors.violet[6],
         }}
       >
         {dark ? (
