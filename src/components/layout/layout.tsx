@@ -3,7 +3,7 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { ActionIcon, Modal, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Avatar, Modal, useMantineTheme } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FaChartBar } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
@@ -18,6 +18,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
 
   const { data: sessionData } = useSession();
+
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -41,7 +42,17 @@ const Layout = ({ children }: PropsWithChildren) => {
     },
     {
       name: "Profil",
-      icon: <CgProfile size="2rem" onClick={handleNavigationProfil} />,
+      icon: sessionData ? (
+        <Avatar
+          src={sessionData.user.image}
+          alt="profile picture"
+          radius="xl"
+          size="35px"
+          onClick={handleNavigationProfil}
+        />
+      ) : (
+        <CgProfile size="2rem" />
+      ),
     },
     {
       name: "Stats",
@@ -63,7 +74,6 @@ const Layout = ({ children }: PropsWithChildren) => {
       ),
     },
   ];
-
   return (
     <>
       <div
@@ -94,6 +104,10 @@ const Layout = ({ children }: PropsWithChildren) => {
                       theme.colorScheme === "dark"
                         ? `2px solid ${theme.colors.violet[9]}`
                         : `2px solid ${theme.colors.violet[6]}`,
+                    backgroundColor:
+                      theme.colorScheme === "dark"
+                        ? theme.colors.violet[9]
+                        : theme.colors.violet[6],
                   }}
                   onClick={open}
                 >
