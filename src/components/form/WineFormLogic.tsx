@@ -53,6 +53,7 @@ const CreateWineFormLogic = () => {
     if (sessionData && bottleFormat) {
       let imageUrl = "/images/black_crows.jpg";
       if (file) {
+        console.log(file);
         try {
           imageUrl = await uploadFileToCloud(file);
         } catch (err) {

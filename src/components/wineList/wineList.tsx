@@ -104,7 +104,7 @@ function WineListTemplate({ wines }: Props) {
                   </div>
                   <div className="w-full">
                     <Skeleton visible={loading}>
-                      <p className="font-sans text-xs">
+                      <p className="-mt-1 font-sans text-xs">
                         {truncateText(
                           (wine.description as string) || "non defini",
                           80
