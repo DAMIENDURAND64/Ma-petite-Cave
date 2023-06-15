@@ -31,6 +31,7 @@ function GetOneWine() {
   const { id } = router.query;
   const wineId = parseInt(id as string, 10);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const {
     data: wineQuery,
@@ -41,6 +42,7 @@ function GetOneWine() {
   const updateImage = api.wines.updateImage.useMutation();
 
   const handleChangeImage = async () => {
+    setLoading(true);
     let imageUrl = "";
     if (file) {
       try {
@@ -57,11 +59,12 @@ function GetOneWine() {
 
     try {
       await updateImage.mutateAsync(payload);
-      setFile(null);
       await refetchWine();
+      setFile(null);
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const wine:
@@ -117,7 +120,7 @@ function GetOneWine() {
                 alt="uploaded image"
                 width={500}
                 height={200}
-                className="max-h-[260px] min-h-[260px] min-w-[240px] max-w-[240px] rounded-md"
+                className="max-h-[280px] min-h-[280px] min-w-[260px] max-w-[260px] rounded-md"
               />
             </div>
           ) : (
@@ -126,7 +129,7 @@ function GetOneWine() {
               alt="wine image"
               width={200}
               height={200}
-              className="max-h-[260px] min-h-[260px] min-w-[240px] max-w-[240px] rounded-md"
+              className="max-h-[280px] min-h-[280px] min-w-[260px] max-w-[260px] rounded-md"
             />
           )}
           <div className="absolute right-[-8px] top-[-8px] z-10">
@@ -145,10 +148,12 @@ function GetOneWine() {
                         ? theme.colors.violet[9]
                         : theme.colors.violet[6],
                     color: theme.colorScheme === "dark" ? "white" : "black",
+                    width: "30px",
+                    height: "25px",
                   }}
                   {...props}
                 >
-                  <Upload size="1rem" />
+                  <Upload size="1rem" strokeWidth={3} />
                 </ActionIcon>
               )}
             </FileButton>
@@ -228,22 +233,25 @@ function GetOneWine() {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="sm"
-          style={{
-            backgroundImage: theme.fn.gradient({
-              from: "teal",
-              to: "lime",
-              deg: 45,
-            }),
-          }}
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onClick={handleChangeImage}
-          disabled={!file}
-        >
-          Save Image
-        </Button>
+        {file && (
+          <Button
+            type="submit"
+            size="sm"
+            style={{
+              backgroundImage: theme.fn.gradient({
+                from: "teal",
+                to: "lime",
+                deg: 45,
+              }),
+            }}
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={handleChangeImage}
+            disabled={!file}
+            loading={loading}
+          >
+            Save Image
+          </Button>
+        )}
       </div>
     </div>
   );

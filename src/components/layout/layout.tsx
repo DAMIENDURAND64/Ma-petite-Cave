@@ -51,7 +51,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           onClick={handleNavigationProfil}
         />
       ) : (
-        <CgProfile size="2rem" />
+        <CgProfile size="2rem" style={{}} />
       ),
     },
     {

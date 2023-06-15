@@ -101,7 +101,7 @@ const SearchBar = () => {
     group: string;
   }) => (
     <div
-      className="y-center flex w-full gap-2"
+      className="y-center flex w-full cursor-pointer gap-2 py-1 hover:bg-violet-500"
       key={id}
       onClick={() => handleClickWine({ id, group })}
     >
@@ -124,7 +124,7 @@ const SearchBar = () => {
           placeholder="Chercher un vin"
           radius="md"
           shadow="xl"
-          transitionProps={{ duration: 300 }}
+          transitionProps={{ duration: 10 }}
           styles={(theme) => ({
             input: {
               fontFamily: "Helvetica",
