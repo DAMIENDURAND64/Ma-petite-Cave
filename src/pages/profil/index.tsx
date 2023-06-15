@@ -1,14 +1,13 @@
-import { useMantineTheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 import { LoaderRing } from "~/components/loader/loaderRing";
+import ProfilDisplayInfo from "~/components/profil/profilDisplayInfo";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { UseGetMe } from "~/utils/APICalls/user";
 
 function Profil() {
   const { data: sessionData } = useSession();
-  const theme = useMantineTheme();
 
   const { data: me, isLoading, error } = UseGetMe();
 
@@ -27,6 +26,7 @@ function Profil() {
   if (error) {
     return <div>something wrong happened</div>;
   }
+
   return (
     <div className="xy-center flexcol gap-5 p-3">
       <h1>Profil</h1>
@@ -37,39 +37,12 @@ function Profil() {
         height={100}
         className="rounded-full"
       />
-
-      <div className="h-14 w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-[2px] shadow-2xl">
-        <div
-          className="flex h-full w-full items-center justify-around gap-2 rounded-xl px-2"
-          style={{
-            backgroundColor:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[7]
-                : theme.colors.gray[1],
-          }}
-        >
-          Nom :
-          <div className="w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-2 font-sans">
-            {me?.name as string}
-          </div>
-        </div>
-      </div>
-      <div className="h-14 w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-[2px] shadow-2xl">
-        <div
-          className="flex h-full w-full items-center justify-around gap-2 rounded-xl px-2"
-          style={{
-            backgroundColor:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[7]
-                : theme.colors.gray[1],
-          }}
-        >
-          Mail :
-          <div className="w-fit rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 p-2 font-sans">
-            {me?.email as string}
-          </div>
-        </div>
-      </div>
+      <ProfilDisplayInfo label="Nom" value={me?.name as string} />
+      <ProfilDisplayInfo label="Email" value={me?.email as string} />
+      <ProfilDisplayInfo
+        label="Date d'inscription"
+        value={new Date(me?.createdAt as Date).toLocaleDateString()}
+      />
     </div>
   );
 }
