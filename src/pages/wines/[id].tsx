@@ -3,6 +3,7 @@ import {
   Badge,
   Button,
   FileButton,
+  Modal,
   useMantineTheme,
 } from "@mantine/core";
 import {
@@ -20,9 +21,18 @@ import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { useGetOneWine } from "~/utils/APICalls/wines";
-import { api } from "~/utils/api";
 import { uploadFileToCloud } from "~/utils/cloudinary";
 import { Colors } from "~/utils/colors/Colors";
+import { motion } from "framer-motion";
+import { useDisclosure } from "@mantine/hooks";
+import ModalQuantity from "~/components/quantity/ModalQuantity";
+import { api } from "~/utils/api";
+
+type SelectedWineBottle = {
+  selectedWineBottle: WineBottle & {
+    format: { name: string; capacity: string };
+  };
+};
 
 function GetOneWine() {
   const { data: sessionData } = useSession();
@@ -32,6 +42,10 @@ function GetOneWine() {
   const wineId = parseInt(id as string, 10);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const [selectedWineBottle, setSelectedWineBottle] =
+    useState<SelectedWineBottle | null>(null);
 
   const {
     data: wineQuery,
@@ -39,7 +53,24 @@ function GetOneWine() {
     refetch: refetchWine,
   } = useGetOneWine(wineId);
 
-  const updateImage = api.wines.updateImage.useMutation();
+  const usePostUpdateImage = api.wines.updateImage.useMutation();
+  const usePostUpdateQuantityWine = api.wines.updateQuantity.useMutation();
+
+  const handleUpdateQuantity = async (id: number, quantity: number) => {
+    const payload = {
+      id: id,
+      quantity: quantity,
+      wineId: wineId,
+    };
+
+    try {
+      await usePostUpdateQuantityWine.mutateAsync(payload);
+      await refetchWine();
+      close();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleChangeImage = async () => {
     setLoading(true);
@@ -58,7 +89,7 @@ function GetOneWine() {
     };
 
     try {
-      await updateImage.mutateAsync(payload);
+      await usePostUpdateImage.mutateAsync(payload);
       await refetchWine();
       setFile(null);
     } catch (err) {
@@ -199,7 +230,7 @@ function GetOneWine() {
         <div className="flex gap-2">
           <h2>T° idéale:</h2>
           <p className="font-sans">
-            {wine.servingTemperature || "pas de données"}°
+            {wine.servingTemperature ?? "pas de données"}°
           </p>
         </div>
         <div className="flex gap-2">
@@ -207,28 +238,53 @@ function GetOneWine() {
           <p className="font-sans">
             {wine.purchasedAt
               ? wine.purchasedAt.toLocaleDateString()
-              : "pas de date"}{" "}
+              : "pas de date"}
           </p>
         </div>
         <div className="flex flex-col">
           <h2>Description:</h2>
           <p className="w-full font-sans">
-            {wine.description || "pas de description"}
+            {wine.description ?? "pas de description"}
           </p>
         </div>
 
         <div className="flex flex-wrap gap-3">
           {wine.wineBottles.map((wineBottle) => (
-            <div
-              className="w-fit rounded-md bg-slate-500 p-3"
-              key={wineBottle.id}
-            >
-              <h3 className="text-lg font-semibold text-white">{`${wineBottle.format.name} (${wineBottle.format.capacity})`}</h3>
-              <p className="text-white">{`${
-                wineBottle.quantity > 1 ? "quantités" : "quantité"
-              } : ${wineBottle.quantity}`}</p>
-              <p className="text-white">{`prix:  ${wineBottle.price}€ /b`}</p>
-            </div>
+            <>
+              <motion.div
+                whileHover={{ scale: 1 }}
+                className="w-fit cursor-pointer rounded-md bg-slate-500 p-3"
+                key={wineBottle.id}
+                onClick={() => {
+                  setSelectedWineBottle({ selectedWineBottle: wineBottle });
+                  open();
+                }}
+              >
+                <h3 className="text-lg font-semibold text-white">{`${wineBottle.format.name} (${wineBottle.format.capacity})`}</h3>
+                <p className="text-white">{`${
+                  wineBottle.quantity > 1 ? "quantités" : "quantité"
+                } : ${wineBottle.quantity}`}</p>
+                <p className="text-white">{`prix:  ${wineBottle.price}€ /b`}</p>
+              </motion.div>
+              <Modal
+                opened={opened}
+                onClose={close}
+                withCloseButton={false}
+                padding="none"
+                centered
+                overlayProps={{
+                  opacity: 0,
+                  blur: 1,
+                }}
+              >
+                {selectedWineBottle && (
+                  <ModalQuantity
+                    wineBottle={selectedWineBottle.selectedWineBottle}
+                    handleUpdateQuantity={handleUpdateQuantity}
+                  />
+                )}
+              </Modal>
+            </>
           ))}
         </div>
       </div>

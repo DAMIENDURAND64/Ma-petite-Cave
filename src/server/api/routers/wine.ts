@@ -260,6 +260,46 @@ export const wineRouter = createTRPCRouter({
       });
     }),
 
+  updateQuantity: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        quantity: z.number(),
+        wineId: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session?.user.id) {
+        throw new Error("User must be logged in to update a wine record");
+      }
+      const wine = await ctx.prisma.wine.findUnique({
+        where: {
+          id: input.wineId,
+        },
+        include: {
+          wineColor: true,
+          wineBottles: true,
+          tastingNotes: true,
+        },
+      });
+
+      if (!wine) {
+        throw new Error(`Invalid wine id: ${input.wineId}`);
+      }
+      if (wine.ownerId !== ctx.session.user.id) {
+        throw new Error("User is not authorized to update this wine record");
+      }
+
+      return ctx.prisma.wineBottle.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          quantity: input.quantity,
+        },
+      });
+    }),
+
   delete: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
