@@ -5,6 +5,7 @@ import CarouselWine from "~/components/carousels/CarouselWine";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { useGetAllVintage } from "~/utils/APICalls/vintage";
 import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
 import { UseGetAllWines } from "~/utils/APICalls/wines";
 import { Colors } from "~/utils/colors/Colors";
@@ -30,6 +31,9 @@ function Homepage() {
     isLoading: winesLoading,
     error: wineError,
   } = UseGetAllWines();
+
+  const { data: vintageData } = useGetAllVintage();
+  console.log(vintageData);
 
   if (sessionData === null) {
     return <Unauthorized />;
@@ -67,6 +71,7 @@ function Homepage() {
         </div>
       )}
       <CarouselWine wineBottlesFormat={wineBottlesFormat} />
+      <CarouselWine vintageData={vintageData} />
     </div>
   );
 }
