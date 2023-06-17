@@ -17,3 +17,7 @@ export const useGetAllWineByFormat = (wineBottleFormatId: number) => {
     formatId: wineBottleFormatId,
   });
 };
+
+export const useGetAllWineByVintage = (vintage: number) => {
+  return api.wines.getAllByVintage.useQuery({ vintage });
+};

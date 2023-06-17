@@ -20,6 +20,7 @@ type CarouselProps = {
     wineColor: Color;
     tastingNotes: TastingNote[];
   })[];
+  vintageData?: { vintage: number }[];
   colors?: { [key: number]: string };
   wineBottlesFormat?: BottleFormat[];
   align?: "start" | "center" | "end";
@@ -29,6 +30,7 @@ type CarouselProps = {
 function CarouselWine({
   colorData,
   wineData,
+  vintageData,
   wineBottlesFormat,
   colors,
   align,
@@ -85,6 +87,12 @@ function CarouselWine({
           <Skeleton visible={loading}>Formats:</Skeleton>
         </div>
       )}
+      {vintageData && (
+        <div className="flex justify-between ">
+          <Skeleton visible={loading}>Vintage:</Skeleton>
+        </div>
+      )}
+
       <Carousel
         withControls={false}
         getEmblaApi={setEmbla}
@@ -216,6 +224,41 @@ function CarouselWine({
                   <div className="truncate text-center">
                     <p className="font-sans text-sm font-bold">{format.name}</p>
                     <p className="font-sans text-sm font-bold">{`(${format.capacity})`}</p>
+                  </div>
+                </Link>
+              </Skeleton>
+            </Carousel.Slide>
+          );
+        })}
+
+        {vintageData?.map((vintage) => {
+          return (
+            <Carousel.Slide
+              key={vintage.vintage}
+              style={{
+                boxShadow: "3px 3px 7px rgba(0, 0, 0, 0.35)",
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[6]
+                    : theme.colors.gray[1],
+                borderRadius: "10px",
+                margin: "3px",
+                marginTop: "10px",
+                marginBottom: "10px",
+                padding: "8px",
+              }}
+            >
+              <Skeleton visible={loading}>
+                <Link
+                  href={{
+                    pathname: "/wines/vintage/[id]",
+                    query: { id: vintage.vintage },
+                  }}
+                >
+                  <div className="truncate text-center">
+                    <p className="font-sans text-sm font-bold">
+                      {vintage.vintage}
+                    </p>
                   </div>
                 </Link>
               </Skeleton>
