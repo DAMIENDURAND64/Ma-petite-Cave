@@ -192,6 +192,30 @@ function GetOneWine() {
         </div>
       </div>
       <div className="flexcol m-3 gap-2">
+        <div className="-mt-5 flex w-full justify-center">
+          <div className="min-w-[260px] max-w-[260px]">
+            {file && (
+              <Button
+                type="submit"
+                size="sm"
+                fullWidth
+                style={{
+                  backgroundImage: theme.fn.gradient({
+                    from: "teal",
+                    to: "lime",
+                    deg: 45,
+                  }),
+                }}
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={handleChangeImage}
+                disabled={!file}
+                loading={loading}
+              >
+                Save Image
+              </Button>
+            )}
+          </div>
+        </div>
         <div className="-mt-2 flex w-full flex-col items-center justify-center gap-2">
           <h2 className="text-xl">{wine.name.toUpperCase()}</h2>
           <Badge
@@ -247,24 +271,43 @@ function GetOneWine() {
             {wine.description ?? "pas de description"}
           </p>
         </div>
-
+        <Badge
+          radius="md"
+          size="xl"
+          style={{
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[5]
+                : theme.colors.gray[3],
+            color: theme.colorScheme === "dark" ? "white" : "black",
+            margin: "15px 0",
+          }}
+        >
+          {wine.wineBottles.length > 1 ? "FORMATS" : "FORMAT"}
+        </Badge>
         <div className="flex flex-wrap gap-3">
-          {wine.wineBottles.map((wineBottle) => (
+          {wine.wineBottles.map((wineBottle, index) => (
             <>
               <motion.div
                 whileHover={{ scale: 1 }}
-                className="w-fit cursor-pointer rounded-md bg-slate-500 p-3"
+                className={`w-full cursor-pointer rounded-md ${
+                  index % 2 === 0 ? "bg-slate-500" : "bg-slate-600"
+                } p-3`}
                 key={wineBottle.id}
                 onClick={() => {
                   setSelectedWineBottle({ selectedWineBottle: wineBottle });
                   open();
                 }}
               >
-                <h3 className="text-lg font-semibold text-white">{`${wineBottle.format.name} (${wineBottle.format.capacity})`}</h3>
-                <p className="text-white">{`${
-                  wineBottle.quantity > 1 ? "quantités" : "quantité"
-                } : ${wineBottle.quantity}`}</p>
-                <p className="text-white">{`prix:  ${wineBottle.price}€ /b`}</p>
+                <h3 className="mb-2 text-center text-lg font-semibold text-white">{`${wineBottle.format.name} (${wineBottle.format.capacity})`}</h3>
+                <div className="flex justify-around">
+                  <p className="font-sans text-white">{`${
+                    wineBottle.quantity
+                  } ${
+                    wineBottle.quantity > 1 ? "bouteilles" : "bouteille"
+                  }`}</p>
+                  <p className="font-sans text-white">{`prix:  ${wineBottle.price}€ /b`}</p>
+                </div>
               </motion.div>
               <Modal
                 opened={opened}
@@ -287,27 +330,6 @@ function GetOneWine() {
             </>
           ))}
         </div>
-      </div>
-      <div className="flex justify-end">
-        {file && (
-          <Button
-            type="submit"
-            size="sm"
-            style={{
-              backgroundImage: theme.fn.gradient({
-                from: "teal",
-                to: "lime",
-                deg: 45,
-              }),
-            }}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={handleChangeImage}
-            disabled={!file}
-            loading={loading}
-          >
-            Save Image
-          </Button>
-        )}
       </div>
     </div>
   );
