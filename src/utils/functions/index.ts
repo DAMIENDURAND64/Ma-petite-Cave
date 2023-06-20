@@ -10,3 +10,18 @@ export const removedFamilyName = (name: string) => {
   const lastIndex = name.lastIndexOf(" ");
   return name.substring(0, lastIndex);
 };
+
+export const uniqueVintage = (array: { vintage: number }[] | undefined) => {
+  if (!array) return [];
+
+  const uniqueSet = new Set();
+  const uniqueArray = array.filter((obj) => {
+    if (!uniqueSet.has(obj.vintage)) {
+      uniqueSet.add(obj.vintage);
+      return true;
+    }
+    return false;
+  });
+
+  return uniqueArray;
+};

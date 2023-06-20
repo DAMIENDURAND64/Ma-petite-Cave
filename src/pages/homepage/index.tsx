@@ -9,6 +9,7 @@ import { useGetAllVintage } from "~/utils/APICalls/vintage";
 import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
 import { UseGetAllWines } from "~/utils/APICalls/wines";
 import { Colors } from "~/utils/colors/Colors";
+import { uniqueVintage } from "~/utils/functions";
 
 function Homepage() {
   const router = useRouter();
@@ -32,14 +33,22 @@ function Homepage() {
     error: wineError,
   } = UseGetAllWines();
 
-  const { data: vintageData } = useGetAllVintage();
-  console.log(vintageData);
+  const {
+    data: vintageWine,
+    isLoading: vintageDataLoading,
+    isError: vintageDataError,
+  } = useGetAllVintage();
 
   if (sessionData === null) {
     return <Unauthorized />;
   }
 
-  if (wineColorError || wineError || wineBottlesFormatError) {
+  if (
+    wineColorError ||
+    wineError ||
+    wineBottlesFormatError ||
+    vintageDataError
+  ) {
     return <div>No Data available</div>;
   }
 
@@ -47,13 +56,19 @@ function Homepage() {
     router.push("/wines/add").catch((err) => console.log(err));
   };
 
-  if (wineColorLoading || winesLoading || wineBottlesFormatLoading) {
+  if (
+    wineColorLoading ||
+    winesLoading ||
+    wineBottlesFormatLoading ||
+    vintageDataLoading
+  ) {
     return (
       <div className="xy-center flex h-full w-full">
         <LoaderRing />
       </div>
     );
   }
+
   return (
     <div className="flexcol w-full gap-4 overflow-y-auto">
       <CarouselWine colors={Colors} colorData={wineColor} align="center" />
@@ -71,7 +86,11 @@ function Homepage() {
         </div>
       )}
       <CarouselWine wineBottlesFormat={wineBottlesFormat} />
-      <CarouselWine vintageData={vintageData} />
+      <CarouselWine
+        vintageData={uniqueVintage(vintageWine).sort(
+          (a, b) => a.vintage - b.vintage
+        )}
+      />
     </div>
   );
 }
