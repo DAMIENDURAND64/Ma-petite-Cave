@@ -83,13 +83,41 @@ function CarouselWine({
         </div>
       )}
       {wineBottlesFormat && (
-        <div className="flex justify-between ">
-          <Skeleton visible={loading}>Formats:</Skeleton>
+        <div className="mb-2 flex justify-between">
+          <div>
+            <Skeleton visible={loading}>Formats:</Skeleton>
+          </div>
+          <div>
+            <Skeleton visible={loading}>
+              <NavigationButton
+                size="sm"
+                onClick={() => {
+                  router.push("/wines/format").catch((err) => console.log(err));
+                }}
+                label="Voir tous"
+                radius="md"
+              />
+            </Skeleton>
+          </div>
         </div>
       )}
       {vintageData && (
-        <div className="flex justify-between ">
-          <Skeleton visible={loading}>Vintage:</Skeleton>
+        <div className="mb-2 flex justify-between">
+          <div>
+            <Skeleton visible={loading}>Vintage:</Skeleton>
+          </div>
+          <div>
+            <Skeleton visible={loading}>
+              <NavigationButton
+                size="sm"
+                onClick={() => {
+                  router.push("/wines").catch((err) => console.log(err));
+                }}
+                label="Voir tous"
+                radius="md"
+              />
+            </Skeleton>
+          </div>
         </div>
       )}
 
@@ -116,7 +144,7 @@ function CarouselWine({
             <Carousel.Slide key={color.id} style={{}}>
               <Link
                 href={{
-                  pathname: "/category/[id]",
+                  pathname: "/wines/category/[id]",
                   query: { id: color.id },
                 }}
               >
