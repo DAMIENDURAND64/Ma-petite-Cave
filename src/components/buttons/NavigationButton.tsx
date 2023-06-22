@@ -1,5 +1,4 @@
 import { Button, useMantineTheme } from "@mantine/core";
-import React from "react";
 
 type NavigationButtonProps = {
   variant?: string;
@@ -18,6 +17,7 @@ const NavigationButton = ({
   label,
 }: NavigationButtonProps) => {
   const theme = useMantineTheme();
+
   return (
     <Button
       variant={variant ?? "filled"}
