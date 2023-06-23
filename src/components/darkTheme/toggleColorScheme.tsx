@@ -28,9 +28,9 @@ const ThemeToggler = () => {
         }}
       >
         {dark ? (
-          <IconSun size="1.5rem" color={dark ? "white" : "black"} />
+          <IconSun size="1.5rem" color="white" />
         ) : (
-          <IconMoonStars size="1.5rem" color={dark ? "white" : "black"} />
+          <IconMoonStars size="1.5rem" color="white" />
         )}
       </ActionIcon>
     </div>

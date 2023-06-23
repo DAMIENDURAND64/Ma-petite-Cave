@@ -111,7 +111,9 @@ function CarouselWine({
               <NavigationButton
                 size="sm"
                 onClick={() => {
-                  router.push("/wines").catch((err) => console.log(err));
+                  router
+                    .push("/wines/vintage")
+                    .catch((err) => console.log(err));
                 }}
                 label="Voir tous"
                 radius="md"
