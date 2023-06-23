@@ -27,7 +27,7 @@ const AuthSignIn: React.FC = () => {
             })
           }
         >
-          <Logout size="1.5rem" color={dark ? "white" : "black"} />
+          <Logout size="1.5rem" color="white" />
         </ActionIcon>
       ) : (
         <Button

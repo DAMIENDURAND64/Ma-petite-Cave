@@ -111,9 +111,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                   }}
                   onClick={open}
                 >
-                  <IconSearch
-                    color={theme.colorScheme === "dark" ? "white" : "black"}
-                  />
+                  <IconSearch color="white" />
                 </ActionIcon>
                 <Modal
                   opened={opened}
