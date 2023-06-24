@@ -126,7 +126,7 @@ function CarouselWine({
       <Carousel
         withControls={false}
         getEmblaApi={setEmbla}
-        slideSize="26%"
+        slideSize="25%"
         loop
         align={align ?? "start"}
         dragFree
@@ -143,26 +143,28 @@ function CarouselWine({
         {colorData?.map((color: Color) => {
           const coloor = colors ? colors[color.id] : "bg-gray-500";
           return (
-            <Carousel.Slide key={color.id} style={{}}>
+            <Carousel.Slide key={color.id} style={{ marginBottom: "14px" }}>
               <Link
                 href={{
                   pathname: "/wines/category/[id]",
                   query: { id: color.id },
                 }}
               >
-                <div className=" flexcol xy-center gap-2 ">
+                <div className="flexcol xy-center gap-2">
                   <Skeleton
                     visible={loading}
-                    height={40}
-                    width={40}
+                    height={56}
+                    width={56}
                     radius="xl"
                   >
-                    <div className="flex w-fit rounded-full border-2 border-gray-400 p-[2px]">
-                      <div
-                        className={`${
-                          coloor as string
-                        }  h-10 w-10  rounded-full`}
-                      />
+                    <div className="x-center flex w-full">
+                      <div className="flex w-fit rounded-full border-2 border-gray-400 p-[2px]">
+                        <div
+                          className={`${
+                            coloor as string
+                          }  h-14 w-14  rounded-full`}
+                        />
+                      </div>
                     </div>
                   </Skeleton>
                   <Skeleton visible={loading}>
@@ -238,10 +240,11 @@ function CarouselWine({
                     ? theme.colors.dark[6]
                     : theme.colors.gray[1],
                 borderRadius: "10px",
-                margin: "3px",
+                margin: "6px",
                 marginTop: "10px",
                 marginBottom: "10px",
                 padding: "5px",
+                marginRight: "6px",
               }}
             >
               <Skeleton visible={loading}>
@@ -276,6 +279,7 @@ function CarouselWine({
                 marginTop: "10px",
                 marginBottom: "10px",
                 padding: "8px",
+                marginRight: "6px",
               }}
             >
               <Skeleton visible={loading}>
@@ -296,25 +300,27 @@ function CarouselWine({
           );
         })}
       </Carousel>
-      <Progress
-        value={scrollProgress}
-        styles={{
-          bar: {
-            transitionDuration: "100ms",
-            backgroundColor:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[1]
-                : theme.colors.gray[5],
-          },
-          root: {
-            maxWidth: "250px",
-            marginTop: "5px !important",
-          },
-        }}
-        size="sm"
-        mt="xl"
-        mx="auto"
-      />
+      {!colorData && (
+        <Progress
+          value={scrollProgress}
+          styles={{
+            bar: {
+              transitionDuration: "100ms",
+              backgroundColor:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[1]
+                  : theme.colors.gray[5],
+            },
+            root: {
+              maxWidth: "250px",
+              marginTop: "5px !important",
+            },
+          }}
+          size="sm"
+          mt="xl"
+          mx="auto"
+        />
+      )}
     </div>
   );
 }
