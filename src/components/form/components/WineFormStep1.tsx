@@ -1,21 +1,8 @@
 import { NumberInput, Select, type SelectItem, TextInput } from "@mantine/core";
 import React from "react";
-import {
-  type Control,
-  Controller,
-  type FieldErrors,
-  type UseFormRegister,
-} from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { DateInput } from "@mantine/dates";
-import { type TFormValues } from "../FormType";
-import { type Color } from "@prisma/client";
-
-type CreateWineFormDataProps = {
-  control: Control<TFormValues>;
-  wineColor?: Color[];
-  errors: FieldErrors<TFormValues>;
-  register: UseFormRegister<TFormValues>;
-};
+import { type CreateWineFormDataProps } from "../FormType";
 
 const WineFormStep1 = ({
   control,

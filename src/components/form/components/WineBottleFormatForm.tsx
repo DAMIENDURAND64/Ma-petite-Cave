@@ -1,15 +1,7 @@
-// Quantity.tsx
 import React from "react";
-import { type Control, Controller, type FieldErrors } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { NumberInput } from "@mantine/core";
-import { type TFormValues } from "../FormType";
-
-type QuantityProps = {
-  control: Control<TFormValues, unknown>;
-  formatId: string;
-  formatName: string;
-  errors: FieldErrors<TFormValues>;
-};
+import { type QuantityProps } from "../FormType";
 
 function WineBottleForm({
   control,

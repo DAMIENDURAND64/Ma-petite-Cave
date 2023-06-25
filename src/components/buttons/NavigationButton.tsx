@@ -1,13 +1,5 @@
 import { Button, useMantineTheme } from "@mantine/core";
-
-type NavigationButtonProps = {
-  variant?: string;
-  radius?: string;
-  size?: string;
-  color?: string;
-  onClick?: () => void;
-  label: string;
-};
+import { type NavigationButtonProps } from "../type";
 
 const NavigationButton = ({
   variant,
