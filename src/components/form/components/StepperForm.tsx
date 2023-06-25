@@ -1,4 +1,4 @@
-import React, { type Dispatch } from "react";
+import React from "react";
 import {
   Button,
   Group,
@@ -6,40 +6,11 @@ import {
   createStyles,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  type FieldErrors,
-  type Control,
-  type UseFormSetValue,
-  type UseFormRegister,
-  type UseFormGetValues,
-  type UseFormWatch,
-} from "react-hook-form";
-import { type BottleFormat, type Color } from "@prisma/client";
 import WineFormStep2 from "./WineFormStep2";
 import WineFormStep3 from "./WineFormStep3";
 import WineFormStep1 from "./WineFormStep1";
-import { type TFormValues } from "../FormType";
+import { type StepperFormProps } from "../FormType";
 import { IconCircleX } from "@tabler/icons-react";
-
-type StepperFormProps = {
-  formatsValue: string[];
-  setFormatsValue: Dispatch<React.SetStateAction<string[]>>;
-  control: Control<TFormValues>;
-  wineColor?: Color[];
-  bottleFormat?: BottleFormat[];
-  setValue: UseFormSetValue<TFormValues>;
-  nextStep: () => void;
-  prevStep: () => void;
-  setActive: Dispatch<React.SetStateAction<number>>;
-  loading: boolean;
-  file: File | null;
-  active: number;
-  setFile: (files: File) => void;
-  errors: FieldErrors<TFormValues>;
-  register: UseFormRegister<TFormValues>;
-  getValues: UseFormGetValues<TFormValues>;
-  watch: UseFormWatch<TFormValues>;
-};
 
 const stepperStyle = createStyles((theme) => ({
   error: {

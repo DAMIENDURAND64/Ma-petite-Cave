@@ -1,21 +1,8 @@
 import { MultiSelect } from "@mantine/core";
 import React from "react";
-import { type TFormValues } from "../FormType";
-import { type BottleFormat } from "@prisma/client";
-import {
-  type Control,
-  type FieldErrors,
-  Controller,
-  type UseFormWatch,
-} from "react-hook-form";
+import { type WineFormStep2Props } from "../FormType";
+import { Controller } from "react-hook-form";
 import WineBottleForm from "./WineBottleFormatForm";
-
-type WineFormStep2Props = {
-  bottleFormat?: BottleFormat[];
-  control: Control<TFormValues>;
-  errors: FieldErrors<TFormValues>;
-  watch: UseFormWatch<TFormValues>;
-};
 
 const WineFormStep2 = ({
   bottleFormat,

@@ -2,30 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Carousel, type Embla } from "@mantine/carousel";
 import { Progress, Skeleton, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
-import type {
-  BottleFormat,
-  Color,
-  TastingNote,
-  Wine,
-  WineBottle,
-} from "@prisma/client";
+import type { BottleFormat, Color } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import NavigationButton from "../buttons/NavigationButton";
-
-type CarouselProps = {
-  colorData?: Color[];
-  wineData?: (Wine & {
-    wineBottles: WineBottle[];
-    wineColor: Color;
-    tastingNotes: TastingNote[];
-  })[];
-  vintageData?: { vintage: number }[];
-  colors?: { [key: number]: string };
-  wineBottlesFormat?: BottleFormat[];
-  align?: "start" | "center" | "end";
-  paddingProps?: string;
-};
+import { type CarouselProps } from "../type";
 
 function CarouselWine({
   colorData,
