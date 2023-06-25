@@ -1,21 +1,7 @@
-import { Button, FileButton, type MantineTheme, Textarea } from "@mantine/core";
+import { Button, FileButton, Textarea } from "@mantine/core";
 import React from "react";
-import {
-  type Control,
-  type FieldErrors,
-  type UseFormRegister,
-} from "react-hook-form";
-import { type TFormValues } from "../FormType";
+import { type WineFormStep3Props } from "../FormType";
 import Image from "next/image";
-
-type CreateWineFormDataProps = {
-  control: Control<TFormValues>;
-  setFile: (files: File) => void;
-  file: File | null;
-  errors: FieldErrors<TFormValues>;
-  register: UseFormRegister<TFormValues>;
-  theme: MantineTheme;
-};
 
 function WineFormStep3({
   setFile,
@@ -23,7 +9,7 @@ function WineFormStep3({
   errors,
   register,
   theme,
-}: CreateWineFormDataProps) {
+}: WineFormStep3Props) {
   return (
     <div className="flexcol xy-center gap-4 px-3">
       {file ? (

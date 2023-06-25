@@ -5,13 +5,8 @@ import {
   useMantineTheme,
   type NumberInputHandlers,
 } from "@mantine/core";
-import { type WineBottle } from "@prisma/client";
 import React, { useRef, useState } from "react";
-
-type ModalQuantityProps = {
-  wineBottle: WineBottle & { format: { name: string; capacity: string } };
-  handleUpdateQuantity: (id: number, quantity: number) => Promise<void>;
-};
+import { type ModalQuantityProps } from "../type";
 
 const ModalQuantity = ({
   wineBottle,

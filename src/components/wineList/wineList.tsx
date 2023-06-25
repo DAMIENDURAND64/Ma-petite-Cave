@@ -1,28 +1,12 @@
 import { Grid, Skeleton, useMantineTheme } from "@mantine/core";
-import type { Color, Wine } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Colors } from "~/utils/colors/Colors";
 import { capitalize, truncateText } from "~/utils/functions";
+import { type WineListTemplateProps } from "../type";
 
-interface Props {
-  wines?:
-    | (Wine & {
-        wineColor: Color;
-      })[];
-  loading?: boolean;
-}
-
-const colors: { [key: number]: string } = {
-  1: "bg-gradient-to-r from-red-900 to-red-500",
-  2: "bg-gradient-to-r from-yellow-300 to-yellow-100",
-  3: "bg-gradient-to-r from-rose-600 to-rose-300",
-  4: "bg-gradient-to-r from-yellow-900 via-yellow-500 to-yellow-900",
-  5: "bg-gradient-to-r from-amber-900 to-amber-500",
-  6: "bg-gradient-to-r from-green-900 to-green-500",
-};
-
-function WineListTemplate({ wines }: Props) {
+function WineListTemplate({ wines }: WineListTemplateProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useMantineTheme();
 
@@ -36,7 +20,7 @@ function WineListTemplate({ wines }: Props) {
   return (
     <Grid justify="space-around" grow gutter="xl" style={{ marginTop: "1px" }}>
       {wines?.map((wine) => {
-        const coloor = colors[wine.wineColor.id] ?? "bg-gray-500";
+        const coloor = Colors[wine.wineColor.id] ?? "bg-gray-500";
         return (
           <Grid.Col
             key={wine.id}
