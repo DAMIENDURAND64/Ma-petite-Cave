@@ -11,8 +11,8 @@ import { type TFormValues, type WineBottleProps } from "./FormType";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from "./components/ValidationSchema";
-import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
-import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
+import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
+import { useGetAllWineColor } from "~/pages/api/APICalls/wineColor";
 
 const CreateWineFormLogic = () => {
   const { data: sessionData } = useSession();

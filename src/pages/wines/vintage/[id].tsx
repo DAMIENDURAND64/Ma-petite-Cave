@@ -6,7 +6,7 @@ import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
-import { useGetAllWineByVintage } from "~/utils/APICalls/wines";
+import { useGetAllWineByVintage } from "~/pages/api/APICalls/wines";
 
 const VintagePage = () => {
   const { data: sessionData } = useSession();

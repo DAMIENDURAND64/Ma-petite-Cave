@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { api } from "../../../utils/api";
 
 export const useGetOneBottleFormat = (wineBottleFormatId: number) => {
   return api.bottleFormat.getOne.useQuery({ id: wineBottleFormatId });

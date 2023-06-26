@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { ColorFromId } from "~/utils/colors/Colors";
 import { LoaderRing } from "../loader/loaderRing";
-import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
-import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
-import { UseGetAllWines } from "~/utils/APICalls/wines";
+import { useGetAllWineColor } from "~/pages/api/APICalls/wineColor";
+import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
+import { UseGetAllWines } from "~/pages/api/APICalls/wines";
 
 const SearchBar = () => {
   const router = useRouter();

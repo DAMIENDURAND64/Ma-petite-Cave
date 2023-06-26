@@ -6,8 +6,8 @@ import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
-import { useGetOneBottleFormat } from "~/utils/APICalls/bottleFormat";
-import { useGetAllWineByFormat } from "~/utils/APICalls/wines";
+import { useGetOneBottleFormat } from "~/pages/api/APICalls/bottleFormat";
+import { useGetAllWineByFormat } from "~/pages/api/APICalls/wines";
 
 const BottleFormatPage = () => {
   const { data: sessionData } = useSession();

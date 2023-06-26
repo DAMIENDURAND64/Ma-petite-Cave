@@ -4,10 +4,10 @@ import { RiAddCircleFill } from "react-icons/ri";
 import CarouselWine from "~/components/carousels/CarouselWine";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
-import { useGetAllVintage } from "~/utils/APICalls/vintage";
-import { useGetAllWineColor } from "~/utils/APICalls/wineColor";
-import { UseGetAllWines } from "~/utils/APICalls/wines";
+import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
+import { useGetAllVintage } from "~/pages/api/APICalls/vintage";
+import { useGetAllWineColor } from "~/pages/api/APICalls/wineColor";
+import { UseGetAllWines } from "~/pages/api/APICalls/wines";
 import { Colors } from "~/utils/colors/Colors";
 import { uniqueVintage } from "~/utils/functions";
 

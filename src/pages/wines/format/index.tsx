@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
 
 const FormatHomepage = () => {
   const { data: sessionData } = useSession();
