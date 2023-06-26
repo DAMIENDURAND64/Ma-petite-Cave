@@ -20,7 +20,7 @@ import { Upload } from "tabler-icons-react";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { useGetOneWine } from "~/utils/APICalls/wines";
+import { useGetOneWine } from "~/pages/api/APICalls/wines";
 import { uploadFileToCloud } from "~/utils/cloudinary";
 import { Colors } from "~/utils/colors/Colors";
 import { motion } from "framer-motion";

@@ -1,36 +1,11 @@
 import React from "react";
-import {
-  Button,
-  Group,
-  Stepper,
-  createStyles,
-  useMantineTheme,
-} from "@mantine/core";
+import { Button, Group, Stepper, useMantineTheme } from "@mantine/core";
 import WineFormStep2 from "./WineFormStep2";
 import WineFormStep3 from "./WineFormStep3";
 import WineFormStep1 from "./WineFormStep1";
 import { type StepperFormProps } from "../FormType";
 import { IconCircleX } from "@tabler/icons-react";
-
-const stepperStyle = createStyles((theme) => ({
-  error: {
-    ".mantine-ttrh0a": {
-      backgroundColor: `${theme.colors.red[4]} !important`,
-    },
-  },
-  background: {
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? `${theme.colors.violet[9]} !important`
-        : `${theme.colors.violet[6]} !important`,
-  },
-  borderColor: {
-    borderColor:
-      theme.colorScheme === "dark"
-        ? `${theme.colors.violet[9]} !important`
-        : `${theme.colors.violet[6]} !important`,
-  },
-}));
+import { stepperStyle } from "~/utils/mantineStyle/StepperStyle";
 
 const StepperForm = ({
   control,

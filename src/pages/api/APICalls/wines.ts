@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { api } from "../../../utils/api";
 
 export const useGetOneWine = (wineId: number) => {
   return api.wines.getOne.useQuery({ id: wineId });

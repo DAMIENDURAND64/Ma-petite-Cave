@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { api } from "../api";
+import { api } from "../../../utils/api";
 
 export const UseGetMe = () => {
   const { data: sessionData } = useSession();

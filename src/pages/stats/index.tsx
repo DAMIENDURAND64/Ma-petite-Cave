@@ -8,8 +8,8 @@ import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { IconPlus } from "@tabler/icons-react";
 import useStyles from "~/utils/mantineStyle/AccordionStyle";
 import { LoaderRing } from "~/components/loader/loaderRing";
-import { UseGetAllWines } from "~/utils/APICalls/wines";
-import { useGetAllBottlesFormat } from "~/utils/APICalls/bottleFormat";
+import { UseGetAllWines } from "~/pages/api/APICalls/wines";
+import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
 
 const IndexStats = () => {
   const { data: sessionData } = useSession();

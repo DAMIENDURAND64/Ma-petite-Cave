@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { useGetAllVintage } from "~/utils/APICalls/vintage";
+import { useGetAllVintage } from "~/pages/api/APICalls/vintage";
 import { uniqueVintage } from "~/utils/functions";
 
 const VintageHomepage = () => {

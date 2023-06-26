@@ -4,7 +4,7 @@ import React from "react";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import ProfilDisplayInfo from "~/components/profil/profilDisplayInfo";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
-import { UseGetMe } from "~/utils/APICalls/user";
+import { UseGetMe } from "~/pages/api/APICalls/user";
 
 function Profil() {
   const { data: sessionData } = useSession();
