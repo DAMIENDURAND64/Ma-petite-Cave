@@ -2,9 +2,8 @@ import { Grid, Skeleton, useMantineTheme } from "@mantine/core";
 import { type BottleFormat } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import NavigationButton from "~/components/buttons/NavigationButton";
+import HeaderPage from "~/components/headerPage/HeaderPage";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
@@ -13,7 +12,6 @@ const FormatHomepage = () => {
   const { data: sessionData } = useSession();
   const theme = useMantineTheme();
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,26 +44,11 @@ const FormatHomepage = () => {
 
   return (
     <div className="flexcol gap-6">
-      <div className="flex  gap-2">
-        <div className="w-fit">
-          <Skeleton visible={loading}>
-            <NavigationButton
-              size="sm"
-              label="retour"
-              radius="md"
-              onClick={() => {
-                router.push("/homepage").catch((err) => console.log(err));
-              }}
-            />
-          </Skeleton>
-        </div>
-
-        <Skeleton visible={loading}>
-          <div className="xy-center flex h-[26px] w-full rounded-md bg-slate-500">
-            <h1 className="text-lg">Formats</h1>
-          </div>
-        </Skeleton>
-      </div>
+      <HeaderPage
+        colors=""
+        label="Formats"
+        loading={wineBottlesFormatLoading}
+      />
       <Grid grow gutter="lg">
         {wineBottlesFormat?.map((format: BottleFormat) => {
           return (

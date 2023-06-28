@@ -41,3 +41,11 @@ export type WineListTemplateProps = {
       })[];
   loading?: boolean;
 };
+
+export type HeaderPageProps = {
+  colors: string;
+  wineColorId?: number;
+
+  loading: boolean;
+  label?: string;
+};
