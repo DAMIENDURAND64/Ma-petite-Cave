@@ -17,7 +17,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Upload } from "tabler-icons-react";
-import NavigationButton from "~/components/buttons/NavigationButton";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import { useGetOneWine } from "~/pages/api/APICalls/wines";
@@ -27,6 +26,7 @@ import { motion } from "framer-motion";
 import { useDisclosure } from "@mantine/hooks";
 import ModalQuantity from "~/components/quantity/ModalQuantity";
 import { api } from "~/utils/api";
+import HeaderPage from "~/components/headerPage/HeaderPage";
 
 type SelectedWineBottle = {
   selectedWineBottle: WineBottle & {
@@ -129,19 +129,11 @@ function GetOneWine() {
 
   return (
     <div className="flexcol gap-3">
-      <div className="flex gap-2">
-        <NavigationButton
-          size="sm"
-          label="retour"
-          radius="md"
-          onClick={() => {
-            router.push("/wines").catch((err) => console.log(err));
-          }}
-        />
-        <div className={`${coloor} xy-center flex h-[26px] w-full rounded-md`}>
-          <h1 className="font-sans text-lg">{wine?.wineColor?.name}</h1>
-        </div>
-      </div>
+      <HeaderPage
+        colors={coloor}
+        label={wine?.wineColor?.name}
+        loading={isLoading}
+      />
       <div className="flexcol xy-center">
         <div className="relative">
           {file !== null ? (

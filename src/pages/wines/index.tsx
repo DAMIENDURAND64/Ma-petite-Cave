@@ -1,9 +1,7 @@
-import { Pagination, Skeleton, useMantineTheme } from "@mantine/core";
+import { Pagination } from "@mantine/core";
 import { useSession } from "next-auth/react";
-
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import NavigationButton from "~/components/buttons/NavigationButton";
+import HeaderPage from "~/components/headerPage/HeaderPage";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
@@ -11,10 +9,7 @@ import { UseGetAllWines } from "~/pages/api/APICalls/wines";
 
 const WineList = () => {
   const { data: sessionData } = useSession();
-  const theme = useMantineTheme();
-  const router = useRouter();
   const { data: wines, isLoading, error } = UseGetAllWines();
-  const dark = theme.colorScheme === "dark";
   const [pageNumber, setPageNumber] = useState<number>(1);
   const pageSize = 10;
 
@@ -47,26 +42,7 @@ const WineList = () => {
 
   return (
     <div className="flexcol gap-3">
-      <Skeleton visible={isLoading}>
-        <div className="flex gap-2">
-          <NavigationButton
-            size="sm"
-            radius="md"
-            label="retour"
-            onClick={() => {
-              router.push("/homepage").catch((err) => console.log(err));
-            }}
-          />
-
-          <div
-            className={`xy-center flex h-[26px] w-full rounded-md ${
-              dark ? "bg-[#2C2E33]" : "bg-[#DEE2E6]"
-            }`}
-          >
-            <h1 className="text-lg">Ma Cave</h1>
-          </div>
-        </div>
-      </Skeleton>
+      <HeaderPage colors="" loading={isLoading} label="Ma Cave" />
       <div className="mx-6">
         <WineListTemplate wines={pageData} loading={isLoading} />
       </div>

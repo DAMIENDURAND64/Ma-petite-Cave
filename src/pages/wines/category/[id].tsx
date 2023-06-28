@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import NavigationButton from "~/components/buttons/NavigationButton";
+import HeaderPage from "~/components/headerPage/HeaderPage";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
 import WineListTemplate from "~/components/wineList/wineList";
@@ -37,23 +37,11 @@ const Color = () => {
 
   return (
     <div className="flexcol gap-3">
-      <div className="flex gap-2">
-        <NavigationButton
-          size="sm"
-          label="retour"
-          radius="md"
-          onClick={() => {
-            router.push("/homepage").catch((err) => console.log(err));
-          }}
-        />
-        <div
-          className={`${
-            Colors[wineColorId] as string
-          } xy-center flex h-[26px] w-full rounded-md`}
-        >
-          <h1 className="text-lg">{wineColorQuery?.[0]?.wineColor?.name}</h1>
-        </div>
-      </div>
+      <HeaderPage
+        colors={Colors[wineColorId] as string}
+        loading={isLoading}
+        label={wineColorQuery?.[0]?.wineColor?.name}
+      />
       <div className="mx-5">
         <WineListTemplate wines={wineColorQuery} />
       </div>
