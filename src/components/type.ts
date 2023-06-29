@@ -49,3 +49,15 @@ export type HeaderPageProps = {
   loading: boolean;
   label?: string;
 };
+
+export type DoughnutForValOfBottlesProps = {
+  wineBottlesValues: Record<number, number>;
+};
+
+export type DoughnutForNumOfBottlesProps = {
+  wineBottlesByColor: Record<number, number>;
+};
+
+export type DoughnutForFormatOfBottlesProps = {
+  formatCounts: Record<number, number>;
+};

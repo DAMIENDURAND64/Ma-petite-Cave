@@ -1,14 +1,13 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { type DoughnutForFormatOfBottlesProps } from "../type";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-type DoughnutProps = {
-  formatCounts: Record<number, number>;
-};
-
-export function DoughnutForFormatOfBottles({ formatCounts }: DoughnutProps) {
+export function DoughnutForFormatOfBottles({
+  formatCounts,
+}: DoughnutForFormatOfBottlesProps) {
   const colorClassMap = [
     "bg-red-700",
     "bg-green-700",
