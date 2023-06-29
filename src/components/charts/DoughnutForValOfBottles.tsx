@@ -17,14 +17,13 @@ import {
 } from "./gradients";
 import { Colors } from "~/utils/colors/Colors";
 import { labels } from "~/utils/labels/label";
+import { type DoughnutForValOfBottlesProps } from "../type";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-type DoughnutProps = {
-  wineBottlesValues: Record<number, number>;
-};
-
-export function DoughnutForValOfBottles({ wineBottlesValues }: DoughnutProps) {
+export function DoughnutForValOfBottles({
+  wineBottlesValues,
+}: DoughnutForValOfBottlesProps) {
   const data = {
     labels: [],
     datasets: [
