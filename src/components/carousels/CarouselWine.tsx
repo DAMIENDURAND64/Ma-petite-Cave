@@ -4,9 +4,8 @@ import { Progress, Skeleton, useMantineTheme } from "@mantine/core";
 import Link from "next/link";
 import type { BottleFormat, Color } from "@prisma/client";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import NavigationButton from "../buttons/NavigationButton";
 import { type CarouselProps } from "../type";
+import HeaderCarousel from "./HeaderCarousel";
 
 function CarouselWine({
   colorData,
@@ -17,7 +16,6 @@ function CarouselWine({
   align,
   paddingProps,
 }: CarouselProps) {
-  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useMantineTheme();
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -44,64 +42,13 @@ function CarouselWine({
   }, [embla, handleScroll]);
   return (
     <div>
-      {wineData && (
-        <div className="mb-2 flex justify-between">
-          <div>
-            <Skeleton visible={loading}>Mes vins:</Skeleton>
-          </div>
-          <div>
-            <Skeleton visible={loading}>
-              <NavigationButton
-                size="sm"
-                onClick={() => {
-                  router.push("/wines").catch((err) => console.log(err));
-                }}
-                label="Voir tous"
-                radius="md"
-              />
-            </Skeleton>
-          </div>
-        </div>
-      )}
+      {wineData && <HeaderCarousel loading={loading} label="Mes Vins" />}
+
       {wineBottlesFormat && (
-        <div className="mb-2 flex justify-between">
-          <div>
-            <Skeleton visible={loading}>Formats:</Skeleton>
-          </div>
-          <div>
-            <Skeleton visible={loading}>
-              <NavigationButton
-                size="sm"
-                onClick={() => {
-                  router.push("/wines/format").catch((err) => console.log(err));
-                }}
-                label="Voir tous"
-                radius="md"
-              />
-            </Skeleton>
-          </div>
-        </div>
+        <HeaderCarousel loading={loading} label="Mes Formats" />
       )}
       {vintageData && (
-        <div className="mb-2 flex justify-between">
-          <div>
-            <Skeleton visible={loading}>Vintage:</Skeleton>
-          </div>
-          <div>
-            <Skeleton visible={loading}>
-              <NavigationButton
-                size="sm"
-                onClick={() => {
-                  router
-                    .push("/wines/vintage")
-                    .catch((err) => console.log(err));
-                }}
-                label="Voir tous"
-                radius="md"
-              />
-            </Skeleton>
-          </div>
-        </div>
+        <HeaderCarousel loading={loading} label="Mes Millésimes" />
       )}
 
       <Carousel
