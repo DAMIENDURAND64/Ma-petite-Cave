@@ -148,7 +148,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           )}
         </div>
       </div>
-      <div className="px-3 pb-20 pt-3">{children}</div>
+      <div className="pb-20 pt-3">{children}</div>
       <div
         className="flexrow xy-center fixed bottom-0 h-16 w-full justify-around border-slate-400"
         style={{
