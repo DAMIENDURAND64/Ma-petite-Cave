@@ -39,7 +39,7 @@ model Wine {
   wineColorId        Int
   owner              User          @relation(fields: [ownerId], references: [id])
   wineColor          Color         @relation(fields: [wineColorId], references: [id])
-  wineBottles        WineBottle[]
+  wineBottles        WineBottle[]  
   tastingNotes       TastingNote[] @relation("TastingNoteToWine")
 }
 
@@ -78,7 +78,7 @@ model WineBottle {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   format    BottleFormat @relation(fields: [formatId], references: [id])
-  wine      Wine         @relation(fields: [wineId], references: [id])
+  wine      Wine         @relation(fields: [wineId], references: [id], onDelete: Cascade)
 }
 
 model Account {

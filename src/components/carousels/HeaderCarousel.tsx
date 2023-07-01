@@ -12,7 +12,7 @@ const HeaderCarousel = ({ loading, label }: Props) => {
   const router = useRouter();
   return (
     <div className="mb-2 flex justify-between px-2">
-      <div className="underline ">
+      <div className="text-lg underline">
         <Skeleton visible={loading}>{label}</Skeleton>
       </div>
       <div>
