@@ -7,20 +7,20 @@ import { type HeaderPageProps } from "../type";
 const HeaderPage = ({ colors, loading, label }: HeaderPageProps) => {
   const router = useRouter();
   return (
-    <div className="flex w-full">
-      <Skeleton visible={loading}>
+    <div className="flex gap-2 px-2">
+      <Skeleton visible={loading} style={{ width: "auto" }}>
         <NavigationButton
           size="md"
           label="retour"
           radius="md"
           onClick={() => {
-            router.push("/homepage").catch((err) => console.log(err));
+            router.back();
           }}
         />
       </Skeleton>
       <Skeleton visible={loading}>
         <div
-          className={`${colors} xy-center flex h-[30px] min-w-[270px] rounded-md  bg-slate-500`}
+          className={`${colors} xy-center flex h-[30px] w-full rounded-md  bg-slate-500`}
         >
           <h1 className="text-lg">{label}</h1>
         </div>
