@@ -27,6 +27,7 @@ import { useDisclosure } from "@mantine/hooks";
 import ModalQuantity from "~/components/quantity/ModalQuantity";
 import { api } from "~/utils/api";
 import HeaderPage from "~/components/headerPage/HeaderPage";
+import DeleteButton from "~/components/buttons/DeleteButton";
 
 type SelectedWineBottle = {
   selectedWineBottle: WineBottle & {
@@ -55,6 +56,7 @@ function GetOneWine() {
 
   const usePostUpdateImage = api.wines.updateImage.useMutation();
   const usePostUpdateQuantityWine = api.wines.updateQuantity.useMutation();
+  const deleteWineMutation = api.wines.delete.useMutation();
 
   const handleUpdateQuantity = async (id: number, quantity: number) => {
     const payload = {
@@ -96,6 +98,20 @@ function GetOneWine() {
       console.log(err);
     }
     setLoading(false);
+  };
+
+  const DeleteWine = () => {
+    deleteWineMutation.mutate(
+      { id: wineId },
+      {
+        onSuccess: () => {
+          router.back();
+        },
+        onError: (error) => {
+          alert(error);
+        },
+      }
+    );
   };
 
   const wine:
@@ -321,6 +337,13 @@ function GetOneWine() {
               </Modal>
             </>
           ))}
+        </div>
+        <div className="flex w-full justify-center">
+          <DeleteButton
+            label="Supprimer ce vin"
+            size="md"
+            onClick={DeleteWine}
+          />
         </div>
       </div>
     </div>
