@@ -136,7 +136,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                     },
                   }}
                 >
-                  <SearchBar />
+                  <SearchBar close={close} />
                 </Modal>
               </div>
             </div>

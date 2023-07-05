@@ -48,8 +48,9 @@ const FormatHomepage = () => {
         colors=""
         label="Formats"
         loading={wineBottlesFormatLoading}
+        sortFilter={false}
       />
-      <Grid grow gutter="lg">
+      <Grid grow gutter="lg" style={{ marginRight: "6px", marginLeft: "6px" }}>
         {wineBottlesFormat?.map((format: BottleFormat) => {
           return (
             <Grid.Col

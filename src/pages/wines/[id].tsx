@@ -105,7 +105,7 @@ function GetOneWine() {
       { id: wineId },
       {
         onSuccess: () => {
-          router.back();
+          void router.push("/homepage");
         },
         onError: (error) => {
           alert(error);
@@ -149,6 +149,7 @@ function GetOneWine() {
         colors={coloor}
         label={wine?.wineColor?.name}
         loading={isLoading}
+        sortFilter={false}
       />
       <div className="flexcol xy-center">
         <div className="relative">
