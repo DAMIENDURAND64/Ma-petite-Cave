@@ -46,8 +46,13 @@ const VintageHomepage = () => {
 
   return (
     <div className="flexcol gap-6">
-      <HeaderPage colors="" label="Vintage" loading={wineVintageLoading} />
-      <Grid grow gutter="lg">
+      <HeaderPage
+        colors=""
+        label="Vintage"
+        loading={wineVintageLoading}
+        sortFilter={false}
+      />
+      <Grid grow gutter="lg" style={{ marginRight: "6px", marginLeft: "6px" }}>
         {vintageToMap
           ?.sort((a, b) => a.vintage - b.vintage)
           .map((item) => {

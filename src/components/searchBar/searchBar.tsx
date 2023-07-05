@@ -9,7 +9,11 @@ import { useGetAllWineColor } from "~/pages/api/APICalls/wineColor";
 import { useGetAllBottlesFormat } from "~/pages/api/APICalls/bottleFormat";
 import { UseGetAllWines } from "~/pages/api/APICalls/wines";
 
-const SearchBar = () => {
+type SearchBarProps = {
+  close: () => void;
+};
+
+const SearchBar = ({ close }: SearchBarProps) => {
   const router = useRouter();
   const [value, setValue] = useState("");
 
@@ -85,6 +89,7 @@ const SearchBar = () => {
       router.push(`/category/${id}`).catch((err) => console.log(err));
     if (group === "Wines")
       router.push(`/wines/${id}`).catch((err) => console.log(err));
+    close();
   };
 
   const autoCompleteItem = ({

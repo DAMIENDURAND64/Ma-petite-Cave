@@ -45,9 +45,11 @@ export type WineListTemplateProps = {
 export type HeaderPageProps = {
   colors: string;
   wineColorId?: number;
-
   loading: boolean;
   label?: string;
+  queries?: string[];
+  onSortChange?: (sortOption: string) => void;
+  sortFilter: boolean;
 };
 
 export type DoughnutForValOfBottlesProps = {

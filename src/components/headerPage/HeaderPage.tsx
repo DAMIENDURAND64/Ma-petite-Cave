@@ -3,8 +3,16 @@ import NavigationButton from "../buttons/NavigationButton";
 import { useRouter } from "next/router";
 import { Skeleton } from "@mantine/core";
 import { type HeaderPageProps } from "../type";
+import SortComponent from "../sort/SortComponent";
 
-const HeaderPage = ({ colors, loading, label }: HeaderPageProps) => {
+const HeaderPage = ({
+  colors,
+  loading,
+  label,
+  queries,
+  onSortChange,
+  sortFilter,
+}: HeaderPageProps) => {
   const router = useRouter();
   return (
     <div className="flex gap-2 px-2">
@@ -25,6 +33,11 @@ const HeaderPage = ({ colors, loading, label }: HeaderPageProps) => {
           <h1 className="text-lg">{label}</h1>
         </div>
       </Skeleton>
+      {sortFilter && (
+        <Skeleton visible={loading} style={{ width: "auto" }}>
+          <SortComponent queries={queries} onSortChange={onSortChange} />
+        </Skeleton>
+      )}
     </div>
   );
 };
