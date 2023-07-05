@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import HeaderPage from "~/components/headerPage/HeaderPage";
 import { LoaderRing } from "~/components/loader/loaderRing";
 import Unauthorized from "~/components/unauthorized/Unauthorized";
@@ -10,9 +11,12 @@ import { Colors } from "~/utils/colors/Colors";
 const Color = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
-  const { id } = router.query;
 
+  const { id } = router.query;
   const wineColorId = parseInt(id as string, 10);
+
+  const [sortOption, setSortOption] = useState<string | null>(null);
+  const Queries = ["vintage", "nom croissant", "nom décroissant"];
 
   const {
     data: wineColorQuery,
@@ -35,15 +39,36 @@ const Color = () => {
     );
   }
 
+  const handleSortChange = (sortOption: string) => {
+    setSortOption(sortOption);
+  };
+
+  let sortedWines = wineColorQuery ?? [];
+  if (sortOption) {
+    sortedWines = [...(wineColorQuery ?? [])].sort((a, b) => {
+      if (sortOption === "vintage") {
+        return a.vintage - b.vintage;
+      } else if (sortOption === "nom croissant") {
+        return a.name.localeCompare(b.name);
+      } else if (sortOption === "nom décroissant") {
+        return b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
+  }
+
   return (
     <div className="flexcol gap-3">
       <HeaderPage
         colors={Colors[wineColorId] as string}
         loading={isLoading}
         label={wineColorQuery?.[0]?.wineColor?.name}
+        queries={Queries}
+        onSortChange={handleSortChange}
+        sortFilter
       />
       <div className="mx-5">
-        <WineListTemplate wines={wineColorQuery} />
+        <WineListTemplate wines={sortedWines} />
       </div>
     </div>
   );

@@ -42,13 +42,23 @@ function CarouselWine({
   }, [embla, handleScroll]);
   return (
     <div>
-      {wineData && <HeaderCarousel loading={loading} label="Mes Vins" />}
+      {wineData && (
+        <HeaderCarousel loading={loading} label="Mes Vins" url="wines" />
+      )}
 
       {wineBottlesFormat && (
-        <HeaderCarousel loading={loading} label="Mes Formats" />
+        <HeaderCarousel
+          loading={loading}
+          label="Mes Formats"
+          url="wines/format"
+        />
       )}
       {vintageData && (
-        <HeaderCarousel loading={loading} label="Mes Millésimes" />
+        <HeaderCarousel
+          loading={loading}
+          label="Mes Millésimes"
+          url="wines/vintage"
+        />
       )}
 
       <Carousel

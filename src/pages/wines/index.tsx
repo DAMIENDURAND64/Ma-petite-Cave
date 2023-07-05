@@ -11,14 +11,37 @@ const WineList = () => {
   const { data: sessionData } = useSession();
   const { data: wines, isLoading, error } = UseGetAllWines();
   const [pageNumber, setPageNumber] = useState<number>(1);
+
+  const [sortOption, setSortOption] = useState<string | null>(null);
+  const Queries = ["vintage", "nom croissant", "nom décroissant"];
+
   const pageSize = 10;
 
   const startingIndex = (pageNumber - 1) * pageSize;
-  const pageData = wines?.slice(startingIndex, startingIndex + pageSize);
 
   const handlePageChange = (newPage: number) => {
     setPageNumber(newPage);
   };
+
+  const handleSortChange = (sortOption: string) => {
+    setSortOption(sortOption);
+  };
+
+  let sortedWines = wines ?? [];
+  if (sortOption) {
+    sortedWines = [...(wines ?? [])].sort((a, b) => {
+      if (sortOption === "vintage") {
+        return a.vintage - b.vintage;
+      } else if (sortOption === "nom croissant") {
+        return a.name.localeCompare(b.name);
+      } else if (sortOption === "nom décroissant") {
+        return b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
+  }
+
+  const pageData = sortedWines?.slice(startingIndex, startingIndex + pageSize);
 
   if (sessionData === null) {
     return <Unauthorized />;
@@ -42,7 +65,14 @@ const WineList = () => {
 
   return (
     <div className="flexcol gap-3">
-      <HeaderPage colors="" loading={isLoading} label="Ma Cave" />
+      <HeaderPage
+        colors=""
+        loading={isLoading}
+        label="Ma Cave"
+        queries={Queries}
+        onSortChange={handleSortChange}
+        sortFilter
+      />
       <div className="mx-6">
         <WineListTemplate wines={pageData} loading={isLoading} />
       </div>
