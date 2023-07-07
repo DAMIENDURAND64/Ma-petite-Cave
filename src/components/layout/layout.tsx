@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React, { useState, type PropsWithChildren, useEffect } from "react";
 import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
@@ -21,6 +21,25 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
+
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset < 30) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleNavigationAddWine = () => {
     router.push("/wines/add").catch((err) => console.log(err));
@@ -76,79 +95,138 @@ const Layout = ({ children }: PropsWithChildren) => {
   ];
   return (
     <>
-      <div
-        className="w-full"
-        style={{
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[4]
-              : theme.colors.dark[1],
-        }}
-      >
-        <div className="flex h-32 justify-between  p-3">
-          <div className="flex ">
-            <Logo />
-          </div>
-          {sessionData ? (
-            <div className="flex flex-col items-end justify-between">
-              <div className="flex gap-4">
+      {scrolled ? (
+        <div
+          className="fixed z-50 h-32 w-full"
+          style={{
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[4]
+                : theme.colors.dark[1],
+          }}
+        >
+          <div className="flex h-32 justify-between p-3">
+            <div className="flex ">
+              <Logo />
+            </div>
+            {sessionData ? (
+              <div className="flex flex-col items-end justify-between">
+                <div className="flex gap-4">
+                  <ThemeToggler />
+                  <AuthSignIn />
+                </div>
+                <div>
+                  <ActionIcon
+                    size="lg"
+                    variant="filled"
+                    style={{
+                      border:
+                        theme.colorScheme === "dark"
+                          ? `2px solid ${theme.colors.violet[9]}`
+                          : `2px solid ${theme.colors.violet[6]}`,
+                      backgroundColor:
+                        theme.colorScheme === "dark"
+                          ? theme.colors.violet[9]
+                          : theme.colors.violet[6],
+                    }}
+                    onClick={open}
+                  >
+                    <IconSearch color="white" />
+                  </ActionIcon>
+                  <Modal
+                    opened={opened}
+                    onClose={close}
+                    yOffset={130}
+                    withCloseButton={false}
+                    radius="md"
+                    transitionProps={{
+                      transition: "fade",
+                      duration: 400,
+                      timingFunction: "linear",
+                    }}
+                    styles={{
+                      root: {
+                        ".mantine-8jl4qs": {
+                          paddingLeft: `12px !important`,
+                          paddingRight: `12px !important`,
+                        },
+                      },
+                      body: {
+                        padding: 0,
+                      },
+                    }}
+                  >
+                    <SearchBar close={close} />
+                  </Modal>
+                </div>
+              </div>
+            ) : (
+              <div className="flex w-[50%] flex-col items-end justify-between">
                 <ThemeToggler />
                 <AuthSignIn />
               </div>
-              <div>
-                <ActionIcon
-                  size="lg"
-                  variant="filled"
-                  style={{
-                    border:
-                      theme.colorScheme === "dark"
-                        ? `2px solid ${theme.colors.violet[9]}`
-                        : `2px solid ${theme.colors.violet[6]}`,
-                    backgroundColor:
-                      theme.colorScheme === "dark"
-                        ? theme.colors.violet[9]
-                        : theme.colors.violet[6],
-                  }}
-                  onClick={open}
-                >
-                  <IconSearch color="white" />
-                </ActionIcon>
-                <Modal
-                  opened={opened}
-                  onClose={close}
-                  yOffset={130}
-                  withCloseButton={false}
-                  radius="md"
-                  transitionProps={{
-                    transition: "fade",
-                    duration: 400,
-                    timingFunction: "linear",
-                  }}
-                  styles={{
-                    root: {
-                      ".mantine-8jl4qs": {
-                        paddingLeft: `12px !important`,
-                        paddingRight: `12px !important`,
-                      },
-                    },
-                    body: {
-                      padding: 0,
-                    },
-                  }}
-                >
-                  <SearchBar close={close} />
-                </Modal>
-              </div>
-            </div>
-          ) : (
-            <div className="flex w-[50%] flex-col items-end justify-between">
-              <ThemeToggler />
-              <AuthSignIn />
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-      <div className="pb-20 pt-3">{children}</div>
+      ) : (
+        <div
+          className="fixed z-50 flex w-full justify-between px-3 py-2"
+          style={{
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[4]
+                : theme.colors.dark[1],
+          }}
+        >
+          <h1 className="text-3xl font-extrabold">Ma petite Cave.</h1>
+          <div>
+            <ActionIcon
+              size="lg"
+              variant="filled"
+              style={{
+                border:
+                  theme.colorScheme === "dark"
+                    ? `2px solid ${theme.colors.violet[9]}`
+                    : `2px solid ${theme.colors.violet[6]}`,
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.violet[9]
+                    : theme.colors.violet[6],
+              }}
+              onClick={open}
+            >
+              <IconSearch color="white" />
+            </ActionIcon>
+            <Modal
+              opened={opened}
+              onClose={close}
+              yOffset={scrolled ? 135 : 55}
+              withCloseButton={false}
+              radius="md"
+              transitionProps={{
+                transition: "fade",
+                duration: 400,
+                timingFunction: "linear",
+              }}
+              styles={{
+                root: {
+                  ".mantine-8jl4qs": {
+                    paddingLeft: `12px !important`,
+                    paddingRight: `12px !important`,
+                  },
+                },
+                body: {
+                  padding: 0,
+                },
+              }}
+            >
+              <SearchBar close={close} />
+            </Modal>
+          </div>
+        </div>
+      )}
+
+      <div className="pb-20 pt-36">{children}</div>
       <div
         className="flexrow xy-center fixed bottom-0 h-16 w-full justify-around border-slate-400"
         style={{
