@@ -1,4 +1,4 @@
-import { Button, useMantineTheme } from "@mantine/core";
+import { Button as MantineButton, useMantineTheme } from "@mantine/core";
 
 type DeleteButtonProps = {
   variant?: "filled" | "outline" | "light" | "link";
@@ -6,35 +6,39 @@ type DeleteButtonProps = {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   onClick?: () => void;
   label?: string;
+  color: "red" | "violet";
 };
 
-const DeleteButton = ({
+const CustomizeButton = ({
   variant,
   radius,
   size,
   onClick,
   label,
+  color,
 }: DeleteButtonProps) => {
   const theme = useMantineTheme();
 
+  const backgroundColor =
+    theme.colorScheme === "dark"
+      ? theme.colors[color][9]
+      : theme.colors[color][6];
+
   return (
-    <Button
+    <MantineButton
       variant={variant ?? "filled"}
       radius={radius ?? "xl"}
       compact
       size={size ?? "xs"}
       onClick={onClick}
       style={{
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.red[9]
-            : theme.colors.red[6],
+        backgroundColor,
         fontFamily: "Helvetica",
       }}
     >
       {label}
-    </Button>
+    </MantineButton>
   );
 };
 
-export default DeleteButton;
+export default CustomizeButton;
