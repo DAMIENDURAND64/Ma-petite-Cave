@@ -3,31 +3,21 @@ import ThemeToggler from "../darkTheme/toggleColorScheme";
 import AuthSignIn from "./AuthSignIn";
 import Logo from "./Logo";
 import { useSession } from "next-auth/react";
-import { ActionIcon, Avatar, Modal, useMantineTheme } from "@mantine/core";
-import { useRouter } from "next/router";
-import { FaChartBar } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { HiOutlineHome } from "react-icons/hi";
-import { RiAddCircleFill } from "react-icons/ri";
+import { useMantineTheme } from "@mantine/core";
 import { motion } from "framer-motion";
-import SearchBar from "../searchBar/searchBar";
-import { IconSearch } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
+import { UseFooterIcons } from "~/utils/footerIcons";
+import SearchIconModal from "../searchBar/searchIconModal";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
-
   const { data: sessionData } = useSession();
-
-  const router = useRouter();
-  const [opened, { open, close }] = useDisclosure(false);
-
   const [scrolled, setScrolled] = useState(false);
+  const footerIcons = UseFooterIcons();
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset < 30) {
+      if (offset > 30) {
         setScrolled(true);
       } else {
         setScrolled(false);
@@ -41,61 +31,9 @@ const Layout = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  const handleNavigationAddWine = () => {
-    router.push("/wines/add").catch((err) => console.log(err));
-  };
-  const handleNavigationHome = () => {
-    router.push("/homepage").catch((err) => console.log(err));
-  };
-  const handleNavigationProfil = () => {
-    router.push("/profil").catch((err) => console.log(err));
-  };
-  const handleNavigationStats = () => {
-    router.push("/stats").catch((err) => console.log(err));
-  };
-
-  const footerIcons = [
-    {
-      name: "Home",
-      icon: <HiOutlineHome size="2rem" onClick={handleNavigationHome} />,
-    },
-    {
-      name: "Profil",
-      icon: sessionData ? (
-        <Avatar
-          src={sessionData.user.image}
-          alt="profile picture"
-          radius="xl"
-          size="35px"
-          onClick={handleNavigationProfil}
-        />
-      ) : (
-        <CgProfile size="2rem" style={{}} />
-      ),
-    },
-    {
-      name: "Stats",
-      icon: <FaChartBar size="2rem" onClick={handleNavigationStats} />,
-    },
-    {
-      name: "Ajouter un vin",
-      icon: (
-        <RiAddCircleFill
-          color={
-            theme.colorScheme === "dark"
-              ? theme.colors.violet[9]
-              : theme.colors.violet[6]
-          }
-          style={{ backgroundColor: "white", borderRadius: "50%" }}
-          size="2rem"
-          onClick={handleNavigationAddWine}
-        />
-      ),
-    },
-  ];
   return (
     <>
-      {scrolled ? (
+      {!scrolled || !sessionData ? (
         <div
           className="fixed z-50 h-32 w-full"
           style={{
@@ -115,50 +53,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                   <ThemeToggler />
                   <AuthSignIn />
                 </div>
-                <div>
-                  <ActionIcon
-                    size="lg"
-                    variant="filled"
-                    style={{
-                      border:
-                        theme.colorScheme === "dark"
-                          ? `2px solid ${theme.colors.violet[9]}`
-                          : `2px solid ${theme.colors.violet[6]}`,
-                      backgroundColor:
-                        theme.colorScheme === "dark"
-                          ? theme.colors.violet[9]
-                          : theme.colors.violet[6],
-                    }}
-                    onClick={open}
-                  >
-                    <IconSearch color="white" />
-                  </ActionIcon>
-                  <Modal
-                    opened={opened}
-                    onClose={close}
-                    yOffset={130}
-                    withCloseButton={false}
-                    radius="md"
-                    transitionProps={{
-                      transition: "fade",
-                      duration: 400,
-                      timingFunction: "linear",
-                    }}
-                    styles={{
-                      root: {
-                        ".mantine-8jl4qs": {
-                          paddingLeft: `12px !important`,
-                          paddingRight: `12px !important`,
-                        },
-                      },
-                      body: {
-                        padding: 0,
-                      },
-                    }}
-                  >
-                    <SearchBar close={close} />
-                  </Modal>
-                </div>
+                <SearchIconModal scrolled={scrolled} />
               </div>
             ) : (
               <div className="flex w-[50%] flex-col items-end justify-between">
@@ -179,54 +74,12 @@ const Layout = ({ children }: PropsWithChildren) => {
           }}
         >
           <h1 className="text-3xl font-extrabold">Ma petite Cave.</h1>
-          <div>
-            <ActionIcon
-              size="lg"
-              variant="filled"
-              style={{
-                border:
-                  theme.colorScheme === "dark"
-                    ? `2px solid ${theme.colors.violet[9]}`
-                    : `2px solid ${theme.colors.violet[6]}`,
-                backgroundColor:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.violet[9]
-                    : theme.colors.violet[6],
-              }}
-              onClick={open}
-            >
-              <IconSearch color="white" />
-            </ActionIcon>
-            <Modal
-              opened={opened}
-              onClose={close}
-              yOffset={scrolled ? 135 : 55}
-              withCloseButton={false}
-              radius="md"
-              transitionProps={{
-                transition: "fade",
-                duration: 400,
-                timingFunction: "linear",
-              }}
-              styles={{
-                root: {
-                  ".mantine-8jl4qs": {
-                    paddingLeft: `12px !important`,
-                    paddingRight: `12px !important`,
-                  },
-                },
-                body: {
-                  padding: 0,
-                },
-              }}
-            >
-              <SearchBar close={close} />
-            </Modal>
-          </div>
+          <SearchIconModal scrolled={scrolled} />
         </div>
       )}
-
+      {/* MAIN APPLICATION START HERE */}
       <div className="pb-20 pt-36">{children}</div>
+      {/* MAIN APPLICATION STOP HERE */}
       <div
         className="flexrow xy-center fixed bottom-0 h-16 w-full justify-around border-slate-400"
         style={{
