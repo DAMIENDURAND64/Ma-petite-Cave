@@ -27,7 +27,7 @@ import { useDisclosure } from "@mantine/hooks";
 import ModalQuantity from "~/components/quantity/ModalQuantity";
 import { api } from "~/utils/api";
 import HeaderPage from "~/components/headerPage/HeaderPage";
-import CustomizeButton from "~/components/buttons/DeleteButton";
+import CustomizeButton from "~/components/buttons/CustomizeButton";
 import ModalWineConsumed from "~/components/consumedWine/ModalWineConsumed";
 
 type SelectedWineBottle = {

@@ -6,6 +6,7 @@ import WineFormStep1 from "./WineFormStep1";
 import { type StepperFormProps } from "../FormType";
 import { IconCircleX } from "@tabler/icons-react";
 import { stepperStyle } from "~/utils/mantineStyle/StepperStyle";
+import SubmitButton from "~/components/buttons/SubmitButton";
 
 const StepperForm = ({
   control,
@@ -113,21 +114,7 @@ const StepperForm = ({
         >
           Back
         </Button>
-        {active === 2 && (
-          <Button
-            type="submit"
-            style={{
-              backgroundImage: theme.fn.gradient({
-                from: "teal",
-                to: "lime",
-                deg: 45,
-              }),
-            }}
-            loading={loading}
-          >
-            Add
-          </Button>
-        )}
+        {active === 2 && <SubmitButton loading={loading} label="Add" />}
         <Button
           onClick={nextStep}
           style={{

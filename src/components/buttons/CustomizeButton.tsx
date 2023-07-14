@@ -27,7 +27,7 @@ const CustomizeButton = ({
   return (
     <MantineButton
       variant={variant ?? "filled"}
-      radius={radius ?? "xl"}
+      radius={radius ?? "md"}
       compact
       size={size ?? "xs"}
       onClick={onClick}
