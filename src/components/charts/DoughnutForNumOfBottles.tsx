@@ -97,9 +97,10 @@ export function DoughnutForNumOfBottles({
       },
     ],
   };
+
   return (
     <div className="w-full">
-      {!wineBottlesByColor ? (
+      {Object.keys(data.labels).length === 0 ? (
         <div className="xy-center flex h-44">
           Ajoute un vin pour voir tes stats
         </div>

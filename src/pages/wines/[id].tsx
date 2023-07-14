@@ -27,7 +27,8 @@ import { useDisclosure } from "@mantine/hooks";
 import ModalQuantity from "~/components/quantity/ModalQuantity";
 import { api } from "~/utils/api";
 import HeaderPage from "~/components/headerPage/HeaderPage";
-import DeleteButton from "~/components/buttons/DeleteButton";
+import CustomizeButton from "~/components/buttons/CustomizeButton";
+import ModalWineConsumed from "~/components/consumedWine/ModalWineConsumed";
 
 type SelectedWineBottle = {
   selectedWineBottle: WineBottle & {
@@ -44,6 +45,10 @@ function GetOneWine() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const [
+    openedWineModalConsumed,
+    { open: openWineModalConsumed, close: closeWineModalConsumed },
+  ] = useDisclosure(false);
 
   const [selectedWineBottle, setSelectedWineBottle] =
     useState<SelectedWineBottle | null>(null);
@@ -338,12 +343,26 @@ function GetOneWine() {
               </Modal>
             </>
           ))}
+          {openedWineModalConsumed && (
+            <ModalWineConsumed
+              openedWineModalConsumed={openedWineModalConsumed}
+              closeWineModalConsumed={closeWineModalConsumed}
+              wineBottles={wine.wineBottles}
+            />
+          )}
         </div>
-        <div className="flex w-full justify-center">
-          <DeleteButton
+        <div className="flex w-full justify-around">
+          <CustomizeButton
             label="Supprimer ce vin"
             size="md"
+            color="red"
             onClick={DeleteWine}
+          />
+          <CustomizeButton
+            label="J'ai bu ce vin"
+            size="md"
+            color="violet"
+            onClick={() => openWineModalConsumed()}
           />
         </div>
       </div>
