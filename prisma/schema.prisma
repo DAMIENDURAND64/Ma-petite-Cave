@@ -8,28 +8,31 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?     @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   accounts      Account[]
   sessions      Session[]
   wines         Wine[]
+  WineDrunk     WineDrunk[]
 }
 
 model Wine {
-  id                 Int           @id @default(autoincrement())
-  name               String
-  producer           String
-  varietal           String[]
-  country            String
-  region             String
-  vintage            Int
-  purchasedAt        DateTime?
-  consumedAt         DateTime?
+  id          Int       @id @default(autoincrement())
+  name        String
+  producer    String
+  varietal    String[]
+  country     String
+  region      String
+  vintage     Int
+  purchasedAt DateTime?
+  consumedAt  DateTime?
+  consumed    Boolean   @default(false)
+
   description        String?
   image              String?
   servingTemperature String?
@@ -39,8 +42,25 @@ model Wine {
   wineColorId        Int
   owner              User          @relation(fields: [ownerId], references: [id])
   wineColor          Color         @relation(fields: [wineColorId], references: [id])
-  wineBottles        WineBottle[]  
+  wineBottles        WineBottle[]
   tastingNotes       TastingNote[] @relation("TastingNoteToWine")
+  WineDrunk          WineDrunk[]
+}
+
+model WineDrunk {
+  id        Int      @id @default(autoincrement())
+  wineId    Int
+  userId    String
+  comment   String
+  date      DateTime
+  format    String
+  location  String
+  with      String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wine      Wine     @relation(fields: [wineId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Color {
